@@ -18,7 +18,7 @@ function useScrollLock() {
 }
 
 const HEADER_H = 60 // px — vaste headerhoogte
-const MODAL_H = '82dvh'
+const MODAL_H = '92dvh'
 
 export default function BottomModal({ titel, onSluit, children }) {
   useScrollLock()
