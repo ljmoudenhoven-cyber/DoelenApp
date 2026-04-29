@@ -154,14 +154,14 @@ function TussendoelModal({ bestaand, onOpslaan, onSluit }) {
 
   return (
     <div className="fixed inset-0 z-50 flex items-end justify-center bg-black/40">
-      <div className="bg-white rounded-t-2xl w-full max-w-[430px] overflow-y-auto" style={{ maxHeight: '85dvh' }}>
-        <div className="flex items-center justify-between px-5 pt-5 pb-3 border-b border-gray-100">
+      <div className="bg-white rounded-t-2xl w-full max-w-[430px] flex flex-col" style={{ maxHeight: '85dvh' }}>
+        <div className="flex-shrink-0 flex items-center justify-between px-5 pt-5 pb-3 border-b border-gray-100">
           <h2 className="font-semibold text-gray-800 text-base">
             {bestaand ? 'Tussendoel bewerken' : 'Tussendoel toevoegen'}
           </h2>
           <button onClick={onSluit} className="text-gray-400 text-2xl leading-none">&times;</button>
         </div>
-        <div className="px-5 py-4 pb-20 space-y-4">
+        <div className="flex-1 overflow-y-auto px-5 py-4 pb-6 space-y-4" style={{ WebkitOverflowScrolling: 'touch' }}>
           <p className="text-gray-500 text-xs">Stel een tussendoel in voor een specifieke datum. Je hoeft niet alle velden in te vullen.</p>
 
           <div>
@@ -281,7 +281,7 @@ export default function Fysiek() {
               <StatKaart label="Gewicht" waarde={`${laatste.gewicht} kg`} />
               <StatKaart label="Vetpercentage" waarde={`${laatste.vetPercentage}%`} />
               <StatKaart label="Buikomvang" waarde={`${laatste.buikomvang} cm`} />
-              <StatKaart label="BMI" waarde={laatste.bmi} extra={bmiCategorie(laatste.bmi)} />
+              <StatKaart label="BMI" waarde={laatste.bmi} bmiInfo={bmiInfo(laatste.bmi)} />
             </div>
             {lengte && <p className="text-gray-400 text-xs mt-2">Lengte: {lengte} cm</p>}
           </div>
@@ -365,12 +365,12 @@ export default function Fysiek() {
       {/* Handmatige meting modal */}
       {toonMetingModal && (
         <div className="fixed inset-0 z-50 flex items-end justify-center bg-black/40">
-          <div className="bg-white rounded-t-2xl w-full max-w-[430px] overflow-y-auto" style={{ maxHeight: '85dvh' }}>
-            <div className="flex items-center justify-between px-5 pt-5 pb-3 border-b border-gray-100">
+          <div className="bg-white rounded-t-2xl w-full max-w-[430px] flex flex-col" style={{ maxHeight: '85dvh' }}>
+            <div className="flex-shrink-0 flex items-center justify-between px-5 pt-5 pb-3 border-b border-gray-100">
               <h2 className="font-semibold text-gray-800 text-base">Meting toevoegen</h2>
               <button onClick={() => setToonMetingModal(false)} className="text-gray-400 text-2xl leading-none">&times;</button>
             </div>
-            <div className="px-5 py-4 pb-20">
+            <div className="flex-1 overflow-y-auto px-5 py-4 pb-6" style={{ WebkitOverflowScrolling: 'touch' }}>
               <MetingFormulier
                 manueel={true}
                 onVoltooid={() => { setToonMetingModal(false); laad() }}
@@ -392,20 +392,20 @@ export default function Fysiek() {
   )
 }
 
-function StatKaart({ label, waarde, extra }) {
+function StatKaart({ label, waarde, bmiInfo }) {
   return (
     <div className="bg-gray-50 rounded-lg p-3">
       <p className="text-gray-500 text-xs">{label}</p>
       <p className="font-semibold text-gray-800 text-lg leading-tight">{waarde}</p>
-      {extra && <p className="text-xs text-green-600">{extra}</p>}
+      {bmiInfo && <p className={`text-xs font-medium ${bmiInfo.kleur}`}>{bmiInfo.label}</p>}
     </div>
   )
 }
 
-function bmiCategorie(bmi) {
+function bmiInfo(bmi) {
   if (!bmi) return null
-  if (bmi < 18.5) return 'Ondergewicht'
-  if (bmi < 25) return 'Normaal gewicht'
-  if (bmi < 30) return 'Overgewicht'
-  return 'Obesitas'
+  if (bmi < 18.5) return { label: 'Ondergewicht', kleur: 'text-orange-500' }
+  if (bmi < 25) return { label: 'Normaal gewicht', kleur: 'text-green-600' }
+  if (bmi < 30) return { label: 'Licht overgewicht', kleur: 'text-orange-500' }
+  return { label: 'Ernstig overgewicht', kleur: 'text-red-500' }
 }

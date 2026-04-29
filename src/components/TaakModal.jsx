@@ -27,15 +27,23 @@ export default function TaakModal({ taak, type, onSluit, onVoltooid, onOvergesla
 
   return (
     <div className="fixed inset-0 z-50 flex items-end justify-center bg-black/40">
-      <div className="bg-white rounded-t-2xl w-full max-w-[430px] overflow-y-auto" style={{ maxHeight: '85dvh' }}>
-        <div className="flex items-center justify-between px-5 pt-5 pb-3 border-b border-gray-100">
+      <div
+        className="bg-white rounded-t-2xl w-full max-w-[430px] flex flex-col"
+        style={{ maxHeight: '85dvh' }}
+      >
+        {/* Vaste header */}
+        <div className="flex-shrink-0 flex items-center justify-between px-5 pt-5 pb-3 border-b border-gray-100">
           <h2 className="font-semibold text-gray-800 text-base">{taak.titel}</h2>
           <button onClick={onSluit} className="text-gray-400 text-2xl leading-none">&times;</button>
         </div>
 
-        <div className="px-5 py-4 pb-20">
+        {/* Scrollbaar content */}
+        <div
+          className="flex-1 overflow-y-auto px-5 py-4"
+          style={{ WebkitOverflowScrolling: 'touch' }}
+        >
           {type === 'overslaan' ? (
-            <div className="space-y-4">
+            <div className="space-y-4 pb-6">
               <p className="text-gray-600 text-sm">Waarom sla je deze taak over?</p>
               <textarea
                 value={reden}
@@ -53,9 +61,11 @@ export default function TaakModal({ taak, type, onSluit, onVoltooid, onOvergesla
               </button>
             </div>
           ) : (
-            formulier || (
-              <p className="text-gray-500 text-sm">Geen formulier beschikbaar voor dit taaktype.</p>
-            )
+            <div className="pb-6">
+              {formulier || (
+                <p className="text-gray-500 text-sm">Geen formulier beschikbaar voor dit taaktype.</p>
+              )}
+            </div>
           )}
         </div>
       </div>
