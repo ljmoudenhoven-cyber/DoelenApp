@@ -98,7 +98,7 @@ function AppInner() {
 
 export default function App() {
   return (
-    <BrowserRouter basename="/LevensApp">
+    <BrowserRouter basename="/DoelenApp">
       <AppInner />
     </BrowserRouter>
   )

@@ -1,11 +1,11 @@
 import localforage from 'localforage'
 
 const stores = {
-  settings: localforage.createInstance({ name: 'LevensApp', storeName: 'settings' }),
-  metingen: localforage.createInstance({ name: 'LevensApp', storeName: 'metingen' }),
-  sport: localforage.createInstance({ name: 'LevensApp', storeName: 'sport' }),
-  lezen: localforage.createInstance({ name: 'LevensApp', storeName: 'lezen' }),
-  taken: localforage.createInstance({ name: 'LevensApp', storeName: 'taken' }),
+  settings: localforage.createInstance({ name: 'DoelenApp', storeName: 'settings' }),
+  metingen: localforage.createInstance({ name: 'DoelenApp', storeName: 'metingen' }),
+  sport: localforage.createInstance({ name: 'DoelenApp', storeName: 'sport' }),
+  lezen: localforage.createInstance({ name: 'DoelenApp', storeName: 'lezen' }),
+  taken: localforage.createInstance({ name: 'DoelenApp', storeName: 'taken' }),
 }
 
 export async function getAll(store) {
