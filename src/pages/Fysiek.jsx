@@ -134,78 +134,12 @@ function GrafiekKaart({ titel, metingen, dataKey, kleur, tussendoelen, einddoel,
   )
 }
 
-function TussendoelModal({ bestaand, onOpslaan, onSluit }) {
-  const vandaag = new Date().toISOString().split('T')[0]
-  const [datum, setDatum] = useState(bestaand?.datum || '')
-  const [gewicht, setGewicht] = useState(bestaand?.gewicht != null ? String(bestaand.gewicht) : '')
-  const [vet, setVet] = useState(bestaand?.vetPercentage != null ? String(bestaand.vetPercentage) : '')
-  const [buik, setBuik] = useState(bestaand?.buikomvang != null ? String(bestaand.buikomvang) : '')
-  const [fout, setFout] = useState('')
-
-  function opslaan() {
-    if (!datum) { setFout('Kies een datum.'); return }
-    if (!gewicht && !vet && !buik) { setFout('Vul minstens één waarde in.'); return }
-    onOpslaan({
-      id: bestaand?.id || `tussendoel-${datum}-${Date.now()}`,
-      datum,
-      gewicht: gewicht ? parseFloat(gewicht) : null,
-      vetPercentage: vet ? parseFloat(vet) : null,
-      buikomvang: buik ? parseFloat(buik) : null,
-    })
-  }
-
-  return (
-    <BottomModal titel={bestaand ? 'Tussendoel bewerken' : 'Tussendoel toevoegen'} onSluit={onSluit}>
-      <div className="space-y-4">
-        <p className="text-gray-500 text-xs">Stel een tussendoel in voor een specifieke datum. Je hoeft niet alle velden in te vullen.</p>
-
-        <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">Datum</label>
-          <input
-            type="date"
-            value={datum}
-            min={vandaag}
-            onChange={e => setDatum(e.target.value)}
-            className="w-full border border-gray-300 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-green-500"
-          />
-        </div>
-        <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">Doelgewicht (kg)</label>
-          <input type="number" inputMode="decimal" step="0.1" value={gewicht}
-            onChange={e => setGewicht(e.target.value)} placeholder="bijv. 80"
-            className="w-full border border-gray-300 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-green-500" />
-        </div>
-        <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">Doelvetpercentage (%)</label>
-          <input type="number" inputMode="decimal" step="0.1" value={vet}
-            onChange={e => setVet(e.target.value)} placeholder="bijv. 16"
-            className="w-full border border-gray-300 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-green-500" />
-        </div>
-        <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">Doelbuikomvang (cm)</label>
-          <input type="number" inputMode="decimal" step="0.5" value={buik}
-            onChange={e => setBuik(e.target.value)} placeholder="bijv. 89"
-            className="w-full border border-gray-300 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-green-500" />
-        </div>
-
-        {fout && <p className="text-red-500 text-xs">{fout}</p>}
-
-        <button onClick={opslaan} className="w-full bg-green-500 text-white font-medium py-3 rounded-xl">
-          Opslaan
-        </button>
-      </div>
-    </BottomModal>
-  )
-}
-
 export default function Fysiek() {
   const [metingen, setMetingen] = useState([])
   const [doelen, setDoelen] = useState(null)
   const [lengte, setLengte] = useState(null)
   const [tussendoelen, setTussendoelen] = useState([])
   const [toonMetingModal, setToonMetingModal] = useState(false)
-  const [toonTussendoelModal, setToonTussendoelModal] = useState(false)
-  const [bewerkTussendoel, setBewerkTussendoel] = useState(null)
 
   const navigate = useNavigate()
 
@@ -223,26 +157,6 @@ export default function Fysiek() {
   }, [])
 
   useEffect(() => { laad() }, [laad])
-
-  async function slaaTussendoelOp(td) {
-    const bestaand = await getSetting('tussendoelen') || []
-    const index = bestaand.findIndex(t => t.id === td.id)
-    const nieuw = index >= 0
-      ? bestaand.map((t, i) => i === index ? td : t)
-      : [...bestaand, td]
-    const gesorteerd = nieuw.sort((a, b) => a.datum.localeCompare(b.datum))
-    await setItem('settings', 'tussendoelen', gesorteerd)
-    setTussendoelen(gesorteerd)
-    setToonTussendoelModal(false)
-    setBewerkTussendoel(null)
-  }
-
-  async function verwijderTussendoel(id) {
-    const bestaand = await getSetting('tussendoelen') || []
-    const nieuw = bestaand.filter(t => t.id !== id)
-    await setItem('settings', 'tussendoelen', nieuw)
-    setTussendoelen(nieuw)
-  }
 
   const laatste = [...metingen].reverse().find(m => m.gewicht != null)
   const einddoelDatum = doelen?.einddoelDatum || null
@@ -269,6 +183,16 @@ export default function Fysiek() {
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
               <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
               <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
+            </svg>
+          </button>
+          <button
+            onClick={() => navigate('/tussendoelen')}
+            className="bg-white text-green-600 w-10 h-10 rounded-full flex items-center justify-center shadow-md"
+            title="Tussendoelen beheren"
+          >
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"/>
+              <line x1="4" y1="22" x2="4" y2="15"/>
             </svg>
           </button>
           <button
@@ -315,59 +239,6 @@ export default function Fysiek() {
         <GrafiekKaart titel="BMI" dataKey="bmi" kleur="#22c55e"
           einddoel={null} eenheid="" {...grafiekProps} />
 
-        {/* Tussendoelen */}
-        <div className="bg-white border border-gray-200 rounded-xl p-4">
-          <div className="flex items-center justify-between mb-3">
-            <h2 className="font-semibold text-gray-800 text-sm">Tussendoelen</h2>
-            <button
-              onClick={() => { setBewerkTussendoel(null); setToonTussendoelModal(true) }}
-              className="bg-green-500 text-white text-xs font-medium px-3 py-1.5 rounded-lg"
-            >
-              + Toevoegen
-            </button>
-          </div>
-
-          {tussendoelen.length === 0 ? (
-            <p className="text-gray-400 text-xs">
-              Voeg tussendoelen toe om je doeltraject in de grafieken te zien. Bijv. op 1 juni 80kg, op 1 september 78kg.
-            </p>
-          ) : (
-            <div className="space-y-2">
-              {tussendoelen.map(td => (
-                <div key={td.id} className="flex items-center justify-between py-2 border-b border-gray-50 last:border-0">
-                  <div>
-                    <p className="text-sm font-medium text-gray-700">{formatDatum(td.datum)}</p>
-                    <p className="text-xs text-gray-400">
-                      {[
-                        td.gewicht && `${td.gewicht}kg`,
-                        td.vetPercentage && `${td.vetPercentage}%`,
-                        td.buikomvang && `${td.buikomvang}cm`,
-                      ].filter(Boolean).join(' · ')}
-                    </p>
-                  </div>
-                  <div className="flex gap-2">
-                    <button
-                      onClick={() => { setBewerkTussendoel(td); setToonTussendoelModal(true) }}
-                      className="text-gray-400 text-xs px-2 py-1 rounded-lg border border-gray-200"
-                    >
-                      Bewerk
-                    </button>
-                    <button
-                      onClick={() => verwijderTussendoel(td.id)}
-                      className="text-red-400 text-xs px-2 py-1 rounded-lg border border-red-100"
-                    >
-                      ✕
-                    </button>
-                  </div>
-                </div>
-              ))}
-            </div>
-          )}
-
-          <p className="text-gray-300 text-[10px] mt-3">
-            Tip: voeg ook je einddoel toe als tussendoel met de gewenste einddatum.
-          </p>
-        </div>
       </div>
 
       {/* Handmatige meting modal */}
@@ -380,14 +251,6 @@ export default function Fysiek() {
         </BottomModal>
       )}
 
-      {/* Tussendoel modal */}
-      {toonTussendoelModal && (
-        <TussendoelModal
-          bestaand={bewerkTussendoel}
-          onOpslaan={slaaTussendoelOp}
-          onSluit={() => { setToonTussendoelModal(false); setBewerkTussendoel(null) }}
-        />
-      )}
     </div>
   )
 }

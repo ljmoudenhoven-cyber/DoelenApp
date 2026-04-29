@@ -6,6 +6,7 @@ import Sport from './pages/Sport'
 import Lezen from './pages/Lezen'
 import Export from './pages/Export'
 import Instellingen from './pages/Instellingen'
+import Tussendoelen from './pages/Tussendoelen'
 import { genereerWekelijkseTaken } from './store/taken'
 import { getSetting, setItem } from './store/db'
 import { genereerSportSchema } from './store/sportSchema'
@@ -90,6 +91,7 @@ function AppInner() {
         <Route path="/lezen" element={<Lezen />} />
         <Route path="/export" element={<Export />} />
         <Route path="/instellingen" element={<Instellingen />} />
+        <Route path="/tussendoelen" element={<Tussendoelen />} />
       </Routes>
       <NavBar />
     </div>
