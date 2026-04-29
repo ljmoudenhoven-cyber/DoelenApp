@@ -1,9 +1,7 @@
 import { useState, useEffect, useCallback } from 'react'
-import { getAll, getSetting, setItem, getItem } from '../store/db'
-import { ComposedChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend } from 'recharts'
+import { getAll, getSetting } from '../store/db'
+import { ComposedChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts'
 import { useNavigate } from 'react-router-dom'
-import MetingFormulier from '../components/formulieren/MetingFormulier'
-import BottomModal from '../components/BottomModal'
 
 function formatDatum(datumStr) {
   if (!datumStr) return ''
@@ -139,7 +137,6 @@ export default function Fysiek() {
   const [doelen, setDoelen] = useState(null)
   const [lengte, setLengte] = useState(null)
   const [tussendoelen, setTussendoelen] = useState([])
-  const [toonMetingModal, setToonMetingModal] = useState(false)
 
   const navigate = useNavigate()
 
@@ -196,7 +193,7 @@ export default function Fysiek() {
             </svg>
           </button>
           <button
-            onClick={() => setToonMetingModal(true)}
+            onClick={() => navigate('/meting-toevoegen')}
             className="bg-white text-green-600 font-bold text-xl w-10 h-10 rounded-full flex items-center justify-center shadow-md"
           >
             +
@@ -221,7 +218,7 @@ export default function Fysiek() {
           <div className="bg-gray-50 border border-gray-200 rounded-xl p-5 text-center">
             <p className="text-gray-500 text-sm">Nog geen metingen.</p>
             <button
-              onClick={() => setToonMetingModal(true)}
+              onClick={() => navigate('/meting-toevoegen')}
               className="mt-3 bg-green-500 text-white text-sm font-medium px-4 py-2 rounded-lg"
             >
               + Eerste meting toevoegen
@@ -240,17 +237,6 @@ export default function Fysiek() {
           einddoel={null} eenheid="" {...grafiekProps} />
 
       </div>
-
-      {/* Handmatige meting modal */}
-      {toonMetingModal && (
-        <BottomModal titel="Meting toevoegen" onSluit={() => setToonMetingModal(false)}>
-          <MetingFormulier
-            manueel={true}
-            onVoltooid={() => { setToonMetingModal(false); laad() }}
-          />
-        </BottomModal>
-      )}
-
     </div>
   )
 }
