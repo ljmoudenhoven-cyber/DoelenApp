@@ -1,6 +1,5 @@
 import { useEffect } from 'react'
 
-// Vergrendelt achtergrondscroll op iOS terwijl modal open is
 function useScrollLock() {
   useEffect(() => {
     const scrollY = window.scrollY
@@ -18,25 +17,36 @@ function useScrollLock() {
   }, [])
 }
 
+const HEADER_H = 60 // px — vaste headerhoogte
+const MODAL_H = '82dvh'
+
 export default function BottomModal({ titel, onSluit, children }) {
   useScrollLock()
 
   return (
     <div className="fixed inset-0 z-50 flex items-end justify-center bg-black/40">
       <div
-        className="bg-white rounded-t-2xl w-full max-w-[430px] flex flex-col"
-        style={{ maxHeight: '85dvh' }}
+        className="bg-white rounded-t-2xl w-full max-w-[430px]"
+        style={{ height: MODAL_H }}
       >
         {/* Vaste header */}
-        <div className="flex-shrink-0 flex items-center justify-between px-5 pt-5 pb-3 border-b border-gray-100">
+        <div
+          className="flex items-center justify-between px-5 border-b border-gray-100"
+          style={{ height: HEADER_H }}
+        >
           <h2 className="font-semibold text-gray-800 text-base">{titel}</h2>
-          <button onClick={onSluit} className="text-gray-400 text-2xl leading-none">&times;</button>
+          <button onClick={onSluit} className="text-gray-400 text-3xl leading-none pb-1">&times;</button>
         </div>
 
-        {/* Scrollbaar inhoud — minHeight: 0 is cruciaal voor iOS Safari */}
+        {/* Scrollbaar inhoud met expliciete hoogte */}
         <div
-          className="overflow-y-scroll px-5 py-4 pb-10"
-          style={{ flex: '1 1 0', minHeight: 0, WebkitOverflowScrolling: 'touch', overscrollBehavior: 'contain' }}
+          className="px-5 py-4 pb-10"
+          style={{
+            height: `calc(${MODAL_H} - ${HEADER_H}px)`,
+            overflowY: 'scroll',
+            WebkitOverflowScrolling: 'touch',
+            overscrollBehavior: 'contain',
+          }}
         >
           {children}
         </div>

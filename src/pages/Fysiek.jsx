@@ -264,7 +264,7 @@ export default function Fysiek() {
           <button
             onClick={() => navigate('/instellingen')}
             className="bg-white/20 text-white text-lg w-10 h-10 rounded-full flex items-center justify-center"
-            title="Instellingen"
+            title="Basisgegevens"
           >
             ⚙️
           </button>

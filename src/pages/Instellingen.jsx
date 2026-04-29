@@ -54,7 +54,6 @@ export default function Instellingen() {
     await setSetting('lengte', l)
     if (geslacht) await setSetting('geslacht', geslacht)
 
-    // Doelen opslaan
     await setItem('settings', 'fysiekDoelen', {
       doelGewicht: doelGewicht ? parseFloat(doelGewicht) : null,
       doelVet: doelVet ? parseFloat(doelVet) : null,
@@ -62,12 +61,11 @@ export default function Instellingen() {
       einddoelDatum: einddoelDatum || null,
     })
 
-    // Beginstand opslaan als eerste meting (alleen als ingevuld)
     if (beginGewicht && beginVet && beginBuik) {
       const vandaag = new Date().toISOString().split('T')[0]
       const bmi = berekenBMI(parseFloat(beginGewicht), l)
-      const beginMeting = {
-        id: `meting-beginstand-${vandaag}`,
+      await setItem('metingen', `meting-beginstand`, {
+        id: 'meting-beginstand',
         datum: vandaag,
         gewicht: parseFloat(beginGewicht),
         vetPercentage: parseFloat(beginVet),
@@ -75,21 +73,32 @@ export default function Instellingen() {
         bmi,
         beginstand: true,
         ingevoerdOp: new Date().toISOString(),
-      }
-      await setItem('metingen', beginMeting.id, beginMeting)
+      })
     }
 
     setOpgeslagen(true)
-    setTimeout(() => navigate('/'), 1000)
+    setTimeout(() => navigate('/fysiek'), 800)
+  }
+
+  function sluiten() {
+    navigate('/fysiek')
   }
 
   const vandaag = new Date().toISOString().split('T')[0]
 
   return (
     <div className="flex flex-col pb-10">
-      <div className="bg-green-500 px-5 pt-14 pb-6">
-        <h1 className="text-white text-2xl font-bold">Instellingen ⚙️</h1>
-        <p className="text-green-100 text-sm mt-1">Jouw basisgegevens</p>
+      <div className="bg-green-500 px-5 pt-14 pb-6 flex items-end justify-between">
+        <div>
+          <h1 className="text-white text-2xl font-bold">Basisgegevens ⚙️</h1>
+          <p className="text-green-100 text-sm mt-1">Lengte, beginstand en doelen</p>
+        </div>
+        <button
+          onClick={sluiten}
+          className="bg-white/20 text-white text-sm font-medium px-4 py-2 rounded-full"
+        >
+          Sluiten
+        </button>
       </div>
 
       <div className="px-4 py-5 space-y-5">
@@ -214,7 +223,7 @@ export default function Instellingen() {
           disabled={opgeslagen}
           className="w-full bg-green-500 text-white font-semibold py-4 rounded-xl text-base shadow-sm disabled:opacity-50"
         >
-          Opslaan & starten
+          {opgeslagen ? 'Opgeslagen ✅' : 'Opslaan'}
         </button>
       </div>
     </div>
