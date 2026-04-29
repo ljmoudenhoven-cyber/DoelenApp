@@ -33,7 +33,7 @@ export default function TaakModal({ taak, type, onSluit, onVoltooid, onOvergesla
           <button onClick={onSluit} className="text-gray-400 text-2xl leading-none">&times;</button>
         </div>
 
-        <div className="px-5 py-4 pb-10">
+        <div className="px-5 py-4 pb-20">
           {type === 'overslaan' ? (
             <div className="space-y-4">
               <p className="text-gray-600 text-sm">Waarom sla je deze taak over?</p>

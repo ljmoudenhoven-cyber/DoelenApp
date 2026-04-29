@@ -161,7 +161,7 @@ function TussendoelModal({ bestaand, onOpslaan, onSluit }) {
           </h2>
           <button onClick={onSluit} className="text-gray-400 text-2xl leading-none">&times;</button>
         </div>
-        <div className="px-5 py-4 pb-10 space-y-4">
+        <div className="px-5 py-4 pb-20 space-y-4">
           <p className="text-gray-500 text-xs">Stel een tussendoel in voor een specifieke datum. Je hoeft niet alle velden in te vullen.</p>
 
           <div>
@@ -370,7 +370,7 @@ export default function Fysiek() {
               <h2 className="font-semibold text-gray-800 text-base">Meting toevoegen</h2>
               <button onClick={() => setToonMetingModal(false)} className="text-gray-400 text-2xl leading-none">&times;</button>
             </div>
-            <div className="px-5 py-4 pb-10">
+            <div className="px-5 py-4 pb-20">
               <MetingFormulier
                 manueel={true}
                 onVoltooid={() => { setToonMetingModal(false); laad() }}
