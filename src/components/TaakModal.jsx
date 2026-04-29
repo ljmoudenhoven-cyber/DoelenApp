@@ -27,13 +27,13 @@ export default function TaakModal({ taak, type, onSluit, onVoltooid, onOvergesla
 
   return (
     <div className="fixed inset-0 z-50 flex items-end justify-center bg-black/40">
-      <div className="bg-white rounded-t-2xl w-full max-w-[430px] max-h-[85vh] overflow-y-auto">
+      <div className="bg-white rounded-t-2xl w-full max-w-[430px] overflow-y-auto" style={{ maxHeight: '85dvh' }}>
         <div className="flex items-center justify-between px-5 pt-5 pb-3 border-b border-gray-100">
           <h2 className="font-semibold text-gray-800 text-base">{taak.titel}</h2>
           <button onClick={onSluit} className="text-gray-400 text-2xl leading-none">&times;</button>
         </div>
 
-        <div className="px-5 py-4">
+        <div className="px-5 py-4 pb-10">
           {type === 'overslaan' ? (
             <div className="space-y-4">
               <p className="text-gray-600 text-sm">Waarom sla je deze taak over?</p>

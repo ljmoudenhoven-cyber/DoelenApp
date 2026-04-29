@@ -154,14 +154,14 @@ function TussendoelModal({ bestaand, onOpslaan, onSluit }) {
 
   return (
     <div className="fixed inset-0 z-50 flex items-end justify-center bg-black/40">
-      <div className="bg-white rounded-t-2xl w-full max-w-[430px] max-h-[85vh] overflow-y-auto">
+      <div className="bg-white rounded-t-2xl w-full max-w-[430px] overflow-y-auto" style={{ maxHeight: '85dvh' }}>
         <div className="flex items-center justify-between px-5 pt-5 pb-3 border-b border-gray-100">
           <h2 className="font-semibold text-gray-800 text-base">
             {bestaand ? 'Tussendoel bewerken' : 'Tussendoel toevoegen'}
           </h2>
           <button onClick={onSluit} className="text-gray-400 text-2xl leading-none">&times;</button>
         </div>
-        <div className="px-5 py-4 space-y-4">
+        <div className="px-5 py-4 pb-10 space-y-4">
           <p className="text-gray-500 text-xs">Stel een tussendoel in voor een specifieke datum. Je hoeft niet alle velden in te vullen.</p>
 
           <div>
@@ -365,12 +365,12 @@ export default function Fysiek() {
       {/* Handmatige meting modal */}
       {toonMetingModal && (
         <div className="fixed inset-0 z-50 flex items-end justify-center bg-black/40">
-          <div className="bg-white rounded-t-2xl w-full max-w-[430px] max-h-[85vh] overflow-y-auto">
+          <div className="bg-white rounded-t-2xl w-full max-w-[430px] overflow-y-auto" style={{ maxHeight: '85dvh' }}>
             <div className="flex items-center justify-between px-5 pt-5 pb-3 border-b border-gray-100">
               <h2 className="font-semibold text-gray-800 text-base">Meting toevoegen</h2>
               <button onClick={() => setToonMetingModal(false)} className="text-gray-400 text-2xl leading-none">&times;</button>
             </div>
-            <div className="px-5 py-4">
+            <div className="px-5 py-4 pb-10">
               <MetingFormulier
                 manueel={true}
                 onVoltooid={() => { setToonMetingModal(false); laad() }}
