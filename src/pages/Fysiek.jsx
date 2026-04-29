@@ -2,6 +2,7 @@ import { useState, useEffect, useCallback } from 'react'
 import { getAll, getSetting, setItem, getItem } from '../store/db'
 import { ComposedChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend } from 'recharts'
 import MetingFormulier from '../components/formulieren/MetingFormulier'
+import BottomModal from '../components/BottomModal'
 
 function formatDatum(datumStr) {
   if (!datumStr) return ''
@@ -153,54 +154,46 @@ function TussendoelModal({ bestaand, onOpslaan, onSluit }) {
   }
 
   return (
-    <div className="fixed inset-0 z-50 flex items-end justify-center bg-black/40">
-      <div className="bg-white rounded-t-2xl w-full max-w-[430px] flex flex-col" style={{ maxHeight: '85dvh' }}>
-        <div className="flex-shrink-0 flex items-center justify-between px-5 pt-5 pb-3 border-b border-gray-100">
-          <h2 className="font-semibold text-gray-800 text-base">
-            {bestaand ? 'Tussendoel bewerken' : 'Tussendoel toevoegen'}
-          </h2>
-          <button onClick={onSluit} className="text-gray-400 text-2xl leading-none">&times;</button>
+    <BottomModal titel={bestaand ? 'Tussendoel bewerken' : 'Tussendoel toevoegen'} onSluit={onSluit}>
+      <div className="space-y-4">
+        <p className="text-gray-500 text-xs">Stel een tussendoel in voor een specifieke datum. Je hoeft niet alle velden in te vullen.</p>
+
+        <div>
+          <label className="block text-sm font-medium text-gray-700 mb-1">Datum</label>
+          <input
+            type="date"
+            value={datum}
+            min={vandaag}
+            onChange={e => setDatum(e.target.value)}
+            className="w-full border border-gray-300 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-green-500"
+          />
         </div>
-        <div className="flex-1 overflow-y-auto px-5 py-4 pb-6 space-y-4" style={{ WebkitOverflowScrolling: 'touch' }}>
-          <p className="text-gray-500 text-xs">Stel een tussendoel in voor een specifieke datum. Je hoeft niet alle velden in te vullen.</p>
-
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Datum</label>
-            <input
-              type="date"
-              value={datum}
-              min={vandaag}
-              onChange={e => setDatum(e.target.value)}
-              className="w-full border border-gray-300 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-green-500"
-            />
-          </div>
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Doelgewicht (kg)</label>
-            <input type="number" inputMode="decimal" step="0.1" value={gewicht}
-              onChange={e => setGewicht(e.target.value)} placeholder="bijv. 80"
-              className="w-full border border-gray-300 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-green-500" />
-          </div>
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Doelvetpercentage (%)</label>
-            <input type="number" inputMode="decimal" step="0.1" value={vet}
-              onChange={e => setVet(e.target.value)} placeholder="bijv. 16"
-              className="w-full border border-gray-300 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-green-500" />
-          </div>
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Doelbuikomvang (cm)</label>
-            <input type="number" inputMode="decimal" step="0.5" value={buik}
-              onChange={e => setBuik(e.target.value)} placeholder="bijv. 89"
-              className="w-full border border-gray-300 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-green-500" />
-          </div>
-
-          {fout && <p className="text-red-500 text-xs">{fout}</p>}
-
-          <button onClick={opslaan} className="w-full bg-green-500 text-white font-medium py-3 rounded-xl">
-            Opslaan
-          </button>
+        <div>
+          <label className="block text-sm font-medium text-gray-700 mb-1">Doelgewicht (kg)</label>
+          <input type="number" inputMode="decimal" step="0.1" value={gewicht}
+            onChange={e => setGewicht(e.target.value)} placeholder="bijv. 80"
+            className="w-full border border-gray-300 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-green-500" />
         </div>
+        <div>
+          <label className="block text-sm font-medium text-gray-700 mb-1">Doelvetpercentage (%)</label>
+          <input type="number" inputMode="decimal" step="0.1" value={vet}
+            onChange={e => setVet(e.target.value)} placeholder="bijv. 16"
+            className="w-full border border-gray-300 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-green-500" />
+        </div>
+        <div>
+          <label className="block text-sm font-medium text-gray-700 mb-1">Doelbuikomvang (cm)</label>
+          <input type="number" inputMode="decimal" step="0.5" value={buik}
+            onChange={e => setBuik(e.target.value)} placeholder="bijv. 89"
+            className="w-full border border-gray-300 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-green-500" />
+        </div>
+
+        {fout && <p className="text-red-500 text-xs">{fout}</p>}
+
+        <button onClick={opslaan} className="w-full bg-green-500 text-white font-medium py-3 rounded-xl">
+          Opslaan
+        </button>
       </div>
-    </div>
+    </BottomModal>
   )
 }
 
@@ -364,20 +357,12 @@ export default function Fysiek() {
 
       {/* Handmatige meting modal */}
       {toonMetingModal && (
-        <div className="fixed inset-0 z-50 flex items-end justify-center bg-black/40">
-          <div className="bg-white rounded-t-2xl w-full max-w-[430px] flex flex-col" style={{ maxHeight: '85dvh' }}>
-            <div className="flex-shrink-0 flex items-center justify-between px-5 pt-5 pb-3 border-b border-gray-100">
-              <h2 className="font-semibold text-gray-800 text-base">Meting toevoegen</h2>
-              <button onClick={() => setToonMetingModal(false)} className="text-gray-400 text-2xl leading-none">&times;</button>
-            </div>
-            <div className="flex-1 overflow-y-auto px-5 py-4 pb-6" style={{ WebkitOverflowScrolling: 'touch' }}>
-              <MetingFormulier
-                manueel={true}
-                onVoltooid={() => { setToonMetingModal(false); laad() }}
-              />
-            </div>
-          </div>
-        </div>
+        <BottomModal titel="Meting toevoegen" onSluit={() => setToonMetingModal(false)}>
+          <MetingFormulier
+            manueel={true}
+            onVoltooid={() => { setToonMetingModal(false); laad() }}
+          />
+        </BottomModal>
       )}
 
       {/* Tussendoel modal */}
