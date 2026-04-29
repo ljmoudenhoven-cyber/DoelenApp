@@ -10,9 +10,12 @@ import Tussendoelen from './pages/Tussendoelen'
 import MetingToevoegen from './pages/MetingToevoegen'
 import Metingen from './pages/Metingen'
 import TussendoelToevoegen from './pages/TussendoelToevoegen'
+import Login from './pages/Login'
 import { genereerWekelijkseTaken } from './store/taken'
 import { getSetting, setItem } from './store/db'
 import { genereerSportSchema } from './store/sportSchema'
+import { useAuth } from './store/auth'
+import { pullAll, clearLocalData } from './store/sync'
 
 function NavBar() {
   return (
@@ -51,39 +54,62 @@ function NavBar() {
   )
 }
 
+function Spinner() {
+  return (
+    <div className="flex items-center justify-center min-h-screen">
+      <div className="text-green-600 text-4xl animate-pulse">🌱</div>
+    </div>
+  )
+}
+
 function AppInner() {
   const navigate = useNavigate()
-  const [geladen, setGeladen] = useState(false)
+  const { user, geladen: authGeladen } = useAuth()
+  const [vorigeUserId, setVorigeUserId] = useState(null)
+  const [dataGeladen, setDataGeladen] = useState(false)
 
   useEffect(() => {
+    if (!authGeladen) return
+
+    if (!user) {
+      if (vorigeUserId) {
+        clearLocalData().finally(() => {
+          setVorigeUserId(null)
+          setDataGeladen(false)
+        })
+      } else {
+        setDataGeladen(false)
+      }
+      return
+    }
+
+    if (user.id === vorigeUserId && dataGeladen) return
+
     async function init() {
-      // Check eerste keer opstarten
+      setDataGeladen(false)
+      await pullAll()
+
       const lengte = await getSetting('lengte')
       if (!lengte) {
         navigate('/instellingen')
       }
 
-      // Zorg dat sportschema bestaat
       const bestaandSchema = await getSetting('sportSchema')
       if (!bestaandSchema) {
         const schema = genereerSportSchema()
         await setItem('settings', 'sportSchema', schema)
       }
 
-      // Genereer taken voor vandaag
       await genereerWekelijkseTaken()
-      setGeladen(true)
+      setVorigeUserId(user.id)
+      setDataGeladen(true)
     }
     init()
-  }, [navigate])
+  }, [authGeladen, user, vorigeUserId, dataGeladen, navigate])
 
-  if (!geladen) {
-    return (
-      <div className="flex items-center justify-center min-h-screen">
-        <div className="text-green-600 text-4xl animate-pulse">🌱</div>
-      </div>
-    )
-  }
+  if (!authGeladen) return <Spinner />
+  if (!user) return <Login />
+  if (!dataGeladen) return <Spinner />
 
   return (
     <div className="flex flex-col min-h-dvh pb-20">

@@ -1,4 +1,5 @@
 import localforage from 'localforage'
+import { pushItem, pushDelete } from './sync'
 
 const stores = {
   settings: localforage.createInstance({ name: 'DoelenApp', storeName: 'settings' }),
@@ -19,11 +20,14 @@ export async function getItem(store, key) {
 }
 
 export async function setItem(store, key, value) {
-  return stores[store].setItem(key, value)
+  await stores[store].setItem(key, value)
+  pushItem(store, key, value)
+  return value
 }
 
 export async function removeItem(store, key) {
-  return stores[store].removeItem(key)
+  await stores[store].removeItem(key)
+  pushDelete(store, key)
 }
 
 export async function getSetting(key) {
@@ -31,5 +35,7 @@ export async function getSetting(key) {
 }
 
 export async function setSetting(key, value) {
-  return stores.settings.setItem(key, value)
+  await stores.settings.setItem(key, value)
+  pushItem('settings', key, value)
+  return value
 }

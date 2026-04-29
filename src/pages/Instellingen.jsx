@@ -1,6 +1,8 @@
 import { useState, useEffect } from 'react'
 import { getSetting, setSetting, setItem } from '../store/db'
 import { useNavigate } from 'react-router-dom'
+import { supabase } from '../store/supabase'
+import { signOut } from '../store/auth'
 
 function berekenBMI(gewicht, lengte) {
   if (!gewicht || !lengte) return null
@@ -24,8 +26,10 @@ export default function Instellingen() {
 
   const [opgeslagen, setOpgeslagen] = useState(false)
   const [fout, setFout] = useState('')
+  const [email, setEmail] = useState('')
 
   useEffect(() => {
+    supabase.auth.getUser().then(({ data }) => setEmail(data?.user?.email || ''))
     async function laad() {
       const [l, g, doelen] = await Promise.all([
         getSetting('lengte'),
@@ -231,6 +235,22 @@ export default function Instellingen() {
         >
           {opgeslagen ? 'Opgeslagen ✅' : 'Opslaan'}
         </button>
+
+        {email && (
+          <div className="bg-white border border-gray-200 rounded-xl p-4 mt-2">
+            <h2 className="font-semibold text-gray-800 text-sm mb-1">Account</h2>
+            <p className="text-gray-500 text-xs mb-3">Ingelogd als <span className="font-medium text-gray-700">{email}</span></p>
+            <button
+              onClick={async () => {
+                if (!confirm('Weet je zeker dat je wilt uitloggen? Je data blijft bewaard in de cloud.')) return
+                await signOut()
+              }}
+              className="w-full border border-gray-300 text-gray-600 text-sm font-medium py-2.5 rounded-xl"
+            >
+              Uitloggen
+            </button>
+          </div>
+        )}
       </div>
     </div>
   )
