@@ -158,6 +158,18 @@ export default function Fysiek() {
   const laatste = [...metingen].reverse().find(m => m.gewicht != null)
   const einddoelDatum = doelen?.einddoelDatum || null
 
+  // BMI afleiden uit gewicht voor tussendoelen en einddoel
+  const lengteM = lengte ? lengte / 100 : null
+  function gewichtNaarBMI(g) {
+    if (!g || !lengteM) return null
+    return Math.round((g / (lengteM * lengteM)) * 10) / 10
+  }
+  const tussendoelenMetBMI = tussendoelen.map(t => ({
+    ...t,
+    bmi: t.gewicht != null ? gewichtNaarBMI(t.gewicht) : null,
+  }))
+  const doelBMI = gewichtNaarBMI(doelen?.doelGewicht)
+
   const grafiekProps = {
     metingen,
     tussendoelen,
@@ -233,8 +245,16 @@ export default function Fysiek() {
           einddoel={doelen?.doelVet} eenheid="%" {...grafiekProps} />
         <GrafiekKaart titel="Buikomvang" dataKey="buikomvang" kleur="#8b5cf6"
           einddoel={doelen?.doelBuik} eenheid="cm" {...grafiekProps} />
-        <GrafiekKaart titel="BMI" dataKey="bmi" kleur="#22c55e"
-          einddoel={null} eenheid="" {...grafiekProps} />
+        <GrafiekKaart
+          titel="BMI"
+          dataKey="bmi"
+          kleur="#22c55e"
+          eenheid=""
+          metingen={metingen}
+          tussendoelen={tussendoelenMetBMI}
+          einddoel={doelBMI}
+          einddoelDatum={einddoelDatum}
+        />
 
       </div>
     </div>
