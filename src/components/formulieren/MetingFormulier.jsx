@@ -1,6 +1,5 @@
 import { useState } from 'react'
-import { getSetting } from '../../store/db'
-import { setItem } from '../../store/db'
+import { getSetting, setItem } from '../../store/db'
 import { taakAfvinken } from '../../store/taken'
 
 function berekenBMI(gewicht, lengte) {
@@ -9,7 +8,10 @@ function berekenBMI(gewicht, lengte) {
   return Math.round((gewicht / (l * l)) * 10) / 10
 }
 
-export default function MetingFormulier({ taak, onVoltooid }) {
+// Werkt zowel via taak (taak prop) als handmatig (manueel=true + eigen datum)
+export default function MetingFormulier({ taak = null, manueel = false, onVoltooid }) {
+  const vandaag = new Date().toISOString().split('T')[0]
+  const [datum, setDatum] = useState(taak?.datum || vandaag)
   const [gewicht, setGewicht] = useState('')
   const [vetPercentage, setVetPercentage] = useState('')
   const [buikomvang, setBuikomvang] = useState('')
@@ -25,26 +27,37 @@ export default function MetingFormulier({ taak, onVoltooid }) {
     const lengte = await getSetting('lengte')
     const bmi = berekenBMI(parseFloat(gewicht), parseFloat(lengte))
 
+    const id = `meting-${datum}-${manueel ? Date.now() : 'taak'}`
     const meting = {
-      id: taak.datum,
-      datum: taak.datum,
+      id,
+      datum,
       gewicht: parseFloat(gewicht),
       vetPercentage: parseFloat(vetPercentage),
       buikomvang: parseFloat(buikomvang),
       bmi,
+      manueel,
       ingevoerdOp: new Date().toISOString(),
     }
 
-    await setItem('metingen', meting.id, meting)
-    await taakAfvinken(taak.id)
+    await setItem('metingen', id, meting)
+    if (taak) await taakAfvinken(taak.id)
     onVoltooid()
   }
 
-  const bmiVooruitkijken = gewicht ? null : null
-
   return (
     <div className="space-y-4">
-      <p className="text-gray-500 text-sm">{taak.beschrijving}</p>
+      {manueel && (
+        <div>
+          <label className="block text-sm font-medium text-gray-700 mb-1">Datum</label>
+          <input
+            type="date"
+            value={datum}
+            max={vandaag}
+            onChange={e => setDatum(e.target.value)}
+            className="w-full border border-gray-300 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-green-500"
+          />
+        </div>
+      )}
 
       <div>
         <label className="block text-sm font-medium text-gray-700 mb-1">Gewicht (kg)</label>
