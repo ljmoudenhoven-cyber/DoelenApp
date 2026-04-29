@@ -8,13 +8,13 @@ function berekenBMI(gewicht, lengte) {
   return Math.round((gewicht / (l * l)) * 10) / 10
 }
 
-// Werkt zowel via taak (taak prop) als handmatig (manueel=true + eigen datum)
-export default function MetingFormulier({ taak = null, manueel = false, onVoltooid }) {
+// Werkt voor: taak (taak prop), nieuw handmatig (manueel=true), of bewerken (bestaand prop)
+export default function MetingFormulier({ taak = null, manueel = false, bestaand = null, onVoltooid }) {
   const vandaag = new Date().toISOString().split('T')[0]
-  const [datum, setDatum] = useState(taak?.datum || vandaag)
-  const [gewicht, setGewicht] = useState('')
-  const [vetPercentage, setVetPercentage] = useState('')
-  const [buikomvang, setBuikomvang] = useState('')
+  const [datum, setDatum] = useState(bestaand?.datum || taak?.datum || vandaag)
+  const [gewicht, setGewicht] = useState(bestaand?.gewicht != null ? String(bestaand.gewicht) : '')
+  const [vetPercentage, setVetPercentage] = useState(bestaand?.vetPercentage != null ? String(bestaand.vetPercentage) : '')
+  const [buikomvang, setBuikomvang] = useState(bestaand?.buikomvang != null ? String(bestaand.buikomvang) : '')
   const [fout, setFout] = useState('')
   const [bezig, setBezig] = useState(false)
 
@@ -27,7 +27,7 @@ export default function MetingFormulier({ taak = null, manueel = false, onVoltoo
     const lengte = await getSetting('lengte')
     const bmi = berekenBMI(parseFloat(gewicht), parseFloat(lengte))
 
-    const id = `meting-${datum}-${manueel ? Date.now() : 'taak'}`
+    const id = bestaand?.id || `meting-${datum}-${manueel ? Date.now() : 'taak'}`
     const meting = {
       id,
       datum,
@@ -35,8 +35,9 @@ export default function MetingFormulier({ taak = null, manueel = false, onVoltoo
       vetPercentage: parseFloat(vetPercentage),
       buikomvang: parseFloat(buikomvang),
       bmi,
-      manueel,
-      ingevoerdOp: new Date().toISOString(),
+      manueel: bestaand?.manueel ?? manueel,
+      ingevoerdOp: bestaand?.ingevoerdOp || new Date().toISOString(),
+      bewerktOp: bestaand ? new Date().toISOString() : undefined,
     }
 
     await setItem('metingen', id, meting)
@@ -44,9 +45,11 @@ export default function MetingFormulier({ taak = null, manueel = false, onVoltoo
     onVoltooid()
   }
 
+  const toonDatum = manueel || bestaand
+
   return (
     <div className="space-y-4">
-      {manueel && (
+      {toonDatum && (
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-1">Datum</label>
           <input

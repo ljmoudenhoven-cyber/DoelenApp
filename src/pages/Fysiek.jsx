@@ -193,7 +193,7 @@ export default function Fysiek() {
             </svg>
           </button>
           <button
-            onClick={() => navigate('/meting-toevoegen')}
+            onClick={() => navigate('/metingen')}
             className="bg-white text-green-600 font-bold text-xl w-10 h-10 rounded-full flex items-center justify-center shadow-md"
           >
             +
@@ -218,7 +218,7 @@ export default function Fysiek() {
           <div className="bg-gray-50 border border-gray-200 rounded-xl p-5 text-center">
             <p className="text-gray-500 text-sm">Nog geen metingen.</p>
             <button
-              onClick={() => navigate('/meting-toevoegen')}
+              onClick={() => navigate('/metingen')}
               className="mt-3 bg-green-500 text-white text-sm font-medium px-4 py-2 rounded-lg"
             >
               + Eerste meting toevoegen
