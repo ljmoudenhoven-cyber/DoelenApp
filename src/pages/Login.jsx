@@ -30,8 +30,8 @@ export default function Login() {
     e.preventDefault()
     setFout('')
     const opgeschoond = code.replace(/\D/g, '')
-    if (opgeschoond.length !== 6) {
-      setFout('De code bestaat uit 6 cijfers')
+    if (opgeschoond.length < 6 || opgeschoond.length > 8) {
+      setFout('De code bestaat uit 6 tot 8 cijfers')
       return
     }
     setBezig(true)
@@ -84,7 +84,7 @@ export default function Login() {
               {bezig ? 'Versturen…' : 'Stuur inlogcode'}
             </button>
             <p className="text-gray-400 text-xs text-center">
-              Geen wachtwoord nodig — je krijgt een 6-cijferige code in je mail.
+              Geen wachtwoord nodig — je krijgt een inlogcode in je mail.
             </p>
           </form>
         ) : (
@@ -98,14 +98,14 @@ export default function Login() {
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">6-cijferige code</label>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Inlogcode uit de mail</label>
               <input
                 type="text"
                 inputMode="numeric"
                 pattern="[0-9]*"
-                maxLength={6}
+                maxLength={8}
                 value={code}
-                onChange={e => { setCode(e.target.value.replace(/\D/g, '').slice(0, 6)); setFout('') }}
+                onChange={e => { setCode(e.target.value.replace(/\D/g, '').slice(0, 8)); setFout('') }}
                 placeholder="123456"
                 autoComplete="one-time-code"
                 autoFocus
@@ -121,7 +121,7 @@ export default function Login() {
 
             <button
               type="submit"
-              disabled={bezig || code.length !== 6}
+              disabled={bezig || code.length < 6}
               className="w-full bg-green-500 text-white font-semibold py-4 rounded-xl text-base shadow-sm disabled:opacity-50"
             >
               {bezig ? 'Inloggen…' : 'Inloggen'}
