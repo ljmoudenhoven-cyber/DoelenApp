@@ -33,10 +33,10 @@ export default function BottomModal({ titel, onSluit, children }) {
           <button onClick={onSluit} className="text-gray-400 text-2xl leading-none">&times;</button>
         </div>
 
-        {/* Scrollbaar inhoud */}
+        {/* Scrollbaar inhoud — minHeight: 0 is cruciaal voor iOS Safari */}
         <div
-          className="flex-1 overflow-y-scroll px-5 py-4 pb-8"
-          style={{ WebkitOverflowScrolling: 'touch', overscrollBehavior: 'contain' }}
+          className="overflow-y-scroll px-5 py-4 pb-10"
+          style={{ flex: '1 1 0', minHeight: 0, WebkitOverflowScrolling: 'touch', overscrollBehavior: 'contain' }}
         >
           {children}
         </div>

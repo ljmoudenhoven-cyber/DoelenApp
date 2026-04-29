@@ -1,6 +1,7 @@
 import { useState, useEffect, useCallback } from 'react'
 import { getAll, getSetting, setItem, getItem } from '../store/db'
 import { ComposedChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend } from 'recharts'
+import { useNavigate } from 'react-router-dom'
 import MetingFormulier from '../components/formulieren/MetingFormulier'
 import BottomModal from '../components/BottomModal'
 
@@ -206,6 +207,8 @@ export default function Fysiek() {
   const [toonTussendoelModal, setToonTussendoelModal] = useState(false)
   const [bewerkTussendoel, setBewerkTussendoel] = useState(null)
 
+  const navigate = useNavigate()
+
   const laad = useCallback(async () => {
     const [alle, d, l, td] = await Promise.all([
       getAll('metingen'),
@@ -257,12 +260,21 @@ export default function Fysiek() {
           <h1 className="text-white text-2xl font-bold">Fysiek 💪</h1>
           <p className="text-green-100 text-sm mt-1">Lichaamsmetingen bijhouden</p>
         </div>
-        <button
-          onClick={() => setToonMetingModal(true)}
-          className="bg-white text-green-600 font-bold text-xl w-10 h-10 rounded-full flex items-center justify-center shadow-md"
-        >
-          +
-        </button>
+        <div className="flex gap-2">
+          <button
+            onClick={() => navigate('/instellingen')}
+            className="bg-white/20 text-white text-lg w-10 h-10 rounded-full flex items-center justify-center"
+            title="Instellingen"
+          >
+            ⚙️
+          </button>
+          <button
+            onClick={() => setToonMetingModal(true)}
+            className="bg-white text-green-600 font-bold text-xl w-10 h-10 rounded-full flex items-center justify-center shadow-md"
+          >
+            +
+          </button>
+        </div>
       </div>
 
       <div className="px-4 py-5 space-y-4">
