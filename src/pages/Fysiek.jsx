@@ -9,6 +9,25 @@ function formatDatum(datumStr) {
   return `${d.getDate()}/${d.getMonth() + 1}`
 }
 
+// Lineair interpoleren: doelwaarde op willekeurige datum, op basis van omliggende doelpunten
+function interpoleerDoel(datum, doelPunten) {
+  if (!doelPunten.length) return null
+  let voor = null, na = null
+  for (const p of doelPunten) {
+    if (p.datum <= datum) voor = p
+    if (p.datum >= datum && !na) na = p
+  }
+  if (voor && na) {
+    if (voor.datum === na.datum) return voor.doel
+    const t1 = new Date(voor.datum + 'T00:00:00').getTime()
+    const t2 = new Date(na.datum + 'T00:00:00').getTime()
+    const t = new Date(datum + 'T00:00:00').getTime()
+    const ratio = (t - t1) / (t2 - t1)
+    return Math.round((voor.doel + (na.doel - voor.doel) * ratio) * 10) / 10
+  }
+  return voor?.doel ?? na?.doel ?? null
+}
+
 // Bouw gecombineerde grafiekdata: metingen (solid) + doeltraject (dashed)
 function bouwGrafiekData(metingen, tussendoelen, einddoel, einddoelDatum, dataKey) {
   const doelPunten = []
@@ -33,7 +52,13 @@ function bouwGrafiekData(metingen, tussendoelen, einddoel, einddoelDatum, dataKe
   // Alle unieke datums samenvoegen
   const alleData = {}
   metingen.forEach(m => {
-    alleData[m.datum] = { ...alleData[m.datum], datum: m.datum, meting: m[dataKey] ?? null }
+    const doelOpDatum = interpoleerDoel(m.datum, doelPunten)
+    alleData[m.datum] = {
+      ...alleData[m.datum],
+      datum: m.datum,
+      meting: m[dataKey] ?? null,
+      doel: doelOpDatum,
+    }
   })
   doelPunten.forEach(p => {
     alleData[p.datum] = { ...alleData[p.datum], datum: p.datum, doel: p.doel }
