@@ -19,11 +19,16 @@ export function useAuth() {
   return { user, geladen }
 }
 
-export async function signInMetMagicLink(email) {
-  const redirectTo = `${window.location.origin}/DoelenApp/`
-  const { error } = await supabase.auth.signInWithOtp({
+export async function stuurInlogCode(email) {
+  const { error } = await supabase.auth.signInWithOtp({ email })
+  if (error) throw error
+}
+
+export async function verifieerInlogCode(email, code) {
+  const { error } = await supabase.auth.verifyOtp({
     email,
-    options: { emailRedirectTo: redirectTo },
+    token: code,
+    type: 'email',
   })
   if (error) throw error
 }

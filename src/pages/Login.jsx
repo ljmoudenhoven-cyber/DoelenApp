@@ -1,26 +1,52 @@
 import { useState } from 'react'
-import { signInMetMagicLink } from '../store/auth'
+import { stuurInlogCode, verifieerInlogCode } from '../store/auth'
 
 export default function Login() {
   const [email, setEmail] = useState('')
-  const [status, setStatus] = useState('idle')
+  const [code, setCode] = useState('')
+  const [stap, setStap] = useState('email')
+  const [bezig, setBezig] = useState(false)
   const [fout, setFout] = useState('')
 
-  async function versturen(e) {
+  async function versturenEmail(e) {
     e.preventDefault()
     setFout('')
     if (!email || !email.includes('@')) {
       setFout('Vul een geldig e-mailadres in')
       return
     }
-    setStatus('verzenden')
+    setBezig(true)
     try {
-      await signInMetMagicLink(email.trim())
-      setStatus('verzonden')
+      await stuurInlogCode(email.trim())
+      setStap('code')
     } catch (err) {
       setFout(err.message || 'Er ging iets mis. Probeer opnieuw.')
-      setStatus('idle')
+    } finally {
+      setBezig(false)
     }
+  }
+
+  async function versturenCode(e) {
+    e.preventDefault()
+    setFout('')
+    const opgeschoond = code.replace(/\D/g, '')
+    if (opgeschoond.length !== 6) {
+      setFout('De code bestaat uit 6 cijfers')
+      return
+    }
+    setBezig(true)
+    try {
+      await verifieerInlogCode(email.trim(), opgeschoond)
+    } catch (err) {
+      setFout(err.message || 'Code is ongeldig of verlopen.')
+      setBezig(false)
+    }
+  }
+
+  function terug() {
+    setStap('email')
+    setCode('')
+    setFout('')
   }
 
   return (
@@ -30,23 +56,8 @@ export default function Login() {
         <h1 className="text-2xl font-bold text-gray-800 mb-1">DoelenApp</h1>
         <p className="text-gray-500 text-sm mb-8">Log in om je data te synchroniseren</p>
 
-        {status === 'verzonden' ? (
-          <div className="w-full max-w-sm bg-white border border-green-200 rounded-2xl p-6 shadow-sm text-center">
-            <div className="text-4xl mb-3">📬</div>
-            <h2 className="font-semibold text-gray-800 mb-2">Check je mail</h2>
-            <p className="text-gray-500 text-sm">
-              We hebben een inloglink gestuurd naar <span className="font-medium text-gray-700">{email}</span>.
-              Klik op de link in de mail om in te loggen.
-            </p>
-            <button
-              onClick={() => { setStatus('idle'); setEmail('') }}
-              className="mt-5 text-green-600 text-sm font-medium"
-            >
-              Ander e-mailadres
-            </button>
-          </div>
-        ) : (
-          <form onSubmit={versturen} className="w-full max-w-sm space-y-4">
+        {stap === 'email' ? (
+          <form onSubmit={versturenEmail} className="w-full max-w-sm space-y-4">
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">E-mailadres</label>
               <input
@@ -67,14 +78,62 @@ export default function Login() {
 
             <button
               type="submit"
-              disabled={status === 'verzenden'}
+              disabled={bezig}
               className="w-full bg-green-500 text-white font-semibold py-4 rounded-xl text-base shadow-sm disabled:opacity-50"
             >
-              {status === 'verzenden' ? 'Versturen…' : 'Stuur inloglink'}
+              {bezig ? 'Versturen…' : 'Stuur inlogcode'}
             </button>
             <p className="text-gray-400 text-xs text-center">
-              Geen wachtwoord nodig — je krijgt een link in je mail.
+              Geen wachtwoord nodig — je krijgt een 6-cijferige code in je mail.
             </p>
+          </form>
+        ) : (
+          <form onSubmit={versturenCode} className="w-full max-w-sm space-y-4">
+            <div className="bg-white border border-green-200 rounded-2xl p-5 text-center">
+              <div className="text-3xl mb-2">📬</div>
+              <p className="text-gray-600 text-sm">
+                We hebben een code gestuurd naar
+              </p>
+              <p className="font-medium text-gray-800 text-sm mt-0.5">{email}</p>
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">6-cijferige code</label>
+              <input
+                type="text"
+                inputMode="numeric"
+                pattern="[0-9]*"
+                maxLength={6}
+                value={code}
+                onChange={e => { setCode(e.target.value.replace(/\D/g, '').slice(0, 6)); setFout('') }}
+                placeholder="123456"
+                autoComplete="one-time-code"
+                autoFocus
+                className="w-full bg-white border border-gray-300 rounded-xl px-4 py-3 text-center text-2xl tracking-widest font-mono focus:outline-none focus:border-green-500"
+              />
+            </div>
+
+            {fout && (
+              <div className="bg-red-50 border border-red-200 rounded-xl p-3">
+                <p className="text-red-600 text-sm">{fout}</p>
+              </div>
+            )}
+
+            <button
+              type="submit"
+              disabled={bezig || code.length !== 6}
+              className="w-full bg-green-500 text-white font-semibold py-4 rounded-xl text-base shadow-sm disabled:opacity-50"
+            >
+              {bezig ? 'Inloggen…' : 'Inloggen'}
+            </button>
+
+            <button
+              type="button"
+              onClick={terug}
+              className="w-full text-gray-500 text-sm font-medium py-2"
+            >
+              Ander e-mailadres gebruiken
+            </button>
           </form>
         )}
       </div>
