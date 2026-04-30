@@ -205,7 +205,7 @@ export default function Fysiek() {
     <div className="flex flex-col pb-6">
       <div className="bg-green-500 px-5 pt-[calc(env(safe-area-inset-top)+0.5rem)] pb-6 flex items-end justify-between">
         <div>
-          <h1 className="text-white text-2xl font-bold">Fysiek 💪</h1>
+          <h1 className="text-white text-2xl font-bold">Fysiek</h1>
           <p className="text-green-100 text-sm mt-1">Lichaamsmetingen bijhouden</p>
         </div>
         <div className="flex gap-2">

@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 import { getSetting, setSetting, setItem } from '../store/db'
 import { useNavigate } from 'react-router-dom'
+import { Check } from '../components/Iconen'
 
 function berekenBMI(gewicht, lengte) {
   if (!gewicht || !lengte) return null
@@ -217,17 +218,25 @@ export default function Basisgegevens() {
         )}
 
         {opgeslagen && (
-          <div className="bg-green-50 border border-green-200 rounded-xl p-3 text-center">
-            <p className="text-green-700 font-medium">Opgeslagen! ✅</p>
+          <div className="bg-green-50 border border-green-200 rounded-xl p-3 flex items-center justify-center gap-2 text-green-700">
+            <Check size={18} />
+            <p className="font-medium">Opgeslagen</p>
           </div>
         )}
 
         <button
           onClick={opslaan}
           disabled={opgeslagen}
-          className="w-full bg-green-500 text-white font-semibold py-4 rounded-xl text-base shadow-sm disabled:opacity-50"
+          className="w-full bg-green-500 text-white font-semibold py-4 rounded-xl text-base shadow-sm disabled:opacity-50 flex items-center justify-center gap-2"
         >
-          {opgeslagen ? 'Opgeslagen ✅' : 'Opslaan'}
+          {opgeslagen ? (
+            <>
+              <Check size={18} strokeWidth={2.5} />
+              Opgeslagen
+            </>
+          ) : (
+            'Opslaan'
+          )}
         </button>
       </div>
     </div>

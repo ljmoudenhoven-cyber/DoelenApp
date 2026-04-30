@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom'
 import { getSetting, setSetting } from '../store/db'
 import { supabase } from '../store/supabase'
 import { signOut } from '../store/auth'
+import { Check } from '../components/Iconen'
 
 export default function Instellingen() {
   const navigate = useNavigate()
@@ -59,17 +60,25 @@ export default function Instellingen() {
         </div>
 
         {opgeslagen && (
-          <div className="bg-green-50 border border-green-200 rounded-xl p-3 text-center">
-            <p className="text-green-700 font-medium">Opgeslagen! ✅</p>
+          <div className="bg-green-50 border border-green-200 rounded-xl p-3 flex items-center justify-center gap-2 text-green-700">
+            <Check size={18} />
+            <p className="font-medium">Opgeslagen</p>
           </div>
         )}
 
         <button
           onClick={opslaan}
           disabled={opgeslagen}
-          className="w-full bg-green-500 text-white font-semibold py-4 rounded-xl text-base shadow-sm disabled:opacity-50"
+          className="w-full bg-green-500 text-white font-semibold py-4 rounded-xl text-base shadow-sm disabled:opacity-50 flex items-center justify-center gap-2"
         >
-          {opgeslagen ? 'Opgeslagen ✅' : 'Opslaan'}
+          {opgeslagen ? (
+            <>
+              <Check size={18} strokeWidth={2.5} />
+              Opgeslagen
+            </>
+          ) : (
+            'Opslaan'
+          )}
         </button>
 
         {email && (

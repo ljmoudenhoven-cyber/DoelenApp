@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom'
 import { getTakenVoorVandaag, getTeLaatTaken, taakAfvinken, taakOverslaan } from '../store/taken'
 import { getSetting } from '../store/db'
 import TaakModal from '../components/TaakModal'
+import { Scale, Footprints, Book, BookOpen, Pencil, Check } from '../components/Iconen'
 
 const DAGEN = ['zondag', 'maandag', 'dinsdag', 'woensdag', 'donderdag', 'vrijdag', 'zaterdag']
 const MAANDEN = ['januari', 'februari', 'maart', 'april', 'mei', 'juni', 'juli', 'augustus', 'september', 'oktober', 'november', 'december']
@@ -94,7 +95,7 @@ export default function Hoofdpagina() {
           <h2 className="text-gray-800 font-semibold text-base mb-3">Taken van vandaag</h2>
           {taken.length === 0 ? (
             <div className="bg-green-50 border border-green-200 rounded-xl p-4 text-center">
-              <p className="text-green-700 font-medium">Alle taken gedaan! 🎉</p>
+              <p className="text-green-700 font-medium">Alle taken gedaan</p>
               <p className="text-green-600 text-sm mt-1">Geen openstaande taken voor vandaag.</p>
             </div>
           ) : (
@@ -144,18 +145,23 @@ export default function Hoofdpagina() {
   )
 }
 
+const TAAK_STIJL = {
+  meting: { bg: 'bg-blue-50', tekst: 'text-blue-600', Icon: Scale },
+  sport: { bg: 'bg-orange-50', tekst: 'text-orange-600', Icon: Footprints },
+  'lezen-voortgang': { bg: 'bg-indigo-50', tekst: 'text-indigo-600', Icon: BookOpen },
+  'lezen-nieuwboek': { bg: 'bg-indigo-50', tekst: 'text-indigo-600', Icon: Book },
+  'lezen-review': { bg: 'bg-purple-50', tekst: 'text-purple-600', Icon: Pencil },
+}
+
 function TaakKaart({ taak, onOpen, onOverslaan, onAfvinken }) {
-  const icoon = {
-    meting: '⚖️',
-    sport: '🏃',
-    'lezen-voortgang': '📖',
-    'lezen-nieuwboek': '📚',
-    'lezen-review': '✍️',
-  }[taak.type] || '✅'
+  const stijl = TAAK_STIJL[taak.type] || { bg: 'bg-gray-100', tekst: 'text-gray-600', Icon: Check }
+  const Icon = stijl.Icon
 
   return (
     <div className="bg-white border border-gray-200 rounded-xl p-4 flex items-center gap-3 shadow-sm">
-      <span className="text-2xl">{icoon}</span>
+      <div className={`w-10 h-10 rounded-xl flex items-center justify-center shrink-0 ${stijl.bg} ${stijl.tekst}`}>
+        <Icon size={20} />
+      </div>
       <div className="flex-1 min-w-0">
         <p className="font-medium text-gray-800 text-sm leading-tight">{taak.titel}</p>
         <p className="text-gray-500 text-xs mt-0.5 truncate">{taak.beschrijving}</p>

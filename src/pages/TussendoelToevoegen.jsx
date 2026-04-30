@@ -60,7 +60,7 @@ export default function TussendoelToevoegen() {
       <div className="bg-green-500 px-5 pt-[calc(env(safe-area-inset-top)+0.5rem)] pb-6 flex items-end justify-between">
         <div>
           <h1 className="text-white text-2xl font-bold">
-            {isBewerken ? 'Tussendoel bewerken ✏️' : 'Tussendoel toevoegen 🎯'}
+            {isBewerken ? 'Tussendoel bewerken' : 'Tussendoel toevoegen'}
           </h1>
           <p className="text-green-100 text-sm mt-1">
             {isBewerken ? 'Pas datum of waarden aan' : 'Stel een mijlpaal in op een specifieke datum'}

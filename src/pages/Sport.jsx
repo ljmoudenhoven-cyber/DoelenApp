@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 import { getAll, getSetting, getItem } from '../store/db'
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ReferenceLine, ResponsiveContainer } from 'recharts'
+import { Trophy, Heart } from '../components/Iconen'
 
 function formatTijd(seconden) {
   if (!seconden) return '—'
@@ -52,7 +53,7 @@ export default function Sport() {
   return (
     <div className="flex flex-col">
       <div className="bg-green-500 px-5 pt-[calc(env(safe-area-inset-top)+0.5rem)] pb-6">
-        <h1 className="text-white text-2xl font-bold">Sport 🏃</h1>
+        <h1 className="text-white text-2xl font-bold">Sport</h1>
         <p className="text-green-100 text-sm mt-1">Hardloopschema richting 10km op 12 aug</p>
       </div>
 
@@ -80,7 +81,10 @@ export default function Sport() {
         {/* Records */}
         {records && (
           <div className="bg-white border border-gray-200 rounded-xl p-4">
-            <h2 className="font-semibold text-gray-800 text-sm mb-3">🏆 Persoonlijke records</h2>
+            <h2 className="font-semibold text-gray-800 text-sm mb-3 flex items-center gap-2">
+              <Trophy size={16} className="text-amber-500" />
+              Persoonlijke records
+            </h2>
             <div className="grid grid-cols-2 gap-3">
               <RecordKaart label="Langste afstand" waarde={records.langsteAfstand ? `${records.langsteAfstand} km` : '—'} />
               <RecordKaart label="Langste duurloop" waarde={formatTijd(records.langsteDuurloop)} />
@@ -125,8 +129,9 @@ export default function Sport() {
                     <p className="text-xs text-gray-400">{formatTempo(a.tempo)}</p>
                   </div>
                   {a.hartslag && (
-                    <div className="text-right">
-                      <p className="text-xs text-red-400">♥ {a.hartslag}</p>
+                    <div className="flex items-center gap-1 text-red-400">
+                      <Heart size={12} />
+                      <span className="text-xs">{a.hartslag}</span>
                     </div>
                   )}
                 </div>

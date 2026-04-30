@@ -1,6 +1,7 @@
 import { useState, useEffect, useCallback } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { getAll, removeItem } from '../store/db'
+import { X } from '../components/Iconen'
 
 function formatDatum(datumStr) {
   if (!datumStr) return ''
@@ -89,9 +90,10 @@ export default function Metingen() {
                   </button>
                   <button
                     onClick={() => verwijder(m.id)}
-                    className="text-red-400 text-xs px-3 py-1.5 rounded-lg border border-red-100"
+                    aria-label="Verwijder meting"
+                    className="text-red-400 p-1.5 rounded-lg border border-red-100"
                   >
-                    ✕
+                    <X size={16} />
                   </button>
                 </div>
               </div>

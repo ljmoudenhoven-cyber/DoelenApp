@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react'
 import { getAll, getSetting } from '../store/db'
+import { Star, ChevronDown, ChevronUp } from '../components/Iconen'
 
 const MAANDEN = ['jan', 'feb', 'mrt', 'apr', 'mei', 'jun', 'jul', 'aug', 'sep', 'okt', 'nov', 'dec']
 
@@ -40,8 +41,8 @@ export default function Lezen() {
   return (
     <div className="flex flex-col">
       <div className="bg-green-500 px-5 pt-[calc(env(safe-area-inset-top)+0.5rem)] pb-6">
-        <h1 className="text-white text-2xl font-bold">Lezen 📚</h1>
-        <p className="text-green-100 text-sm mt-1">Elk maand een boek</p>
+        <h1 className="text-white text-2xl font-bold">Lezen</h1>
+        <p className="text-green-100 text-sm mt-1">Elke maand een boek</p>
       </div>
 
       <div className="px-4 py-5 space-y-4">
@@ -113,9 +114,15 @@ function BoekKaart({ boek }) {
         </div>
         <div className="flex items-center gap-2">
           {boek.review?.beoordeling > 0 && (
-            <span className="text-yellow-400 text-sm">{'★'.repeat(boek.review.beoordeling)}</span>
+            <div className="flex items-center gap-0.5 text-amber-400">
+              {Array.from({ length: boek.review.beoordeling }).map((_, i) => (
+                <Star key={i} size={14} filled />
+              ))}
+            </div>
           )}
-          <span className="text-gray-400 text-sm">{open ? '▲' : '▼'}</span>
+          <span className="text-gray-400">
+            {open ? <ChevronUp size={16} /> : <ChevronDown size={16} />}
+          </span>
         </div>
       </button>
 

@@ -29,7 +29,7 @@ export default function MetingToevoegen() {
       <div className="bg-green-500 px-5 pt-[calc(env(safe-area-inset-top)+0.5rem)] pb-6 flex items-end justify-between">
         <div>
           <h1 className="text-white text-2xl font-bold">
-            {isBewerken ? 'Meting bewerken ✏️' : 'Meting toevoegen 📏'}
+            {isBewerken ? 'Meting bewerken' : 'Meting toevoegen'}
           </h1>
           <p className="text-green-100 text-sm mt-1">
             {isBewerken ? 'Pas gewicht, vet% of buikomvang aan' : 'Vul je gewicht, vet% en buikomvang in'}

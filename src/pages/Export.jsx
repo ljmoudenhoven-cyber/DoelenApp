@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { getAll } from '../store/db'
+import { Scale, Footprints, Book, SkipForward, Download, Check } from '../components/Iconen'
 
 function arrayNaarCSV(data, kolommen) {
   if (data.length === 0) return kolommen.join(',') + '\n'
@@ -99,39 +100,56 @@ export default function Export() {
   return (
     <div className="flex flex-col">
       <div className="bg-green-500 px-5 pt-[calc(env(safe-area-inset-top)+0.5rem)] pb-6">
-        <h1 className="text-white text-2xl font-bold">Export 📤</h1>
+        <h1 className="text-white text-2xl font-bold">Export</h1>
         <p className="text-green-100 text-sm mt-1">Download je data als CSV</p>
       </div>
 
       <div className="px-4 py-5 space-y-4">
         <div className="bg-white border border-gray-200 rounded-xl p-4">
-          <h2 className="font-semibold text-gray-800 text-sm mb-2">Wat wordt geëxporteerd?</h2>
-          <ul className="space-y-1.5">
+          <h2 className="font-semibold text-gray-800 text-sm mb-3">Wat wordt geëxporteerd?</h2>
+          <ul className="space-y-2.5">
             {[
-              '⚖️ Lichaamsmetingen (gewicht, vet%, buik, BMI)',
-              '🏃 Sportactiviteiten (afstand, tijd, tempo, hartslag)',
-              '📚 Leesdata (boeken, reviews, geleerde lessen)',
-              '⏭️ Overgeslagen taken (met reden)',
-            ].map(item => (
-              <li key={item} className="text-gray-600 text-sm">{item}</li>
+              { Icon: Scale, kleur: 'bg-blue-50 text-blue-600', tekst: 'Lichaamsmetingen (gewicht, vet%, buik, BMI)' },
+              { Icon: Footprints, kleur: 'bg-orange-50 text-orange-600', tekst: 'Sportactiviteiten (afstand, tijd, tempo, hartslag)' },
+              { Icon: Book, kleur: 'bg-indigo-50 text-indigo-600', tekst: 'Leesdata (boeken, reviews, geleerde lessen)' },
+              { Icon: SkipForward, kleur: 'bg-gray-100 text-gray-500', tekst: 'Overgeslagen taken (met reden)' },
+            ].map(({ Icon, kleur, tekst }) => (
+              <li key={tekst} className="flex items-center gap-3">
+                <span className={`w-7 h-7 rounded-lg flex items-center justify-center shrink-0 ${kleur}`}>
+                  <Icon size={16} />
+                </span>
+                <span className="text-gray-600 text-sm">{tekst}</span>
+              </li>
             ))}
           </ul>
           <p className="text-gray-400 text-xs mt-3">Er worden meerdere CSV-bestanden aangemaakt (één per categorie).</p>
         </div>
 
         {klaar && (
-          <div className="bg-green-50 border border-green-200 rounded-xl p-4 text-center">
-            <p className="text-green-700 font-medium">Export voltooid! ✅</p>
-            <p className="text-green-600 text-sm mt-1">De bestanden zijn gedownload naar je telefoon.</p>
+          <div className="bg-green-50 border border-green-200 rounded-xl p-4 flex items-center gap-3">
+            <span className="w-9 h-9 rounded-full bg-green-100 text-green-600 flex items-center justify-center shrink-0">
+              <Check size={18} />
+            </span>
+            <div>
+              <p className="text-green-700 font-medium">Export voltooid</p>
+              <p className="text-green-600 text-sm">De bestanden zijn gedownload naar je telefoon.</p>
+            </div>
           </div>
         )}
 
         <button
           onClick={exporteerAlles}
           disabled={bezig}
-          className="w-full bg-green-500 text-white font-semibold py-4 rounded-xl text-base disabled:opacity-50 shadow-sm"
+          className="w-full bg-green-500 text-white font-semibold py-4 rounded-xl text-base disabled:opacity-50 shadow-sm flex items-center justify-center gap-2"
         >
-          {bezig ? 'Exporteren...' : '📥 Exporteer alle data'}
+          {bezig ? (
+            'Exporteren...'
+          ) : (
+            <>
+              <Download size={18} strokeWidth={2.25} />
+              Exporteer alle data
+            </>
+          )}
         </button>
 
         <p className="text-gray-400 text-xs text-center">

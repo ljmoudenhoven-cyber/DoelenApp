@@ -1,6 +1,7 @@
 import { useState, useEffect, useCallback } from 'react'
 import { getSetting, setItem } from '../store/db'
 import { useNavigate } from 'react-router-dom'
+import { X } from '../components/Iconen'
 
 function formatDatum(datumStr) {
   if (!datumStr) return ''
@@ -88,9 +89,10 @@ export default function Tussendoelen() {
                   </button>
                   <button
                     onClick={() => verwijder(td.id)}
-                    className="text-red-400 text-xs px-3 py-1.5 rounded-lg border border-red-100"
+                    aria-label="Verwijder tussendoel"
+                    className="text-red-400 p-1.5 rounded-lg border border-red-100"
                   >
-                    ✕
+                    <X size={16} />
                   </button>
                 </div>
               </div>

@@ -17,6 +17,7 @@ import { getSetting, setItem } from './store/db'
 import { genereerSportSchema } from './store/sportSchema'
 import { useAuth } from './store/auth'
 import { pullAll, clearLocalData } from './store/sync'
+import { Sprout } from './components/Iconen'
 
 function NavIcon({ children }) {
   return (
@@ -85,7 +86,9 @@ function NavBar() {
 function Spinner() {
   return (
     <div className="flex items-center justify-center min-h-screen">
-      <div className="text-green-600 text-4xl animate-pulse">🌱</div>
+      <div className="text-green-600 animate-pulse">
+        <Sprout size={48} strokeWidth={1.5} />
+      </div>
     </div>
   )
 }

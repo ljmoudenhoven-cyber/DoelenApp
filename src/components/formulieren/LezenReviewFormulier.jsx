@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 import { getSetting, setItem, getItem } from '../../store/db'
 import { taakAfvinken } from '../../store/taken'
+import { Star } from '../Iconen'
 
 export default function LezenReviewFormulier({ taak, onVoltooid }) {
   const [boek, setBoek] = useState(null)
@@ -48,9 +49,10 @@ export default function LezenReviewFormulier({ taak, onVoltooid }) {
             <button
               key={ster}
               onClick={() => setBeoordeling(ster)}
-              className={`text-3xl ${ster <= beoordeling ? 'text-yellow-400' : 'text-gray-200'}`}
+              aria-label={`${ster} ${ster === 1 ? 'ster' : 'sterren'}`}
+              className={ster <= beoordeling ? 'text-amber-400' : 'text-gray-200'}
             >
-              ★
+              <Star size={32} filled={ster <= beoordeling} />
             </button>
           ))}
         </div>
