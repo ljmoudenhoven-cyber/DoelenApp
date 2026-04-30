@@ -1,110 +1,41 @@
 import { useState, useEffect } from 'react'
-import { getSetting, setSetting, setItem } from '../store/db'
 import { useNavigate } from 'react-router-dom'
+import { getSetting, setSetting } from '../store/db'
 import { supabase } from '../store/supabase'
 import { signOut } from '../store/auth'
 
-function berekenBMI(gewicht, lengte) {
-  if (!gewicht || !lengte) return null
-  const l = lengte / 100
-  return Math.round((gewicht / (l * l)) * 10) / 10
-}
-
 export default function Instellingen() {
   const navigate = useNavigate()
-  const [lengte, setLengte] = useState('')
-  const [geslacht, setGeslacht] = useState('')
-  // Beginstand
-  const [beginGewicht, setBeginGewicht] = useState('')
-  const [beginVet, setBeginVet] = useState('')
-  const [beginBuik, setBeginBuik] = useState('')
-  // Doelen
-  const [doelGewicht, setDoelGewicht] = useState('')
-  const [doelVet, setDoelVet] = useState('')
-  const [doelBuik, setDoelBuik] = useState('')
-  const [einddoelDatum, setEinddoelDatum] = useState('')
-
-  const [opgeslagen, setOpgeslagen] = useState(false)
-  const [fout, setFout] = useState('')
+  const [naam, setNaam] = useState('')
   const [email, setEmail] = useState('')
+  const [opgeslagen, setOpgeslagen] = useState(false)
 
   useEffect(() => {
     supabase.auth.getUser().then(({ data }) => setEmail(data?.user?.email || ''))
-    async function laad() {
-      const [l, g, doelen] = await Promise.all([
-        getSetting('lengte'),
-        getSetting('geslacht'),
-        getSetting('fysiekDoelen'),
-      ])
-      if (l) setLengte(String(l))
-      if (g) setGeslacht(g)
-      if (doelen) {
-        if (doelen.doelGewicht) setDoelGewicht(String(doelen.doelGewicht))
-        if (doelen.doelVet) setDoelVet(String(doelen.doelVet))
-        if (doelen.doelBuik) setDoelBuik(String(doelen.doelBuik))
-        if (doelen.einddoelDatum) setEinddoelDatum(doelen.einddoelDatum)
-      }
-    }
-    laad()
+    getSetting('naam').then(n => { if (n) setNaam(n) })
   }, [])
 
   async function opslaan() {
-    if (!lengte || parseInt(lengte) < 100 || parseInt(lengte) > 250) {
-      setFout('Vul een geldige lengte in (100–250 cm).')
-      return
-    }
-
-    const l = parseInt(lengte)
-    await setSetting('lengte', l)
-    if (geslacht) await setSetting('geslacht', geslacht)
-
-    await setItem('settings', 'fysiekDoelen', {
-      doelGewicht: doelGewicht ? parseFloat(doelGewicht) : null,
-      doelVet: doelVet ? parseFloat(doelVet) : null,
-      doelBuik: doelBuik ? parseFloat(doelBuik) : null,
-      einddoelDatum: einddoelDatum || null,
-    })
-
-    if (beginGewicht && beginVet && beginBuik) {
-      const vandaag = new Date().toISOString().split('T')[0]
-      const bmi = berekenBMI(parseFloat(beginGewicht), l)
-      await setItem('metingen', `meting-beginstand`, {
-        id: 'meting-beginstand',
-        datum: vandaag,
-        gewicht: parseFloat(beginGewicht),
-        vetPercentage: parseFloat(beginVet),
-        buikomvang: parseFloat(beginBuik),
-        bmi,
-        beginstand: true,
-        ingevoerdOp: new Date().toISOString(),
-      })
-    }
-
+    await setSetting('naam', naam.trim())
     setOpgeslagen(true)
-    setTimeout(() => navigate('/fysiek'), 800)
+    setTimeout(() => navigate('/'), 800)
   }
-
-  function sluiten() {
-    navigate('/fysiek')
-  }
-
-  const vandaag = new Date().toISOString().split('T')[0]
 
   return (
     <div className="flex flex-col pb-10">
       <div className="bg-green-500 px-5 pt-14 pb-6 flex items-end justify-between">
         <div>
           <h1 className="text-white text-2xl font-bold flex items-center gap-2">
-            Basisgegevens
+            Instellingen
             <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-              <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
-              <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
+              <circle cx="12" cy="12" r="3"/>
+              <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/>
             </svg>
           </h1>
-          <p className="text-green-100 text-sm mt-1">Lengte, beginstand en doelen</p>
+          <p className="text-green-100 text-sm mt-1">Naam en account</p>
         </div>
         <button
-          onClick={sluiten}
+          onClick={() => navigate('/')}
           className="bg-white/20 text-white text-sm font-medium px-4 py-2 rounded-full"
         >
           Sluiten
@@ -112,115 +43,20 @@ export default function Instellingen() {
       </div>
 
       <div className="px-4 py-5 space-y-5">
-
-        {/* Persoonsgegevens */}
         <div className="bg-white border border-gray-200 rounded-xl p-4 space-y-4">
-          <h2 className="font-semibold text-gray-800 text-sm">Persoonsgegevens</h2>
-
+          <h2 className="font-semibold text-gray-800 text-sm">Persoonlijk</h2>
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
-              Lichaamslengte (cm) <span className="text-red-400">*</span>
-            </label>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Naam</label>
             <input
-              type="number"
-              inputMode="numeric"
-              value={lengte}
-              onChange={e => { setLengte(e.target.value); setFout('') }}
-              placeholder="bijv. 182"
+              type="text"
+              value={naam}
+              onChange={e => setNaam(e.target.value)}
+              placeholder="bijv. Lars"
               className="w-full border border-gray-300 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-green-500"
             />
-            <p className="text-gray-400 text-xs mt-1">Nodig voor BMI-berekening</p>
-          </div>
-
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">Geslacht</label>
-            <div className="flex gap-3">
-              {['Man', 'Vrouw'].map(g => (
-                <button
-                  key={g}
-                  onClick={() => setGeslacht(g)}
-                  className={`flex-1 py-2.5 rounded-xl text-sm font-medium border transition-colors ${
-                    geslacht === g
-                      ? 'bg-green-500 text-white border-green-500'
-                      : 'bg-white text-gray-600 border-gray-300'
-                  }`}
-                >
-                  {g}
-                </button>
-              ))}
-            </div>
-            <p className="text-gray-400 text-xs mt-1">Wordt gebruikt voor interpretatie van vetpercentage</p>
+            <p className="text-gray-400 text-xs mt-1">Wordt gebruikt voor de begroeting op de hoofdpagina</p>
           </div>
         </div>
-
-        {/* Beginstand */}
-        <div className="bg-white border border-gray-200 rounded-xl p-4 space-y-4">
-          <div>
-            <h2 className="font-semibold text-gray-800 text-sm">Beginstand</h2>
-            <p className="text-gray-400 text-xs mt-1">
-              Vul je huidige metingen in — dit wordt je startpunt in de grafieken
-            </p>
-          </div>
-
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Huidig gewicht (kg)</label>
-            <input type="number" inputMode="decimal" step="0.1" value={beginGewicht}
-              onChange={e => setBeginGewicht(e.target.value)} placeholder="bijv. 88"
-              className="w-full border border-gray-300 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-green-500" />
-          </div>
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Huidig vetpercentage (%)</label>
-            <input type="number" inputMode="decimal" step="0.1" value={beginVet}
-              onChange={e => setBeginVet(e.target.value)} placeholder="bijv. 22"
-              className="w-full border border-gray-300 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-green-500" />
-          </div>
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Huidige buikomvang (cm)</label>
-            <input type="number" inputMode="decimal" step="0.5" value={beginBuik}
-              onChange={e => setBeginBuik(e.target.value)} placeholder="bijv. 96"
-              className="w-full border border-gray-300 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-green-500" />
-          </div>
-        </div>
-
-        {/* Doelen */}
-        <div className="bg-white border border-gray-200 rounded-xl p-4 space-y-4">
-          <div>
-            <h2 className="font-semibold text-gray-800 text-sm">Doelen</h2>
-            <p className="text-gray-400 text-xs mt-1">Zichtbaar als doellijn in de grafieken</p>
-          </div>
-
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Doelgewicht (kg)</label>
-            <input type="number" inputMode="decimal" step="0.5" value={doelGewicht}
-              onChange={e => setDoelGewicht(e.target.value)} placeholder="bijv. 80"
-              className="w-full border border-gray-300 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-green-500" />
-          </div>
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Doelvetpercentage (%)</label>
-            <input type="number" inputMode="decimal" step="0.5" value={doelVet}
-              onChange={e => setDoelVet(e.target.value)} placeholder="bijv. 16"
-              className="w-full border border-gray-300 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-green-500" />
-          </div>
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Doelbuikomvang (cm)</label>
-            <input type="number" inputMode="decimal" step="0.5" value={doelBuik}
-              onChange={e => setDoelBuik(e.target.value)} placeholder="bijv. 88"
-              className="w-full border border-gray-300 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-green-500" />
-          </div>
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Wanneer wil je je doel bereiken?</label>
-            <input type="date" value={einddoelDatum} min={vandaag}
-              onChange={e => setEinddoelDatum(e.target.value)}
-              className="w-full border border-gray-300 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-green-500" />
-            <p className="text-gray-400 text-xs mt-1">Dit bepaalt het eindpunt van de doellijn in de grafiek</p>
-          </div>
-        </div>
-
-        {fout && (
-          <div className="bg-red-50 border border-red-200 rounded-xl p-3">
-            <p className="text-red-600 text-sm">{fout}</p>
-          </div>
-        )}
 
         {opgeslagen && (
           <div className="bg-green-50 border border-green-200 rounded-xl p-3 text-center">

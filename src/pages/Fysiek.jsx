@@ -210,7 +210,7 @@ export default function Fysiek() {
         </div>
         <div className="flex gap-2">
           <button
-            onClick={() => navigate('/instellingen')}
+            onClick={() => navigate('/basisgegevens')}
             className="bg-white text-green-600 w-10 h-10 rounded-full flex items-center justify-center shadow-md"
             title="Basisgegevens aanpassen"
           >
