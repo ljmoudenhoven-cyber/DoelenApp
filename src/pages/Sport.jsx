@@ -51,7 +51,7 @@ export default function Sport() {
 
   return (
     <div className="flex flex-col">
-      <div className="bg-green-500 px-5 pt-14 pb-6">
+      <div className="bg-green-500 px-5 pt-[calc(env(safe-area-inset-top)+0.5rem)] pb-6">
         <h1 className="text-white text-2xl font-bold">Sport 🏃</h1>
         <p className="text-green-100 text-sm mt-1">Hardloopschema richting 10km op 12 aug</p>
       </div>

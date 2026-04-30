@@ -26,7 +26,7 @@ export default function MetingToevoegen() {
 
   return (
     <div className="flex flex-col pb-10">
-      <div className="bg-green-500 px-5 pt-14 pb-6 flex items-end justify-between">
+      <div className="bg-green-500 px-5 pt-[calc(env(safe-area-inset-top)+0.5rem)] pb-6 flex items-end justify-between">
         <div>
           <h1 className="text-white text-2xl font-bold">
             {isBewerken ? 'Meting bewerken ✏️' : 'Meting toevoegen 📏'}

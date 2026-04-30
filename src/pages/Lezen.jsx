@@ -39,7 +39,7 @@ export default function Lezen() {
 
   return (
     <div className="flex flex-col">
-      <div className="bg-green-500 px-5 pt-14 pb-6">
+      <div className="bg-green-500 px-5 pt-[calc(env(safe-area-inset-top)+0.5rem)] pb-6">
         <h1 className="text-white text-2xl font-bold">Lezen 📚</h1>
         <p className="text-green-100 text-sm mt-1">Elk maand een boek</p>
       </div>
