@@ -33,9 +33,12 @@ function NavBar() {
   return (
     <nav
       className="fixed bottom-0 left-1/2 -translate-x-1/2 w-full max-w-[430px] bg-white border-t border-gray-200 z-50"
-      style={{ paddingBottom: 'env(safe-area-inset-bottom)' }}
+      style={{
+        paddingTop: 'calc(0.5rem + env(safe-area-inset-bottom) / 2)',
+        paddingBottom: 'calc(0.5rem + env(safe-area-inset-bottom) / 2)',
+      }}
     >
-      <div className="flex justify-around items-center py-3">
+      <div className="flex justify-around items-center">
         <NavLink to="/" end className={linkClass}>
           <NavIcon>
             <path d="M3 9.5 12 3l9 6.5V21a1 1 0 0 1-1 1h-5v-7h-6v7H4a1 1 0 0 1-1-1z"/>
