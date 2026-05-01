@@ -99,9 +99,9 @@ export default function Export() {
 
   return (
     <div className="flex flex-col">
-      <div className="bg-green-500 px-5 pt-[calc(env(safe-area-inset-top)+0.5rem)] pb-6">
+      <div className="bg-accent-500 px-5 pt-[calc(env(safe-area-inset-top)+0.5rem)] pb-6">
         <h1 className="text-white text-2xl font-bold">Export</h1>
-        <p className="text-green-100 text-sm mt-1">Download je data als CSV</p>
+        <p className="text-accent-100 text-sm mt-1">Download je data als CSV</p>
       </div>
 
       <div className="px-4 py-5 space-y-4">
@@ -126,13 +126,13 @@ export default function Export() {
         </div>
 
         {klaar && (
-          <div className="bg-green-50 border border-green-200 rounded-xl p-4 flex items-center gap-3">
-            <span className="w-9 h-9 rounded-full bg-green-100 text-green-600 flex items-center justify-center shrink-0">
+          <div className="bg-accent-50 border border-accent-200 rounded-xl p-4 flex items-center gap-3">
+            <span className="w-9 h-9 rounded-full bg-accent-100 text-accent-600 flex items-center justify-center shrink-0">
               <Check size={18} />
             </span>
             <div>
-              <p className="text-green-700 font-medium">Export voltooid</p>
-              <p className="text-green-600 text-sm">De bestanden zijn gedownload naar je telefoon.</p>
+              <p className="text-accent-700 font-medium">Export voltooid</p>
+              <p className="text-accent-600 text-sm">De bestanden zijn gedownload naar je telefoon.</p>
             </div>
           </div>
         )}
@@ -140,7 +140,7 @@ export default function Export() {
         <button
           onClick={exporteerAlles}
           disabled={bezig}
-          className="w-full bg-green-500 text-white font-semibold py-4 rounded-xl text-base disabled:opacity-50 shadow-sm flex items-center justify-center gap-2"
+          className="w-full bg-accent-500 text-white font-semibold py-4 rounded-xl text-base disabled:opacity-50 shadow-sm flex items-center justify-center gap-2"
         >
           {bezig ? (
             'Exporteren...'

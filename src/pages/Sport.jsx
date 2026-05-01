@@ -52,9 +52,9 @@ export default function Sport() {
 
   return (
     <div className="flex flex-col">
-      <div className="bg-green-500 px-5 pt-[calc(env(safe-area-inset-top)+0.5rem)] pb-6">
+      <div className="bg-accent-500 px-5 pt-[calc(env(safe-area-inset-top)+0.5rem)] pb-6">
         <h1 className="text-white text-2xl font-bold">Sport</h1>
-        <p className="text-green-100 text-sm mt-1">Hardloopschema richting 10km op 12 aug</p>
+        <p className="text-accent-100 text-sm mt-1">Hardloopschema richting 10km op 12 aug</p>
       </div>
 
       <div className="px-4 py-5 space-y-4">
@@ -67,7 +67,7 @@ export default function Sport() {
               <p className="text-gray-400 text-xs">12 augustus 2026</p>
             </div>
             <div className="text-right">
-              <p className="text-2xl font-bold text-green-600">{dagenTotDoel}</p>
+              <p className="text-2xl font-bold text-accent-600">{dagenTotDoel}</p>
               <p className="text-gray-400 text-xs">dagen te gaan</p>
             </div>
           </div>

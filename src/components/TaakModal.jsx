@@ -27,7 +27,7 @@ function HandmatigFormulier({ taak, onVoltooid }) {
       <button
         onClick={voltooi}
         disabled={bezig}
-        className="w-full bg-green-500 text-white font-medium py-3 rounded-xl flex items-center justify-center gap-2 disabled:opacity-50"
+        className="w-full bg-accent-500 text-white font-medium py-3 rounded-xl flex items-center justify-center gap-2 disabled:opacity-50"
       >
         <Check size={18} strokeWidth={2.5} />
         {bezig ? 'Opslaan...' : 'Markeer als voltooid'}
@@ -67,7 +67,7 @@ export default function TaakModal({ taak, type, onSluit, onVoltooid, onOvergesla
             value={reden}
             onChange={e => { setReden(e.target.value); setFout('') }}
             placeholder="Geef een reden..."
-            className="w-full border border-gray-300 rounded-xl p-3 text-sm resize-none focus:outline-none focus:border-green-500"
+            className="w-full border border-gray-300 rounded-xl p-3 text-sm resize-none focus:outline-none focus:border-accent-500"
             rows={3}
           />
           {fout && <p className="text-red-500 text-xs">{fout}</p>}

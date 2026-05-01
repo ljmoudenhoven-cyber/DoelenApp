@@ -40,9 +40,9 @@ export default function Lezen() {
 
   return (
     <div className="flex flex-col">
-      <div className="bg-green-500 px-5 pt-[calc(env(safe-area-inset-top)+0.5rem)] pb-6">
+      <div className="bg-accent-500 px-5 pt-[calc(env(safe-area-inset-top)+0.5rem)] pb-6">
         <h1 className="text-white text-2xl font-bold">Lezen</h1>
-        <p className="text-green-100 text-sm mt-1">Elke maand een boek</p>
+        <p className="text-accent-100 text-sm mt-1">Elke maand een boek</p>
       </div>
 
       <div className="px-4 py-5 space-y-4">
@@ -55,7 +55,7 @@ export default function Lezen() {
                 <h2 className="font-semibold text-gray-800 text-base mt-0.5">{huidigBoek.titel}</h2>
               </div>
               <div className="text-right ml-3">
-                <p className="text-2xl font-bold text-green-600">{procent}%</p>
+                <p className="text-2xl font-bold text-accent-600">{procent}%</p>
                 <p className="text-gray-400 text-xs">gelezen</p>
               </div>
             </div>
@@ -63,7 +63,7 @@ export default function Lezen() {
             {/* Voortgangsbalk */}
             <div className="h-3 bg-gray-100 rounded-full overflow-hidden mb-2">
               <div
-                className="h-full bg-green-500 rounded-full transition-all"
+                className="h-full bg-accent-500 rounded-full transition-all"
                 style={{ width: `${procent}%` }}
               />
             </div>
@@ -130,9 +130,9 @@ function BoekKaart({ boek }) {
         <div className="px-4 pb-4 border-t border-gray-100 space-y-2">
           <p className="text-gray-600 text-sm mt-3">{boek.review.mening}</p>
           {boek.review.geleerd && (
-            <div className="bg-green-50 rounded-lg p-3">
-              <p className="text-green-700 text-xs font-medium mb-1">Wat heb ik geleerd:</p>
-              <p className="text-green-700 text-sm">{boek.review.geleerd}</p>
+            <div className="bg-accent-50 rounded-lg p-3">
+              <p className="text-accent-700 text-xs font-medium mb-1">Wat heb ik geleerd:</p>
+              <p className="text-accent-700 text-sm">{boek.review.geleerd}</p>
             </div>
           )}
         </div>

@@ -1,12 +1,12 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { maakHandmatigeTaak } from '../store/taken'
-import { Pencil, HeartPulse, Heart } from '../components/Iconen'
+import { User, Apple, Brain } from '../components/Iconen'
 
 const TYPES = [
-  { id: 'persoonlijk', label: 'Persoonlijk', Icon: Pencil, kleur: 'zinc' },
-  { id: 'gezondheid', label: 'Gezondheid', Icon: HeartPulse, kleur: 'red' },
-  { id: 'mentaal', label: 'Mentaal', Icon: Heart, kleur: 'sky' },
+  { id: 'persoonlijk', label: 'Persoonlijk', Icon: User, kleur: 'zinc' },
+  { id: 'gezondheid', label: 'Gezondheid', Icon: Apple, kleur: 'red' },
+  { id: 'mentaal', label: 'Mentaal', Icon: Brain, kleur: 'sky' },
 ]
 
 const ACTIEF_KLEUREN = {
@@ -41,10 +41,10 @@ export default function ActiviteitPlannen() {
 
   return (
     <div className="flex flex-col pb-10">
-      <div className="bg-green-500 px-5 pt-[calc(env(safe-area-inset-top)+0.5rem)] pb-6 flex items-end justify-between">
+      <div className="bg-accent-500 px-5 pt-[calc(env(safe-area-inset-top)+0.5rem)] pb-6 flex items-end justify-between">
         <div>
           <h1 className="text-white text-2xl font-bold">Activiteit plannen</h1>
-          <p className="text-green-100 text-sm mt-1">Voeg een eigen activiteit toe</p>
+          <p className="text-accent-100 text-sm mt-1">Voeg een eigen activiteit toe</p>
         </div>
         <button
           onClick={() => navigate('/')}
@@ -86,7 +86,7 @@ export default function ActiviteitPlannen() {
               value={titel}
               onChange={e => { setTitel(e.target.value); setFout('') }}
               placeholder="bijv. Mediteren 10 minuten"
-              className="w-full border border-gray-300 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-green-500"
+              className="w-full border border-gray-300 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-accent-500"
             />
           </div>
 
@@ -96,7 +96,7 @@ export default function ActiviteitPlannen() {
               type="date"
               value={datum}
               onChange={e => setDatum(e.target.value)}
-              className="w-full border border-gray-300 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-green-500"
+              className="w-full border border-gray-300 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-accent-500"
             />
           </div>
 
@@ -109,7 +109,7 @@ export default function ActiviteitPlannen() {
               onChange={e => setBeschrijving(e.target.value)}
               placeholder="Korte toelichting of notitie"
               rows={3}
-              className="w-full border border-gray-300 rounded-xl px-4 py-3 text-sm resize-none focus:outline-none focus:border-green-500"
+              className="w-full border border-gray-300 rounded-xl px-4 py-3 text-sm resize-none focus:outline-none focus:border-accent-500"
             />
           </div>
 
@@ -118,7 +118,7 @@ export default function ActiviteitPlannen() {
           <button
             onClick={opslaan}
             disabled={bezig}
-            className="w-full bg-green-500 text-white font-semibold py-3 rounded-xl text-sm disabled:opacity-50"
+            className="w-full bg-accent-500 text-white font-semibold py-3 rounded-xl text-sm disabled:opacity-50"
           >
             {bezig ? 'Opslaan...' : 'Activiteit plannen'}
           </button>

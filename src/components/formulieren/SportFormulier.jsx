@@ -80,8 +80,8 @@ export default function SportFormulier({ taak, onVoltooid }) {
 
   return (
     <div className="space-y-4">
-      <div className="bg-green-50 rounded-xl p-3">
-        <p className="text-green-700 text-sm font-medium">{taak.beschrijving}</p>
+      <div className="bg-accent-50 rounded-xl p-3">
+        <p className="text-accent-700 text-sm font-medium">{taak.beschrijving}</p>
       </div>
 
       <div>
@@ -93,7 +93,7 @@ export default function SportFormulier({ taak, onVoltooid }) {
           value={afstand}
           onChange={e => setAfstand(e.target.value)}
           placeholder="bijv. 5.2"
-          className="w-full border border-gray-300 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-green-500"
+          className="w-full border border-gray-300 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-accent-500"
         />
       </div>
 
@@ -107,7 +107,7 @@ export default function SportFormulier({ taak, onVoltooid }) {
               value={minuten}
               onChange={e => setMinuten(e.target.value)}
               placeholder="min"
-              className="w-full border border-gray-300 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-green-500 text-center"
+              className="w-full border border-gray-300 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-accent-500 text-center"
             />
             <p className="text-xs text-gray-400 text-center mt-1">minuten</p>
           </div>
@@ -121,13 +121,13 @@ export default function SportFormulier({ taak, onVoltooid }) {
               value={seconden}
               onChange={e => setSeconden(e.target.value)}
               placeholder="sec"
-              className="w-full border border-gray-300 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-green-500 text-center"
+              className="w-full border border-gray-300 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-accent-500 text-center"
             />
             <p className="text-xs text-gray-400 text-center mt-1">seconden</p>
           </div>
         </div>
         {tijdTekst() && (
-          <p className="text-green-600 text-xs mt-1">{tijdTekst()}</p>
+          <p className="text-accent-600 text-xs mt-1">{tijdTekst()}</p>
         )}
       </div>
 
@@ -139,7 +139,7 @@ export default function SportFormulier({ taak, onVoltooid }) {
           value={hartslag}
           onChange={e => setHartslag(e.target.value)}
           placeholder="bijv. 155"
-          className="w-full border border-gray-300 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-green-500"
+          className="w-full border border-gray-300 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-accent-500"
         />
       </div>
 
@@ -148,7 +148,7 @@ export default function SportFormulier({ taak, onVoltooid }) {
       <button
         onClick={opslaan}
         disabled={bezig}
-        className="w-full bg-green-500 text-white font-medium py-3 rounded-xl disabled:opacity-50"
+        className="w-full bg-accent-500 text-white font-medium py-3 rounded-xl disabled:opacity-50"
       >
         {bezig ? 'Opslaan...' : 'Training opslaan'}
       </button>

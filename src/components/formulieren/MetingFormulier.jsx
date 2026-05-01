@@ -57,7 +57,7 @@ export default function MetingFormulier({ taak = null, manueel = false, bestaand
             value={datum}
             max={vandaag}
             onChange={e => setDatum(e.target.value)}
-            className="w-full border border-gray-300 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-green-500"
+            className="w-full border border-gray-300 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-accent-500"
           />
         </div>
       )}
@@ -71,7 +71,7 @@ export default function MetingFormulier({ taak = null, manueel = false, bestaand
           value={gewicht}
           onChange={e => setGewicht(e.target.value)}
           placeholder="bijv. 82.5"
-          className="w-full border border-gray-300 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-green-500"
+          className="w-full border border-gray-300 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-accent-500"
         />
       </div>
 
@@ -84,7 +84,7 @@ export default function MetingFormulier({ taak = null, manueel = false, bestaand
           value={vetPercentage}
           onChange={e => setVetPercentage(e.target.value)}
           placeholder="bijv. 18.5"
-          className="w-full border border-gray-300 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-green-500"
+          className="w-full border border-gray-300 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-accent-500"
         />
       </div>
 
@@ -97,7 +97,7 @@ export default function MetingFormulier({ taak = null, manueel = false, bestaand
           value={buikomvang}
           onChange={e => setBuikomvang(e.target.value)}
           placeholder="bijv. 92"
-          className="w-full border border-gray-300 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-green-500"
+          className="w-full border border-gray-300 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-accent-500"
         />
       </div>
 
@@ -106,7 +106,7 @@ export default function MetingFormulier({ taak = null, manueel = false, bestaand
       <button
         onClick={opslaan}
         disabled={bezig}
-        className="w-full bg-green-500 text-white font-medium py-3 rounded-xl disabled:opacity-50"
+        className="w-full bg-accent-500 text-white font-medium py-3 rounded-xl disabled:opacity-50"
       >
         {bezig ? 'Opslaan...' : 'Opslaan'}
       </button>

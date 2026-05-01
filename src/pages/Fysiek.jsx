@@ -203,15 +203,15 @@ export default function Fysiek() {
 
   return (
     <div className="flex flex-col pb-6">
-      <div className="bg-green-500 px-5 pt-[calc(env(safe-area-inset-top)+0.5rem)] pb-6 flex items-end justify-between">
+      <div className="bg-accent-500 px-5 pt-[calc(env(safe-area-inset-top)+0.5rem)] pb-6 flex items-end justify-between">
         <div>
           <h1 className="text-white text-2xl font-bold">Fysiek</h1>
-          <p className="text-green-100 text-sm mt-1">Lichaamsmetingen bijhouden</p>
+          <p className="text-accent-100 text-sm mt-1">Lichaamsmetingen bijhouden</p>
         </div>
         <div className="flex gap-2">
           <button
             onClick={() => navigate('/basisgegevens')}
-            className="bg-white text-green-600 w-10 h-10 rounded-full flex items-center justify-center shadow-md"
+            className="bg-white text-accent-600 w-10 h-10 rounded-full flex items-center justify-center shadow-md"
             title="Basisgegevens aanpassen"
           >
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
@@ -221,7 +221,7 @@ export default function Fysiek() {
           </button>
           <button
             onClick={() => navigate('/tussendoelen')}
-            className="bg-white text-green-600 w-10 h-10 rounded-full flex items-center justify-center shadow-md"
+            className="bg-white text-accent-600 w-10 h-10 rounded-full flex items-center justify-center shadow-md"
             title="Tussendoelen beheren"
           >
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
@@ -231,7 +231,7 @@ export default function Fysiek() {
           </button>
           <button
             onClick={() => navigate('/metingen')}
-            className="bg-white text-green-600 w-10 h-10 rounded-full flex items-center justify-center shadow-md"
+            className="bg-white text-accent-600 w-10 h-10 rounded-full flex items-center justify-center shadow-md"
             title="Metingen beheren"
           >
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -263,7 +263,7 @@ export default function Fysiek() {
             <p className="text-gray-500 text-sm">Nog geen metingen.</p>
             <button
               onClick={() => navigate('/metingen')}
-              className="mt-3 bg-green-500 text-white text-sm font-medium px-4 py-2 rounded-lg"
+              className="mt-3 bg-accent-500 text-white text-sm font-medium px-4 py-2 rounded-lg"
             >
               + Eerste meting toevoegen
             </button>

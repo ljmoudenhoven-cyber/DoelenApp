@@ -28,7 +28,7 @@ export default function Metingen() {
 
   return (
     <div className="flex flex-col pb-10">
-      <div className="bg-green-500 px-5 pt-[calc(env(safe-area-inset-top)+0.5rem)] pb-6 flex items-end justify-between">
+      <div className="bg-accent-500 px-5 pt-[calc(env(safe-area-inset-top)+0.5rem)] pb-6 flex items-end justify-between">
         <div>
           <h1 className="text-white text-2xl font-bold flex items-center gap-2">
             Metingen
@@ -40,7 +40,7 @@ export default function Metingen() {
               <path d="m17.5 15.5 2-2"/>
             </svg>
           </h1>
-          <p className="text-green-100 text-sm mt-1">Alle bijgehouden metingen</p>
+          <p className="text-accent-100 text-sm mt-1">Alle bijgehouden metingen</p>
         </div>
         <button
           onClick={() => navigate('/fysiek')}
@@ -53,7 +53,7 @@ export default function Metingen() {
       <div className="px-4 py-5 space-y-4">
         <button
           onClick={() => navigate('/meting-toevoegen')}
-          className="w-full bg-green-500 text-white font-semibold py-3 rounded-xl text-sm"
+          className="w-full bg-accent-500 text-white font-semibold py-3 rounded-xl text-sm"
         >
           + Meting toevoegen
         </button>
@@ -70,7 +70,7 @@ export default function Metingen() {
                 <div>
                   <p className="text-sm font-semibold text-gray-800">
                     {formatDatum(m.datum)}
-                    {m.beginstand && <span className="ml-2 text-[10px] bg-green-100 text-green-700 px-2 py-0.5 rounded-full">begin</span>}
+                    {m.beginstand && <span className="ml-2 text-[10px] bg-accent-100 text-accent-700 px-2 py-0.5 rounded-full">begin</span>}
                   </p>
                   <p className="text-xs text-gray-400 mt-0.5">
                     {[

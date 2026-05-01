@@ -87,7 +87,7 @@ export default function Basisgegevens() {
 
   return (
     <div className="flex flex-col pb-10">
-      <div className="bg-green-500 px-5 pt-[calc(env(safe-area-inset-top)+0.5rem)] pb-6 flex items-end justify-between">
+      <div className="bg-accent-500 px-5 pt-[calc(env(safe-area-inset-top)+0.5rem)] pb-6 flex items-end justify-between">
         <div>
           <h1 className="text-white text-2xl font-bold flex items-center gap-2">
             Basisgegevens
@@ -96,7 +96,7 @@ export default function Basisgegevens() {
               <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
             </svg>
           </h1>
-          <p className="text-green-100 text-sm mt-1">Lengte, beginstand en doelen</p>
+          <p className="text-accent-100 text-sm mt-1">Lengte, beginstand en doelen</p>
         </div>
         <button
           onClick={sluiten}
@@ -122,7 +122,7 @@ export default function Basisgegevens() {
               value={lengte}
               onChange={e => { setLengte(e.target.value); setFout('') }}
               placeholder="bijv. 182"
-              className="w-full border border-gray-300 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-green-500"
+              className="w-full border border-gray-300 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-accent-500"
             />
             <p className="text-gray-400 text-xs mt-1">Nodig voor BMI-berekening</p>
           </div>
@@ -136,7 +136,7 @@ export default function Basisgegevens() {
                   onClick={() => setGeslacht(g)}
                   className={`flex-1 py-2.5 rounded-xl text-sm font-medium border transition-colors ${
                     geslacht === g
-                      ? 'bg-green-500 text-white border-green-500'
+                      ? 'bg-accent-500 text-white border-accent-500'
                       : 'bg-white text-gray-600 border-gray-300'
                   }`}
                 >
@@ -161,19 +161,19 @@ export default function Basisgegevens() {
             <label className="block text-sm font-medium text-gray-700 mb-1">Huidig gewicht (kg)</label>
             <input type="number" inputMode="decimal" step="0.1" value={beginGewicht}
               onChange={e => setBeginGewicht(e.target.value)} placeholder="bijv. 88"
-              className="w-full border border-gray-300 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-green-500" />
+              className="w-full border border-gray-300 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-accent-500" />
           </div>
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">Huidig vetpercentage (%)</label>
             <input type="number" inputMode="decimal" step="0.1" value={beginVet}
               onChange={e => setBeginVet(e.target.value)} placeholder="bijv. 22"
-              className="w-full border border-gray-300 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-green-500" />
+              className="w-full border border-gray-300 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-accent-500" />
           </div>
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">Huidige buikomvang (cm)</label>
             <input type="number" inputMode="decimal" step="0.5" value={beginBuik}
               onChange={e => setBeginBuik(e.target.value)} placeholder="bijv. 96"
-              className="w-full border border-gray-300 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-green-500" />
+              className="w-full border border-gray-300 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-accent-500" />
           </div>
         </div>
 
@@ -188,25 +188,25 @@ export default function Basisgegevens() {
             <label className="block text-sm font-medium text-gray-700 mb-1">Doelgewicht (kg)</label>
             <input type="number" inputMode="decimal" step="0.5" value={doelGewicht}
               onChange={e => setDoelGewicht(e.target.value)} placeholder="bijv. 80"
-              className="w-full border border-gray-300 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-green-500" />
+              className="w-full border border-gray-300 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-accent-500" />
           </div>
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">Doelvetpercentage (%)</label>
             <input type="number" inputMode="decimal" step="0.5" value={doelVet}
               onChange={e => setDoelVet(e.target.value)} placeholder="bijv. 16"
-              className="w-full border border-gray-300 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-green-500" />
+              className="w-full border border-gray-300 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-accent-500" />
           </div>
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">Doelbuikomvang (cm)</label>
             <input type="number" inputMode="decimal" step="0.5" value={doelBuik}
               onChange={e => setDoelBuik(e.target.value)} placeholder="bijv. 88"
-              className="w-full border border-gray-300 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-green-500" />
+              className="w-full border border-gray-300 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-accent-500" />
           </div>
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">Wanneer wil je je doel bereiken?</label>
             <input type="date" value={einddoelDatum} min={vandaag}
               onChange={e => setEinddoelDatum(e.target.value)}
-              className="w-full border border-gray-300 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-green-500" />
+              className="w-full border border-gray-300 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-accent-500" />
             <p className="text-gray-400 text-xs mt-1">Dit bepaalt het eindpunt van de doellijn in de grafiek</p>
           </div>
         </div>
@@ -218,7 +218,7 @@ export default function Basisgegevens() {
         )}
 
         {opgeslagen && (
-          <div className="bg-green-50 border border-green-200 rounded-xl p-3 flex items-center justify-center gap-2 text-green-700">
+          <div className="bg-accent-50 border border-accent-200 rounded-xl p-3 flex items-center justify-center gap-2 text-accent-700">
             <Check size={18} />
             <p className="font-medium">Opgeslagen</p>
           </div>
@@ -227,7 +227,7 @@ export default function Basisgegevens() {
         <button
           onClick={opslaan}
           disabled={opgeslagen}
-          className="w-full bg-green-500 text-white font-semibold py-4 rounded-xl text-base shadow-sm disabled:opacity-50 flex items-center justify-center gap-2"
+          className="w-full bg-accent-500 text-white font-semibold py-4 rounded-xl text-base shadow-sm disabled:opacity-50 flex items-center justify-center gap-2"
         >
           {opgeslagen ? (
             <>

@@ -30,7 +30,7 @@ export default function Tussendoelen() {
 
   return (
     <div className="flex flex-col pb-10">
-      <div className="bg-green-500 px-5 pt-[calc(env(safe-area-inset-top)+0.5rem)] pb-6 flex items-end justify-between">
+      <div className="bg-accent-500 px-5 pt-[calc(env(safe-area-inset-top)+0.5rem)] pb-6 flex items-end justify-between">
         <div>
           <h1 className="text-white text-2xl font-bold flex items-center gap-2">
             Tussendoelen
@@ -39,7 +39,7 @@ export default function Tussendoelen() {
               <line x1="4" y1="22" x2="4" y2="15"/>
             </svg>
           </h1>
-          <p className="text-green-100 text-sm mt-1">Mijlpalen op weg naar je einddoel</p>
+          <p className="text-accent-100 text-sm mt-1">Mijlpalen op weg naar je einddoel</p>
         </div>
         <button
           onClick={() => navigate('/fysiek')}
@@ -56,7 +56,7 @@ export default function Tussendoelen() {
 
         <button
           onClick={() => navigate('/tussendoel-toevoegen')}
-          className="w-full bg-green-500 text-white font-semibold py-3 rounded-xl text-sm"
+          className="w-full bg-accent-500 text-white font-semibold py-3 rounded-xl text-sm"
         >
           + Tussendoel toevoegen
         </button>

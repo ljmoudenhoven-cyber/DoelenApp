@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom'
 import { getTakenVoorVandaag, getTeLaatTaken, getTakenKomende7Dagen, taakAfvinken, taakOverslaan } from '../store/taken'
 import { getSetting } from '../store/db'
 import TaakModal from '../components/TaakModal'
-import { Scale, Footprints, Book, BookOpen, Pencil, Heart, HeartPulse, Check, Cog, Plus } from '../components/Iconen'
+import { Scale, Footprints, Book, BookOpen, Pencil, Check, Cog, Plus, User, Apple, Brain } from '../components/Iconen'
 
 const DAGEN = ['zondag', 'maandag', 'dinsdag', 'woensdag', 'donderdag', 'vrijdag', 'zaterdag']
 const MAANDEN = ['januari', 'februari', 'maart', 'april', 'mei', 'juni', 'juli', 'augustus', 'september', 'oktober', 'november', 'december']
@@ -36,9 +36,9 @@ const TAAK_STIJL = {
   'lezen-voortgang': { bg: 'bg-indigo-50', tekst: 'text-indigo-600', Icon: BookOpen },
   'lezen-nieuwboek': { bg: 'bg-indigo-50', tekst: 'text-indigo-600', Icon: Book },
   'lezen-review': { bg: 'bg-purple-50', tekst: 'text-purple-600', Icon: Pencil },
-  persoonlijk: { bg: 'bg-zinc-100', tekst: 'text-zinc-600', Icon: Pencil },
-  gezondheid: { bg: 'bg-red-50', tekst: 'text-red-600', Icon: HeartPulse },
-  mentaal: { bg: 'bg-sky-50', tekst: 'text-sky-600', Icon: Heart },
+  persoonlijk: { bg: 'bg-zinc-100', tekst: 'text-zinc-600', Icon: User },
+  gezondheid: { bg: 'bg-red-50', tekst: 'text-red-600', Icon: Apple },
+  mentaal: { bg: 'bg-sky-50', tekst: 'text-sky-600', Icon: Brain },
 }
 
 export default function Hoofdpagina() {
@@ -97,16 +97,16 @@ export default function Hoofdpagina() {
   return (
     <div className="flex flex-col min-h-full">
       {/* Header */}
-      <div className="bg-green-500 px-5 pt-[calc(env(safe-area-inset-top)+0.5rem)] pb-6 flex items-end justify-between">
+      <div className="bg-accent-500 px-5 pt-[calc(env(safe-area-inset-top)+0.5rem)] pb-6 flex items-end justify-between">
         <div>
-          <p className="text-green-100 text-sm capitalize">{datumTekst()}</p>
+          <p className="text-accent-100 text-sm capitalize">{datumTekst()}</p>
           <h1 className="text-white text-2xl font-bold mt-1">
             {groetTekst()}{naam ? `, ${naam}` : ''}
           </h1>
         </div>
         <button
           onClick={() => navigate('/instellingen')}
-          className="bg-white text-green-600 w-10 h-10 rounded-full flex items-center justify-center shadow-md"
+          className="bg-white text-accent-600 w-10 h-10 rounded-full flex items-center justify-center shadow-md"
           title="Instellingen"
         >
           <Cog size={18} strokeWidth={2.5} />
@@ -117,7 +117,7 @@ export default function Hoofdpagina() {
         {/* Plan-knop */}
         <button
           onClick={() => navigate('/activiteit-plannen')}
-          className="w-full bg-green-500 text-white font-semibold py-4 rounded-xl text-base shadow-sm flex items-center justify-center gap-2"
+          className="w-full bg-accent-500 text-white font-semibold py-4 rounded-xl text-base shadow-sm flex items-center justify-center gap-2"
         >
           <Plus size={20} strokeWidth={2.5} />
           Activiteit plannen
@@ -144,9 +144,9 @@ export default function Hoofdpagina() {
         <section>
           <h2 className="text-gray-800 font-semibold text-base mb-3">Vandaag{taken.length > 0 ? ` (${taken.length})` : ''}</h2>
           {taken.length === 0 ? (
-            <div className="bg-green-50 border border-green-200 rounded-xl p-4 text-center">
-              <p className="text-green-700 font-medium">Niets voor vandaag</p>
-              <p className="text-green-600 text-sm mt-1">Geen openstaande taken — geniet ervan.</p>
+            <div className="bg-accent-50 border border-accent-200 rounded-xl p-4 text-center">
+              <p className="text-accent-700 font-medium">Niets voor vandaag</p>
+              <p className="text-accent-600 text-sm mt-1">Geen openstaande taken — geniet ervan.</p>
             </div>
           ) : (
             <div className="space-y-2">
@@ -214,7 +214,7 @@ function TaakKaart({ taak, onOpen, onOverslaan }) {
       <div className="flex gap-2">
         <button
           onClick={onOpen}
-          className="bg-green-500 text-white text-xs font-medium px-3 py-1.5 rounded-lg"
+          className="bg-accent-500 text-white text-xs font-medium px-3 py-1.5 rounded-lg"
         >
           Invullen
         </button>

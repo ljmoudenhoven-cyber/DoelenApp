@@ -51,9 +51,9 @@ export default function Login() {
   }
 
   return (
-    <div className="flex flex-col min-h-dvh bg-gradient-to-b from-green-50 to-white">
+    <div className="flex flex-col min-h-dvh bg-gradient-to-b from-accent-50 to-white">
       <div className="flex-1 flex flex-col items-center justify-center px-6">
-        <div className="w-16 h-16 rounded-2xl bg-green-100 text-green-600 flex items-center justify-center mb-4">
+        <div className="w-16 h-16 rounded-2xl bg-accent-100 text-accent-600 flex items-center justify-center mb-4">
           <Sprout size={36} strokeWidth={1.75} />
         </div>
         <h1 className="text-2xl font-bold text-gray-800 mb-1">DoelenApp</h1>
@@ -69,7 +69,7 @@ export default function Login() {
                 onChange={e => { setEmail(e.target.value); setFout('') }}
                 placeholder="jij@voorbeeld.nl"
                 autoComplete="email"
-                className="w-full bg-white border border-gray-300 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-green-500"
+                className="w-full bg-white border border-gray-300 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-accent-500"
               />
             </div>
 
@@ -82,7 +82,7 @@ export default function Login() {
             <button
               type="submit"
               disabled={bezig}
-              className="w-full bg-green-500 text-white font-semibold py-4 rounded-xl text-base shadow-sm disabled:opacity-50"
+              className="w-full bg-accent-500 text-white font-semibold py-4 rounded-xl text-base shadow-sm disabled:opacity-50"
             >
               {bezig ? 'Versturen…' : 'Stuur inlogcode'}
             </button>
@@ -92,8 +92,8 @@ export default function Login() {
           </form>
         ) : (
           <form onSubmit={versturenCode} className="w-full max-w-sm space-y-4">
-            <div className="bg-white border border-green-200 rounded-2xl p-5 text-center">
-              <div className="w-10 h-10 rounded-full bg-green-100 text-green-600 flex items-center justify-center mx-auto mb-2">
+            <div className="bg-white border border-accent-200 rounded-2xl p-5 text-center">
+              <div className="w-10 h-10 rounded-full bg-accent-100 text-accent-600 flex items-center justify-center mx-auto mb-2">
                 <Mail size={20} strokeWidth={1.75} />
               </div>
               <p className="text-gray-600 text-sm">
@@ -114,7 +114,7 @@ export default function Login() {
                 placeholder="123456"
                 autoComplete="one-time-code"
                 autoFocus
-                className="w-full bg-white border border-gray-300 rounded-xl px-4 py-3 text-center text-2xl tracking-widest font-mono focus:outline-none focus:border-green-500"
+                className="w-full bg-white border border-gray-300 rounded-xl px-4 py-3 text-center text-2xl tracking-widest font-mono focus:outline-none focus:border-accent-500"
               />
             </div>
 
@@ -127,7 +127,7 @@ export default function Login() {
             <button
               type="submit"
               disabled={bezig || code.length < 6}
-              className="w-full bg-green-500 text-white font-semibold py-4 rounded-xl text-base shadow-sm disabled:opacity-50"
+              className="w-full bg-accent-500 text-white font-semibold py-4 rounded-xl text-base shadow-sm disabled:opacity-50"
             >
               {bezig ? 'Inloggen…' : 'Inloggen'}
             </button>

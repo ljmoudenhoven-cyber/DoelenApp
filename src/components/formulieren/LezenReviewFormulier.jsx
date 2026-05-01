@@ -64,7 +64,7 @@ export default function LezenReviewFormulier({ taak, onVoltooid }) {
           value={mening}
           onChange={e => setMening(e.target.value)}
           placeholder="Schrijf je mening over het boek..."
-          className="w-full border border-gray-300 rounded-xl p-3 text-sm resize-none focus:outline-none focus:border-green-500"
+          className="w-full border border-gray-300 rounded-xl p-3 text-sm resize-none focus:outline-none focus:border-accent-500"
           rows={3}
         />
       </div>
@@ -75,7 +75,7 @@ export default function LezenReviewFormulier({ taak, onVoltooid }) {
           value={geleerd}
           onChange={e => setGeleerd(e.target.value)}
           placeholder="Wat neem je mee uit dit boek?"
-          className="w-full border border-gray-300 rounded-xl p-3 text-sm resize-none focus:outline-none focus:border-green-500"
+          className="w-full border border-gray-300 rounded-xl p-3 text-sm resize-none focus:outline-none focus:border-accent-500"
           rows={3}
         />
       </div>
@@ -85,7 +85,7 @@ export default function LezenReviewFormulier({ taak, onVoltooid }) {
       <button
         onClick={opslaan}
         disabled={bezig}
-        className="w-full bg-green-500 text-white font-medium py-3 rounded-xl disabled:opacity-50"
+        className="w-full bg-accent-500 text-white font-medium py-3 rounded-xl disabled:opacity-50"
       >
         {bezig ? 'Opslaan...' : 'Review opslaan'}
       </button>

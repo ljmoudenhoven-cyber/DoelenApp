@@ -18,6 +18,7 @@ import { getSetting, setItem } from './store/db'
 import { genereerSportSchema } from './store/sportSchema'
 import { useAuth } from './store/auth'
 import { pullAll, clearLocalData } from './store/sync'
+import { pasThemaToe } from './store/thema'
 import { Sprout } from './components/Iconen'
 
 function NavIcon({ children }) {
@@ -30,7 +31,7 @@ function NavIcon({ children }) {
 
 function NavBar() {
   const linkClass = ({ isActive }) =>
-    `flex flex-col items-center gap-1 px-3 py-1 rounded-lg transition-colors ${isActive ? 'text-green-600' : 'text-gray-400'}`
+    `flex flex-col items-center gap-1 px-3 py-1 rounded-lg transition-colors ${isActive ? 'text-accent-600' : 'text-gray-400'}`
 
   return (
     <nav
@@ -79,7 +80,7 @@ function NavBar() {
 function Spinner() {
   return (
     <div className="flex items-center justify-center min-h-screen">
-      <div className="text-green-600 animate-pulse">
+      <div className="text-accent-600 animate-pulse">
         <Sprout size={48} strokeWidth={1.5} />
       </div>
     </div>
@@ -98,6 +99,7 @@ function AppInner() {
     if (!user) {
       if (vorigeUserId) {
         clearLocalData().finally(() => {
+          pasThemaToe('groen')
           setVorigeUserId(null)
           setDataGeladen(false)
         })
@@ -112,6 +114,10 @@ function AppInner() {
     async function init() {
       setDataGeladen(false)
       await pullAll()
+
+      const thema = await getSetting('thema')
+      const themaCustom = await getSetting('themaCustom')
+      pasThemaToe(thema || 'groen', themaCustom)
 
       const lengte = await getSetting('lengte')
       if (!lengte) {

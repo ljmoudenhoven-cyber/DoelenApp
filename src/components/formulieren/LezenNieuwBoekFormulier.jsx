@@ -45,7 +45,7 @@ export default function LezenNieuwBoekFormulier({ taak, onVoltooid }) {
           value={titel}
           onChange={e => setTitel(e.target.value)}
           placeholder="bijv. Atomic Habits"
-          className="w-full border border-gray-300 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-green-500"
+          className="w-full border border-gray-300 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-accent-500"
         />
       </div>
 
@@ -57,7 +57,7 @@ export default function LezenNieuwBoekFormulier({ taak, onVoltooid }) {
           value={paginas}
           onChange={e => setPaginas(e.target.value)}
           placeholder="bijv. 320"
-          className="w-full border border-gray-300 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-green-500"
+          className="w-full border border-gray-300 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-accent-500"
         />
       </div>
 
@@ -66,7 +66,7 @@ export default function LezenNieuwBoekFormulier({ taak, onVoltooid }) {
       <button
         onClick={opslaan}
         disabled={bezig}
-        className="w-full bg-green-500 text-white font-medium py-3 rounded-xl disabled:opacity-50"
+        className="w-full bg-accent-500 text-white font-medium py-3 rounded-xl disabled:opacity-50"
       >
         {bezig ? 'Opslaan...' : 'Boek toevoegen'}
       </button>

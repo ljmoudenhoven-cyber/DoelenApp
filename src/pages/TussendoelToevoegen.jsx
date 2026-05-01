@@ -57,12 +57,12 @@ export default function TussendoelToevoegen() {
 
   return (
     <div className="flex flex-col pb-10">
-      <div className="bg-green-500 px-5 pt-[calc(env(safe-area-inset-top)+0.5rem)] pb-6 flex items-end justify-between">
+      <div className="bg-accent-500 px-5 pt-[calc(env(safe-area-inset-top)+0.5rem)] pb-6 flex items-end justify-between">
         <div>
           <h1 className="text-white text-2xl font-bold">
             {isBewerken ? 'Tussendoel bewerken' : 'Tussendoel toevoegen'}
           </h1>
-          <p className="text-green-100 text-sm mt-1">
+          <p className="text-accent-100 text-sm mt-1">
             {isBewerken ? 'Pas datum of waarden aan' : 'Stel een mijlpaal in op een specifieke datum'}
           </p>
         </div>
@@ -93,26 +93,26 @@ export default function TussendoelToevoegen() {
                   value={datum}
                   min={isBewerken ? undefined : vandaag}
                   onChange={e => setDatum(e.target.value)}
-                  className="w-full border border-gray-300 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-green-500"
+                  className="w-full border border-gray-300 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-accent-500"
                 />
               </div>
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">Doelgewicht (kg)</label>
                 <input type="number" inputMode="decimal" step="0.1" value={gewicht}
                   onChange={e => setGewicht(e.target.value)} placeholder="bijv. 80"
-                  className="w-full border border-gray-300 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-green-500" />
+                  className="w-full border border-gray-300 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-accent-500" />
               </div>
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">Doelvetpercentage (%)</label>
                 <input type="number" inputMode="decimal" step="0.1" value={vet}
                   onChange={e => setVet(e.target.value)} placeholder="bijv. 16"
-                  className="w-full border border-gray-300 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-green-500" />
+                  className="w-full border border-gray-300 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-accent-500" />
               </div>
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">Doelbuikomvang (cm)</label>
                 <input type="number" inputMode="decimal" step="0.5" value={buik}
                   onChange={e => setBuik(e.target.value)} placeholder="bijv. 89"
-                  className="w-full border border-gray-300 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-green-500" />
+                  className="w-full border border-gray-300 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-accent-500" />
               </div>
 
               {fout && <p className="text-red-500 text-xs">{fout}</p>}
@@ -120,7 +120,7 @@ export default function TussendoelToevoegen() {
               <button
                 onClick={opslaan}
                 disabled={bezig}
-                className="w-full bg-green-500 text-white font-medium py-3 rounded-xl disabled:opacity-50"
+                className="w-full bg-accent-500 text-white font-medium py-3 rounded-xl disabled:opacity-50"
               >
                 {bezig ? 'Opslaan...' : 'Opslaan'}
               </button>
