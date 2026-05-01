@@ -11,6 +11,7 @@ import Tussendoelen from './pages/Tussendoelen'
 import MetingToevoegen from './pages/MetingToevoegen'
 import Metingen from './pages/Metingen'
 import TussendoelToevoegen from './pages/TussendoelToevoegen'
+import ActiviteitPlannen from './pages/ActiviteitPlannen'
 import Login from './pages/Login'
 import { genereerWekelijkseTaken } from './store/taken'
 import { getSetting, setItem } from './store/db'
@@ -69,14 +70,6 @@ function NavBar() {
             <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/>
           </NavIcon>
           <span className="text-[10px] font-medium">Lezen</span>
-        </NavLink>
-        <NavLink to="/export" className={linkClass}>
-          <NavIcon>
-            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
-            <polyline points="7 10 12 15 17 10"/>
-            <line x1="12" y1="15" x2="12" y2="3"/>
-          </NavIcon>
-          <span className="text-[10px] font-medium">Export</span>
         </NavLink>
       </div>
     </nav>
@@ -158,6 +151,7 @@ function AppInner() {
         <Route path="/metingen" element={<Metingen />} />
         <Route path="/meting-toevoegen" element={<MetingToevoegen />} />
         <Route path="/meting-bewerken/:id" element={<MetingToevoegen />} />
+        <Route path="/activiteit-plannen" element={<ActiviteitPlannen />} />
       </Routes>
       <NavBar />
     </div>

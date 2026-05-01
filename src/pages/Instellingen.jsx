@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom'
 import { getSetting, setSetting } from '../store/db'
 import { supabase } from '../store/supabase'
 import { signOut } from '../store/auth'
-import { Check } from '../components/Iconen'
+import { Check, Cog, ChevronRight, HeartPulse, Download } from '../components/Iconen'
 
 export default function Instellingen() {
   const navigate = useNavigate()
@@ -19,7 +19,7 @@ export default function Instellingen() {
   async function opslaan() {
     await setSetting('naam', naam.trim())
     setOpgeslagen(true)
-    setTimeout(() => navigate('/'), 800)
+    setTimeout(() => setOpgeslagen(false), 1500)
   }
 
   return (
@@ -28,12 +28,9 @@ export default function Instellingen() {
         <div>
           <h1 className="text-white text-2xl font-bold flex items-center gap-2">
             Instellingen
-            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-              <circle cx="12" cy="12" r="3"/>
-              <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/>
-            </svg>
+            <Cog size={22} strokeWidth={2.5} />
           </h1>
-          <p className="text-green-100 text-sm mt-1">Naam en account</p>
+          <p className="text-green-100 text-sm mt-1">Naam, gegevens en account</p>
         </div>
         <button
           onClick={() => navigate('/')}
@@ -44,6 +41,7 @@ export default function Instellingen() {
       </div>
 
       <div className="px-4 py-5 space-y-5">
+        {/* Persoonlijk */}
         <div className="bg-white border border-gray-200 rounded-xl p-4 space-y-4">
           <h2 className="font-semibold text-gray-800 text-sm">Persoonlijk</h2>
           <div>
@@ -57,32 +55,43 @@ export default function Instellingen() {
             />
             <p className="text-gray-400 text-xs mt-1">Wordt gebruikt voor de begroeting op de hoofdpagina</p>
           </div>
+          <button
+            onClick={opslaan}
+            disabled={opgeslagen}
+            className="w-full bg-green-500 text-white font-medium py-3 rounded-xl text-sm disabled:opacity-50 flex items-center justify-center gap-2"
+          >
+            {opgeslagen ? (
+              <>
+                <Check size={16} strokeWidth={2.5} />
+                Opgeslagen
+              </>
+            ) : (
+              'Naam opslaan'
+            )}
+          </button>
         </div>
 
-        {opgeslagen && (
-          <div className="bg-green-50 border border-green-200 rounded-xl p-3 flex items-center justify-center gap-2 text-green-700">
-            <Check size={18} />
-            <p className="font-medium">Opgeslagen</p>
-          </div>
-        )}
+        {/* Meer instellingen */}
+        <div className="bg-white border border-gray-200 rounded-xl divide-y divide-gray-100">
+          <InstellingLink
+            icoon={<HeartPulse size={18} />}
+            kleur="text-green-600 bg-green-50"
+            label="Basisgegevens"
+            sublabel="Lengte, geslacht, beginstand"
+            onClick={() => navigate('/basisgegevens')}
+          />
+          <InstellingLink
+            icoon={<Download size={18} />}
+            kleur="text-blue-600 bg-blue-50"
+            label="Gegevens exporteren"
+            sublabel="Download je data als CSV"
+            onClick={() => navigate('/export')}
+          />
+        </div>
 
-        <button
-          onClick={opslaan}
-          disabled={opgeslagen}
-          className="w-full bg-green-500 text-white font-semibold py-4 rounded-xl text-base shadow-sm disabled:opacity-50 flex items-center justify-center gap-2"
-        >
-          {opgeslagen ? (
-            <>
-              <Check size={18} strokeWidth={2.5} />
-              Opgeslagen
-            </>
-          ) : (
-            'Opslaan'
-          )}
-        </button>
-
+        {/* Account */}
         {email && (
-          <div className="bg-white border border-gray-200 rounded-xl p-4 mt-2">
+          <div className="bg-white border border-gray-200 rounded-xl p-4">
             <h2 className="font-semibold text-gray-800 text-sm mb-1">Account</h2>
             <p className="text-gray-500 text-xs mb-3">Ingelogd als <span className="font-medium text-gray-700">{email}</span></p>
             <button
@@ -98,5 +107,23 @@ export default function Instellingen() {
         )}
       </div>
     </div>
+  )
+}
+
+function InstellingLink({ icoon, kleur, label, sublabel, onClick }) {
+  return (
+    <button
+      onClick={onClick}
+      className="w-full flex items-center gap-3 px-4 py-3 text-left"
+    >
+      <div className={`w-9 h-9 rounded-lg flex items-center justify-center shrink-0 ${kleur}`}>
+        {icoon}
+      </div>
+      <div className="flex-1 min-w-0">
+        <p className="text-sm font-medium text-gray-800">{label}</p>
+        <p className="text-xs text-gray-500 mt-0.5">{sublabel}</p>
+      </div>
+      <ChevronRight size={18} className="text-gray-400 shrink-0" />
+    </button>
   )
 }

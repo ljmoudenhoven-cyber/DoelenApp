@@ -1,9 +1,9 @@
 import { useState, useEffect, useCallback } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { getTakenVoorVandaag, getTeLaatTaken, taakAfvinken, taakOverslaan } from '../store/taken'
+import { getTakenVoorVandaag, getTeLaatTaken, getTakenKomende7Dagen, taakAfvinken, taakOverslaan } from '../store/taken'
 import { getSetting } from '../store/db'
 import TaakModal from '../components/TaakModal'
-import { Scale, Footprints, Book, BookOpen, Pencil, Check } from '../components/Iconen'
+import { Scale, Footprints, Book, BookOpen, Pencil, Heart, HeartPulse, Check, Cog, Plus } from '../components/Iconen'
 
 const DAGEN = ['zondag', 'maandag', 'dinsdag', 'woensdag', 'donderdag', 'vrijdag', 'zaterdag']
 const MAANDEN = ['januari', 'februari', 'maart', 'april', 'mei', 'juni', 'juli', 'augustus', 'september', 'oktober', 'november', 'december']
@@ -20,18 +20,45 @@ function groetTekst() {
   return 'Goedenavond'
 }
 
+function dagLabel(datumStr) {
+  const taakDatum = new Date(datumStr + 'T00:00:00')
+  const vandaag = new Date()
+  vandaag.setHours(0, 0, 0, 0)
+  const verschil = Math.round((taakDatum - vandaag) / (1000 * 60 * 60 * 24))
+  if (verschil === 1) return 'Morgen'
+  if (verschil <= 6) return DAGEN[taakDatum.getDay()].charAt(0).toUpperCase() + DAGEN[taakDatum.getDay()].slice(1)
+  return `${taakDatum.getDate()}/${taakDatum.getMonth() + 1}`
+}
+
+const TAAK_STIJL = {
+  meting: { bg: 'bg-blue-50', tekst: 'text-blue-600', Icon: Scale },
+  sport: { bg: 'bg-orange-50', tekst: 'text-orange-600', Icon: Footprints },
+  'lezen-voortgang': { bg: 'bg-indigo-50', tekst: 'text-indigo-600', Icon: BookOpen },
+  'lezen-nieuwboek': { bg: 'bg-indigo-50', tekst: 'text-indigo-600', Icon: Book },
+  'lezen-review': { bg: 'bg-purple-50', tekst: 'text-purple-600', Icon: Pencil },
+  persoonlijk: { bg: 'bg-zinc-100', tekst: 'text-zinc-600', Icon: Pencil },
+  gezondheid: { bg: 'bg-red-50', tekst: 'text-red-600', Icon: HeartPulse },
+  mentaal: { bg: 'bg-sky-50', tekst: 'text-sky-600', Icon: Heart },
+}
+
 export default function Hoofdpagina() {
   const navigate = useNavigate()
   const [taken, setTaken] = useState([])
   const [teLaat, setTeLaat] = useState([])
+  const [komend, setKomend] = useState([])
   const [activeTaak, setActiveTaak] = useState(null)
   const [modalType, setModalType] = useState(null)
   const [naam, setNaam] = useState('')
 
   const laadTaken = useCallback(async () => {
-    const [vandaag, verlopen] = await Promise.all([getTakenVoorVandaag(), getTeLaatTaken()])
+    const [vandaag, verlopen, komende] = await Promise.all([
+      getTakenVoorVandaag(),
+      getTeLaatTaken(),
+      getTakenKomende7Dagen(),
+    ])
     setTaken(vandaag)
     setTeLaat(verlopen)
+    setKomend(komende)
   }, [])
 
   useEffect(() => {
@@ -82,21 +109,44 @@ export default function Hoofdpagina() {
           className="bg-white text-green-600 w-10 h-10 rounded-full flex items-center justify-center shadow-md"
           title="Instellingen"
         >
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-            <circle cx="12" cy="12" r="3"/>
-            <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/>
-          </svg>
+          <Cog size={18} strokeWidth={2.5} />
         </button>
       </div>
 
       <div className="flex-1 px-4 py-5 space-y-6">
+        {/* Plan-knop */}
+        <button
+          onClick={() => navigate('/activiteit-plannen')}
+          className="w-full bg-green-500 text-white font-semibold py-4 rounded-xl text-base shadow-sm flex items-center justify-center gap-2"
+        >
+          <Plus size={20} strokeWidth={2.5} />
+          Activiteit plannen
+        </button>
+
+        {/* Te late taken (alleen als > 0) */}
+        {teLaat.length > 0 && (
+          <section>
+            <h2 className="text-gray-800 font-semibold text-base mb-3">Te laat ({teLaat.length})</h2>
+            <div className="space-y-2">
+              {teLaat.map(taak => (
+                <TeLaatKaart
+                  key={taak.id}
+                  taak={taak}
+                  onOpen={() => openTaak(taak)}
+                  onOverslaan={() => openOverslaan(taak)}
+                />
+              ))}
+            </div>
+          </section>
+        )}
+
         {/* Taken vandaag */}
         <section>
-          <h2 className="text-gray-800 font-semibold text-base mb-3">Taken van vandaag</h2>
+          <h2 className="text-gray-800 font-semibold text-base mb-3">Vandaag{taken.length > 0 ? ` (${taken.length})` : ''}</h2>
           {taken.length === 0 ? (
             <div className="bg-green-50 border border-green-200 rounded-xl p-4 text-center">
-              <p className="text-green-700 font-medium">Alle taken gedaan</p>
-              <p className="text-green-600 text-sm mt-1">Geen openstaande taken voor vandaag.</p>
+              <p className="text-green-700 font-medium">Niets voor vandaag</p>
+              <p className="text-green-600 text-sm mt-1">Geen openstaande taken — geniet ervan.</p>
             </div>
           ) : (
             <div className="space-y-2">
@@ -113,22 +163,25 @@ export default function Hoofdpagina() {
           )}
         </section>
 
-        {/* Te late taken */}
-        {teLaat.length > 0 && (
-          <section>
-            <h2 className="text-gray-800 font-semibold text-base mb-3">Te laat</h2>
-            <div className="space-y-2">
-              {teLaat.map(taak => (
-                <TeLaatKaart
+        {/* Komende 7 dagen */}
+        <section>
+          <h2 className="text-gray-800 font-semibold text-base mb-3">Komende 7 dagen</h2>
+          {komend.length === 0 ? (
+            <div className="bg-gray-50 border border-gray-200 rounded-xl p-4 text-center">
+              <p className="text-gray-500 text-sm">Geen geplande activiteiten.</p>
+            </div>
+          ) : (
+            <div className="bg-white border border-gray-200 rounded-xl divide-y divide-gray-100">
+              {komend.map(taak => (
+                <KomendKaart
                   key={taak.id}
                   taak={taak}
                   onOpen={() => openTaak(taak)}
-                  onOverslaan={() => openOverslaan(taak)}
                 />
               ))}
             </div>
-          </section>
-        )}
+          )}
+        </section>
       </div>
 
       {/* Taak modal */}
@@ -145,15 +198,7 @@ export default function Hoofdpagina() {
   )
 }
 
-const TAAK_STIJL = {
-  meting: { bg: 'bg-blue-50', tekst: 'text-blue-600', Icon: Scale },
-  sport: { bg: 'bg-orange-50', tekst: 'text-orange-600', Icon: Footprints },
-  'lezen-voortgang': { bg: 'bg-indigo-50', tekst: 'text-indigo-600', Icon: BookOpen },
-  'lezen-nieuwboek': { bg: 'bg-indigo-50', tekst: 'text-indigo-600', Icon: Book },
-  'lezen-review': { bg: 'bg-purple-50', tekst: 'text-purple-600', Icon: Pencil },
-}
-
-function TaakKaart({ taak, onOpen, onOverslaan, onAfvinken }) {
+function TaakKaart({ taak, onOpen, onOverslaan }) {
   const stijl = TAAK_STIJL[taak.type] || { bg: 'bg-gray-100', tekst: 'text-gray-600', Icon: Check }
   const Icon = stijl.Icon
 
@@ -164,7 +209,7 @@ function TaakKaart({ taak, onOpen, onOverslaan, onAfvinken }) {
       </div>
       <div className="flex-1 min-w-0">
         <p className="font-medium text-gray-800 text-sm leading-tight">{taak.titel}</p>
-        <p className="text-gray-500 text-xs mt-0.5 truncate">{taak.beschrijving}</p>
+        {taak.beschrijving && <p className="text-gray-500 text-xs mt-0.5 truncate">{taak.beschrijving}</p>}
       </div>
       <div className="flex gap-2">
         <button
@@ -213,5 +258,27 @@ function TeLaatKaart({ taak, onOpen, onOverslaan }) {
         </button>
       </div>
     </div>
+  )
+}
+
+function KomendKaart({ taak, onOpen }) {
+  const stijl = TAAK_STIJL[taak.type] || { bg: 'bg-gray-100', tekst: 'text-gray-600', Icon: Check }
+  const Icon = stijl.Icon
+
+  return (
+    <button
+      onClick={onOpen}
+      className="w-full flex items-center gap-3 px-4 py-3 text-left"
+    >
+      <div className={`w-8 h-8 rounded-lg flex items-center justify-center shrink-0 ${stijl.bg} ${stijl.tekst}`}>
+        <Icon size={16} />
+      </div>
+      <div className="w-20 shrink-0">
+        <p className="text-xs font-semibold text-gray-700">{dagLabel(taak.datum)}</p>
+      </div>
+      <div className="flex-1 min-w-0">
+        <p className="text-sm text-gray-800 truncate">{taak.titel}</p>
+      </div>
+    </button>
   )
 }

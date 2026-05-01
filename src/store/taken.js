@@ -27,6 +27,34 @@ export async function getTeLaatTaken() {
     .sort((a, b) => a.datum.localeCompare(b.datum))
 }
 
+export async function getTakenKomende7Dagen() {
+  const vandaag = new Date()
+  vandaag.setHours(0, 0, 0, 0)
+  const vandaagKey = formatDateKey(vandaag)
+  const grens = new Date(vandaag)
+  grens.setDate(grens.getDate() + 7)
+  const grensKey = formatDateKey(grens)
+
+  const alleTaken = await getAll('taken')
+  return alleTaken
+    .filter(t => t.status === 'open' && t.datum > vandaagKey && t.datum <= grensKey)
+    .sort((a, b) => a.datum.localeCompare(b.datum))
+}
+
+export async function maakHandmatigeTaak({ type, titel, datum, beschrijving }) {
+  const id = `${type}-${Date.now()}`
+  await setItem('taken', id, {
+    id,
+    type,
+    titel,
+    datum,
+    beschrijving: beschrijving || '',
+    handmatig: true,
+    status: 'open',
+    aangemaaktOp: new Date().toISOString(),
+  })
+}
+
 export async function taakAfvinken(taakId) {
   const taak = await getItem('taken', taakId)
   if (taak) {

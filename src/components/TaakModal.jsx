@@ -5,6 +5,36 @@ import SportFormulier from './formulieren/SportFormulier'
 import LezenVoortgangFormulier from './formulieren/LezenVoortgangFormulier'
 import LezenNieuwBoekFormulier from './formulieren/LezenNieuwBoekFormulier'
 import LezenReviewFormulier from './formulieren/LezenReviewFormulier'
+import { taakAfvinken } from '../store/taken'
+import { Check } from './Iconen'
+
+const HANDMATIGE_TYPES = ['persoonlijk', 'gezondheid', 'mentaal']
+
+function HandmatigFormulier({ taak, onVoltooid }) {
+  const [bezig, setBezig] = useState(false)
+
+  async function voltooi() {
+    setBezig(true)
+    await taakAfvinken(taak.id)
+    onVoltooid()
+  }
+
+  return (
+    <div className="space-y-4">
+      {taak.beschrijving && (
+        <p className="text-gray-600 text-sm whitespace-pre-line">{taak.beschrijving}</p>
+      )}
+      <button
+        onClick={voltooi}
+        disabled={bezig}
+        className="w-full bg-green-500 text-white font-medium py-3 rounded-xl flex items-center justify-center gap-2 disabled:opacity-50"
+      >
+        <Check size={18} strokeWidth={2.5} />
+        {bezig ? 'Opslaan...' : 'Markeer als voltooid'}
+      </button>
+    </div>
+  )
+}
 
 export default function TaakModal({ taak, type, onSluit, onVoltooid, onOvergeslagen }) {
   const [reden, setReden] = useState('')
@@ -18,13 +48,15 @@ export default function TaakModal({ taak, type, onSluit, onVoltooid, onOvergesla
     onOvergeslagen(reden.trim())
   }
 
-  const formulier = {
-    meting: <MetingFormulier taak={taak} onVoltooid={onVoltooid} />,
-    sport: <SportFormulier taak={taak} onVoltooid={onVoltooid} />,
-    'lezen-voortgang': <LezenVoortgangFormulier taak={taak} onVoltooid={onVoltooid} />,
-    'lezen-nieuwboek': <LezenNieuwBoekFormulier taak={taak} onVoltooid={onVoltooid} />,
-    'lezen-review': <LezenReviewFormulier taak={taak} onVoltooid={onVoltooid} />,
-  }[taak.type]
+  const formulier = HANDMATIGE_TYPES.includes(taak.type)
+    ? <HandmatigFormulier taak={taak} onVoltooid={onVoltooid} />
+    : {
+        meting: <MetingFormulier taak={taak} onVoltooid={onVoltooid} />,
+        sport: <SportFormulier taak={taak} onVoltooid={onVoltooid} />,
+        'lezen-voortgang': <LezenVoortgangFormulier taak={taak} onVoltooid={onVoltooid} />,
+        'lezen-nieuwboek': <LezenNieuwBoekFormulier taak={taak} onVoltooid={onVoltooid} />,
+        'lezen-review': <LezenReviewFormulier taak={taak} onVoltooid={onVoltooid} />,
+      }[taak.type]
 
   return (
     <BottomModal titel={taak.titel} onSluit={onSluit}>
