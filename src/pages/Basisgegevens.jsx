@@ -77,7 +77,8 @@ export default function Basisgegevens() {
     }
 
     setOpgeslagen(true)
-    setTimeout(() => navigate('/fysiek'), 800)
+    const heeftPlanData = einddoelDatum && (doelGewicht || doelVet || doelBuik)
+    setTimeout(() => navigate(heeftPlanData ? '/tussendoelen?genereer=true' : '/fysiek'), 800)
   }
 
   function sluiten() {
