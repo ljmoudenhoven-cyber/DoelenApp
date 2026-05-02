@@ -22,10 +22,10 @@ export const ACTIVITEIT_OPTIES = [
 ]
 
 const KCAL_PER_KG_VET = 7700
-const STANDAARD_DEFICIT = 500
+const TARGET_WEEKLY_RATE = 0.007 // 0.7% van huidig lichaamsgewicht per week
+const MAX_WEEKLY_RATE = 0.01 // hard cap 1% van lichaamsgewicht
 const ADAPTATIE_PER_WEEK = 0.005
 const MAX_ADAPTATIE = 0.15
-const MAX_WEEKLY_RATE = 0.01 // 1% van lichaamsgewicht
 const KCAL_FLOOR = { Man: 1500, Vrouw: 1200 }
 const MAX_WEKEN = 156
 
@@ -57,8 +57,12 @@ export function gezondeBmiBereik(lengteCm) {
 
 // Week-voor-week simulatie met metabolische adaptatie en harde grenzen.
 // Stop bij doelGewicht (mode A) of na n weken (mode B).
-function simuleerWeken({ startGewicht, doelGewicht, maxWeken, basisData, deficitKcal }) {
-  const richting = doelGewicht != null && startGewicht > doelGewicht ? -1 : 1
+// Tempo schaalt mee met huidig gewicht (0.7% per week target) zodat
+// zwaardere mensen meer afvallen per week dan lichtere.
+function simuleerWeken({ startGewicht, doelGewicht, maxWeken, basisData, richting = -1 }) {
+  if (doelGewicht != null) {
+    richting = startGewicht > doelGewicht ? -1 : 1
+  }
   const projecties = []
   let gewicht = startGewicht
   const waarschuwingen = []
@@ -72,28 +76,35 @@ function simuleerWeken({ startGewicht, doelGewicht, maxWeken, basisData, deficit
     const adaptatie = Math.min(MAX_ADAPTATIE, week * ADAPTATIE_PER_WEEK)
     const effectiveTdee = tdee * (1 - adaptatie)
 
-    // Cap rate op 1% van huidig gewicht per week
-    const maxWeeklyVerlies = gewicht * MAX_WEEKLY_RATE
-    const maxWeeklyDeficit = (maxWeeklyVerlies * KCAL_PER_KG_VET) / 7
-    let dailyDeficit = Math.min(deficitKcal, maxWeeklyDeficit)
+    // Doel-deficit afgeleid van percentage huidig gewicht (schaalt met gewicht
+    // en wordt automatisch trager naarmate je afvalt)
+    const targetWeeklyVerandering = gewicht * TARGET_WEEKLY_RATE
+    const targetDailyDeficit = (targetWeeklyVerandering * KCAL_PER_KG_VET) / 7
 
-    // Cap zodat intake niet onder floor zakt
-    const floor = KCAL_FLOOR[basisData.geslacht] || 1200
-    const maxDeficitPerFloor = effectiveTdee - floor
-    if (dailyDeficit > maxDeficitPerFloor) {
-      dailyDeficit = Math.max(0, maxDeficitPerFloor)
-      if (!intakeFloorGeraakt) {
-        intakeFloorGeraakt = true
-        waarschuwingen.push({
-          type: 'info',
-          bericht: `Bij week ${week} zou je calorie-inname onder ${floor} kcal/dag moeten zakken om het tempo te halen. Het tempo wordt vanaf hier automatisch bijgesteld.`,
-        })
+    // Hard cap op 1% van huidig gewicht per week
+    const maxWeeklyVerandering = gewicht * MAX_WEEKLY_RATE
+    const maxDailyDeficit = (maxWeeklyVerandering * KCAL_PER_KG_VET) / 7
+
+    let dailyDeficit = Math.min(targetDailyDeficit, maxDailyDeficit)
+
+    // Cap zodat intake niet onder floor zakt (alleen bij afvallen)
+    if (richting === -1) {
+      const floor = KCAL_FLOOR[basisData.geslacht] || 1200
+      const maxDeficitPerFloor = effectiveTdee - floor
+      if (dailyDeficit > maxDeficitPerFloor) {
+        dailyDeficit = Math.max(0, maxDeficitPerFloor)
+        if (!intakeFloorGeraakt) {
+          intakeFloorGeraakt = true
+          waarschuwingen.push({
+            type: 'info',
+            bericht: `Bij week ${week} zou je calorie-inname onder ${floor} kcal/dag moeten zakken om het tempo te halen. Het tempo wordt vanaf hier automatisch bijgesteld.`,
+          })
+        }
       }
     }
 
-    const weeklyDeficit = dailyDeficit * 7
-    const verandering = (weeklyDeficit / KCAL_PER_KG_VET) * richting
-    let nieuwGewicht = gewicht + verandering
+    const weeklyVerandering = (dailyDeficit * 7) / KCAL_PER_KG_VET
+    let nieuwGewicht = gewicht + weeklyVerandering * richting
 
     let bereikt = false
     if (doelGewicht != null) {
@@ -132,8 +143,8 @@ function dagenTussen(aStr, bStr) {
 }
 
 // Mode A: gebruiker geeft doelgewicht, app berekent einddatum
-export function berekenEindDatumVanGewicht({ startGewicht, doelGewicht, basisData, deficitKcal = STANDAARD_DEFICIT }) {
-  const sim = simuleerWeken({ startGewicht, doelGewicht, maxWeken: MAX_WEKEN, basisData, deficitKcal })
+export function berekenEindDatumVanGewicht({ startGewicht, doelGewicht, basisData }) {
+  const sim = simuleerWeken({ startGewicht, doelGewicht, maxWeken: MAX_WEKEN, basisData })
   if (sim.projecties.length === 0) return { onmogelijk: true, waarschuwingen: sim.waarschuwingen }
   const laatste = sim.projecties[sim.projecties.length - 1]
   if (laatste.gewicht !== doelGewicht) {
@@ -142,7 +153,7 @@ export function berekenEindDatumVanGewicht({ startGewicht, doelGewicht, basisDat
       projecties: sim.projecties,
       waarschuwingen: [
         ...sim.waarschuwingen,
-        { type: 'fout', bericht: `Doel kan niet binnen ${MAX_WEKEN} weken bereikt worden bij ${deficitKcal} kcal/dag deficit.` },
+        { type: 'fout', bericht: `Doel kan niet binnen ${MAX_WEKEN} weken bereikt worden bij gezond tempo.` },
       ],
     }
   }
@@ -156,7 +167,8 @@ export function berekenEindDatumVanGewicht({ startGewicht, doelGewicht, basisDat
 }
 
 // Mode B: gebruiker geeft einddatum, app berekent realistisch doelgewicht
-export function berekenDoelGewichtVanDatum({ startGewicht, eindDatum, basisData, deficitKcal = STANDAARD_DEFICIT }) {
+// (default richting = afvallen)
+export function berekenDoelGewichtVanDatum({ startGewicht, eindDatum, basisData }) {
   const dagen = dagenTussen(formatDateKey(new Date()), eindDatum)
   if (dagen <= 7) {
     return {
@@ -170,7 +182,7 @@ export function berekenDoelGewichtVanDatum({ startGewicht, eindDatum, basisData,
     doelGewicht: null,
     maxWeken: weken,
     basisData,
-    deficitKcal,
+    richting: -1,
   })
   const laatste = sim.projecties[sim.projecties.length - 1]
   return {
@@ -198,7 +210,7 @@ function maakTussendoelen({ startDatum, projecties }) {
   return tussendoelen
 }
 
-export function bouwPlan({ mode, startGewicht, doelGewicht, eindDatum, basisData, deficitKcal = STANDAARD_DEFICIT }) {
+export function bouwPlan({ mode, startGewicht, doelGewicht, eindDatum, basisData }) {
   const startDatum = formatDateKey(new Date())
   const waarschuwingen = []
 
@@ -207,13 +219,13 @@ export function bouwPlan({ mode, startGewicht, doelGewicht, eindDatum, basisData
   let projecties = []
 
   if (mode === 'doelgewicht') {
-    const r = berekenEindDatumVanGewicht({ startGewicht, doelGewicht, basisData, deficitKcal })
+    const r = berekenEindDatumVanGewicht({ startGewicht, doelGewicht, basisData })
     if (r.onmogelijk) return { onmogelijk: true, waarschuwingen: r.waarschuwingen }
     resolvedEindDatum = r.eindDatum
     projecties = r.projecties
     waarschuwingen.push(...r.waarschuwingen)
   } else {
-    const r = berekenDoelGewichtVanDatum({ startGewicht, eindDatum, basisData, deficitKcal })
+    const r = berekenDoelGewichtVanDatum({ startGewicht, eindDatum, basisData })
     if (r.onmogelijk) return { onmogelijk: true, waarschuwingen: r.waarschuwingen }
     resolvedDoelGewicht = r.doelGewicht
     projecties = r.projecties
@@ -247,7 +259,6 @@ export function bouwPlan({ mode, startGewicht, doelGewicht, eindDatum, basisData
       startGewicht: Math.round(startGewicht * 10) / 10,
       doelGewicht: resolvedDoelGewicht,
       eindDatum: resolvedEindDatum,
-      deficitKcal,
       basisSnapshot: { ...basisData },
       tussendoelen,
       gemTempo,
