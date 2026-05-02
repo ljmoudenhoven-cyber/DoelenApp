@@ -17,13 +17,39 @@ function dagenTussen(a, b) {
   return Math.round((b - a) / (1000 * 60 * 60 * 24))
 }
 
-function progressBijTijd(t, T) {
-  if (T < 28) return t / T
-  const fase1Eind = 14
-  const fase2Eind = T * 0.75
-  if (t <= fase1Eind) return (t / fase1Eind) * 0.20
-  if (t <= fase2Eind) return 0.20 + ((t - fase1Eind) / (fase2Eind - fase1Eind)) * 0.60
-  return 0.80 + ((t - fase2Eind) / (T - fase2Eind)) * 0.20
+// Initiële daling (week 1-2) is grotendeels glycogeen + water en is
+// vrijwel constant onafhankelijk van het totaaldoel — daarom een
+// absolute cap, niet een percentage van het totaal.
+const INITIAL_DROP_LIMITS = {
+  gewicht: { min: 0.5, max: 2.0, pct: 0.05 },
+  vetPercentage: { min: 0.2, max: 1.0, pct: 0.10 },
+  buikomvang: { min: 0.5, max: 2.0, pct: 0.10 },
+}
+
+function berekenInitialDrop(totaalChange, type) {
+  const c = INITIAL_DROP_LIMITS[type] || INITIAL_DROP_LIMITS.gewicht
+  return Math.min(c.max, Math.max(c.min, totaalChange * c.pct))
+}
+
+// Driefase-progressie:
+// - Fase 1 (dag 0-14): initiële daling (water + glycogeen), absoluut begrensd
+// - Fase 2 (dag 14 tot 75% van resterende tijd): 85% van resterende verlies
+// - Fase 3 (laatste 25% van resterende tijd): 15% van resterende verlies (taper)
+function progressBijTijd({ t, T, totaalChange, type }) {
+  if (T < 28 || totaalChange < 1) return t / T
+  const initialDrop = berekenInitialDrop(totaalChange, type)
+  const initialPct = initialDrop / totaalChange
+  if (t <= 14) return initialPct * (t / 14)
+
+  const restPct = 1 - initialPct
+  const fase2Pct = restPct * 0.85
+  const fase3Pct = restPct * 0.15
+  const fase2Dagen = (T - 14) * 0.75
+  const fase2Eind = 14 + fase2Dagen
+  const fase3Dagen = T - fase2Eind
+
+  if (t <= fase2Eind) return initialPct + fase2Pct * ((t - 14) / fase2Dagen)
+  return initialPct + fase2Pct + fase3Pct * ((t - fase2Eind) / fase3Dagen)
 }
 
 function rondAf(waarde, type) {
@@ -68,20 +94,24 @@ export function berekenTussendoelen({ startDatum, eindDatum, huidig, doel }) {
   }
 
   return datums.map(({ datum, t }) => {
-    const progress = progressBijTijd(t, T)
     const td = {
       id: `tussendoel-auto-${datum}`,
       datum,
-      automatisch: true,
     }
     if (huidig.gewicht != null && doel.gewicht != null) {
-      td.gewicht = rondAf(huidig.gewicht - (huidig.gewicht - doel.gewicht) * progress, 'gewicht')
+      const totaal = Math.abs(huidig.gewicht - doel.gewicht)
+      const p = progressBijTijd({ t, T, totaalChange: totaal, type: 'gewicht' })
+      td.gewicht = rondAf(huidig.gewicht - (huidig.gewicht - doel.gewicht) * p, 'gewicht')
     }
     if (huidig.vetPercentage != null && doel.vetPercentage != null) {
-      td.vetPercentage = rondAf(huidig.vetPercentage - (huidig.vetPercentage - doel.vetPercentage) * progress, 'vetPercentage')
+      const totaal = Math.abs(huidig.vetPercentage - doel.vetPercentage)
+      const p = progressBijTijd({ t, T, totaalChange: totaal, type: 'vetPercentage' })
+      td.vetPercentage = rondAf(huidig.vetPercentage - (huidig.vetPercentage - doel.vetPercentage) * p, 'vetPercentage')
     }
     if (huidig.buikomvang != null && doel.buikomvang != null) {
-      td.buikomvang = rondAf(huidig.buikomvang - (huidig.buikomvang - doel.buikomvang) * progress, 'buikomvang')
+      const totaal = Math.abs(huidig.buikomvang - doel.buikomvang)
+      const p = progressBijTijd({ t, T, totaalChange: totaal, type: 'buikomvang' })
+      td.buikomvang = rondAf(huidig.buikomvang - (huidig.buikomvang - doel.buikomvang) * p, 'buikomvang')
     }
     return td
   })
@@ -93,10 +123,8 @@ export async function getHuidigeStand() {
   return metingen.sort((a, b) => b.datum.localeCompare(a.datum))[0]
 }
 
-export async function vervangAutomatischeTussendoelen(nieuweAutomatisch) {
-  const bestaand = await getSetting('tussendoelen') || []
-  const handmatige = bestaand.filter(t => !t.automatisch)
-  const samen = [...handmatige, ...nieuweAutomatisch].sort((a, b) => a.datum.localeCompare(b.datum))
-  await setItem('settings', 'tussendoelen', samen)
-  return samen
+export async function vervangAlleTussendoelen(nieuwe) {
+  const gesorteerd = [...nieuwe].sort((a, b) => a.datum.localeCompare(b.datum))
+  await setItem('settings', 'tussendoelen', gesorteerd)
+  return gesorteerd
 }

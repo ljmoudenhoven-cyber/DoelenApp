@@ -10,7 +10,6 @@ import Basisgegevens from './pages/Basisgegevens'
 import Tussendoelen from './pages/Tussendoelen'
 import MetingToevoegen from './pages/MetingToevoegen'
 import Metingen from './pages/Metingen'
-import TussendoelToevoegen from './pages/TussendoelToevoegen'
 import ActiviteitPlannen from './pages/ActiviteitPlannen'
 import MijnCheckins from './pages/MijnCheckins'
 import Login from './pages/Login'
@@ -153,8 +152,6 @@ function AppInner() {
         <Route path="/instellingen" element={<Instellingen />} />
         <Route path="/basisgegevens" element={<Basisgegevens />} />
         <Route path="/tussendoelen" element={<Tussendoelen />} />
-        <Route path="/tussendoel-toevoegen" element={<TussendoelToevoegen />} />
-        <Route path="/tussendoel-bewerken/:id" element={<TussendoelToevoegen />} />
         <Route path="/metingen" element={<Metingen />} />
         <Route path="/meting-toevoegen" element={<MetingToevoegen />} />
         <Route path="/meting-bewerken/:id" element={<MetingToevoegen />} />

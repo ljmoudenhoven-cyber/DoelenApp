@@ -6,7 +6,7 @@ import {
   berekenTussendoelen,
   valideerDoelTempo,
   getHuidigeStand,
-  vervangAutomatischeTussendoelen,
+  vervangAlleTussendoelen,
   LABELS,
 } from '../store/tussendoelen'
 import { formatDateKey } from '../store/taken'
@@ -76,7 +76,7 @@ function PreviewModal({ tussendoelen, validaties, onAnnuleer, onBevestig }) {
         )}
 
         <p className="text-xs text-gray-400">
-          Bestaande handmatige tussendoelen blijven staan. Eerder gegenereerde automatische worden vervangen.
+          Bestaande tussendoelen worden vervangen door deze nieuwe set.
         </p>
 
         <div className="space-y-2">
@@ -178,7 +178,7 @@ export default function Tussendoelen() {
   }, [searchParams])
 
   async function bevestigPreview() {
-    const updated = await vervangAutomatischeTussendoelen(previewData.tussendoelen)
+    const updated = await vervangAlleTussendoelen(previewData.tussendoelen)
     setTussendoelen(updated)
     setPreviewData(null)
   }
@@ -217,43 +217,30 @@ export default function Tussendoelen() {
           Tussendoelen verschijnen als punten op de doellijn in de grafieken. Zo zie je hoe je koers loopt richting je einddoel.
         </p>
 
-        <div className="space-y-2">
-          <button
-            onClick={autoGenereer}
-            className="w-full bg-accent-500 text-accent-fg font-semibold py-3 rounded-xl text-sm flex items-center justify-center gap-2"
-          >
-            <Repeat size={16} strokeWidth={2.5} />
-            Genereer automatisch
-          </button>
-          <button
-            onClick={() => navigate('/tussendoel-toevoegen')}
-            className="w-full bg-white border border-gray-300 text-gray-700 font-medium py-3 rounded-xl text-sm"
-          >
-            + Tussendoel toevoegen
-          </button>
-          {foutPreview && (
-            <div className="bg-orange-50 border border-orange-200 rounded-xl p-3 mt-2">
-              <p className="text-orange-700 text-xs">{foutPreview}</p>
-            </div>
-          )}
-        </div>
+        <button
+          onClick={autoGenereer}
+          className="w-full bg-accent-500 text-accent-fg font-semibold py-3 rounded-xl text-sm flex items-center justify-center gap-2"
+        >
+          <Repeat size={16} strokeWidth={2.5} />
+          Genereer automatisch
+        </button>
+        {foutPreview && (
+          <div className="bg-orange-50 border border-orange-200 rounded-xl p-3">
+            <p className="text-orange-700 text-xs">{foutPreview}</p>
+          </div>
+        )}
 
         {tussendoelen.length === 0 ? (
           <div className="bg-gray-50 border border-gray-200 rounded-xl p-5 text-center">
             <p className="text-gray-400 text-sm">Nog geen tussendoelen.</p>
-            <p className="text-gray-300 text-xs mt-1">Genereer automatisch of voeg er handmatig één toe.</p>
+            <p className="text-gray-300 text-xs mt-1">Klik 'Genereer automatisch' om je traject uit te stippelen.</p>
           </div>
         ) : (
           <div className="bg-white border border-gray-200 rounded-xl divide-y divide-gray-50">
             {tussendoelen.map(td => (
               <div key={td.id} className="flex items-center justify-between px-4 py-3">
                 <div className="flex-1 min-w-0">
-                  <div className="flex items-center gap-2">
-                    <p className="text-sm font-semibold text-gray-800">{formatDatum(td.datum)}</p>
-                    {!td.automatisch && (
-                      <span className="text-[10px] bg-gray-100 text-gray-500 px-2 py-0.5 rounded-full">handmatig</span>
-                    )}
-                  </div>
+                  <p className="text-sm font-semibold text-gray-800">{formatDatum(td.datum)}</p>
                   <p className="text-xs text-gray-400 mt-0.5">
                     {[
                       td.gewicht != null && `${td.gewicht} kg`,
@@ -262,21 +249,13 @@ export default function Tussendoelen() {
                     ].filter(Boolean).join(' · ')}
                   </p>
                 </div>
-                <div className="flex gap-2 shrink-0">
-                  <button
-                    onClick={() => navigate(`/tussendoel-bewerken/${encodeURIComponent(td.id)}`)}
-                    className="text-gray-500 text-xs px-3 py-1.5 rounded-lg border border-gray-200"
-                  >
-                    Bewerk
-                  </button>
-                  <button
-                    onClick={() => verwijder(td.id)}
-                    aria-label="Verwijder tussendoel"
-                    className="text-red-400 p-1.5 rounded-lg border border-red-100"
-                  >
-                    <X size={16} />
-                  </button>
-                </div>
+                <button
+                  onClick={() => verwijder(td.id)}
+                  aria-label="Verwijder tussendoel"
+                  className="text-red-400 p-1.5 rounded-lg border border-red-100 shrink-0"
+                >
+                  <X size={16} />
+                </button>
               </div>
             ))}
           </div>
