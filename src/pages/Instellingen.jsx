@@ -133,9 +133,9 @@ export default function Instellingen() {
           <InstellingLink
             icoon={<HeartPulse size={18} />}
             kleur="text-accent-600 bg-accent-50"
-            label="Basisgegevens"
-            sublabel="Lengte, geslacht, beginstand"
-            onClick={() => navigate('/basisgegevens')}
+            label="Mijn plan"
+            sublabel="Basisgegevens, doelen en tussendoelen"
+            onClick={() => navigate('/mijn-plan')}
           />
           <InstellingLink
             icoon={<Download size={18} />}

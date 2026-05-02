@@ -6,8 +6,7 @@ import Sport from './pages/Sport'
 import Lezen from './pages/Lezen'
 import Export from './pages/Export'
 import Instellingen from './pages/Instellingen'
-import Basisgegevens from './pages/Basisgegevens'
-import Tussendoelen from './pages/Tussendoelen'
+import MijnPlan from './pages/MijnPlan'
 import MetingToevoegen from './pages/MetingToevoegen'
 import Metingen from './pages/Metingen'
 import ActiviteitPlannen from './pages/ActiviteitPlannen'
@@ -121,7 +120,7 @@ function AppInner() {
 
       const lengte = await getSetting('lengte')
       if (!lengte) {
-        navigate('/basisgegevens')
+        navigate('/mijn-plan')
       }
 
       const bestaandSchema = await getSetting('sportSchema')
@@ -150,8 +149,7 @@ function AppInner() {
         <Route path="/lezen" element={<Lezen />} />
         <Route path="/export" element={<Export />} />
         <Route path="/instellingen" element={<Instellingen />} />
-        <Route path="/basisgegevens" element={<Basisgegevens />} />
-        <Route path="/tussendoelen" element={<Tussendoelen />} />
+        <Route path="/mijn-plan" element={<MijnPlan />} />
         <Route path="/metingen" element={<Metingen />} />
         <Route path="/meting-toevoegen" element={<MetingToevoegen />} />
         <Route path="/meting-bewerken/:id" element={<MetingToevoegen />} />
