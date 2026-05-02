@@ -99,10 +99,10 @@ export default function Hoofdpagina() {
       {/* Header */}
       <div className="bg-accent-500 px-5 pt-[calc(env(safe-area-inset-top)+0.5rem)] pb-6 flex items-end justify-between">
         <div>
-          <p className="text-accent-fg-soft text-sm capitalize">{datumTekst()}</p>
-          <h1 className="text-accent-fg text-2xl font-bold mt-1">
+          <h1 className="text-accent-fg text-2xl font-bold">
             {groetTekst()}{naam ? `, ${naam}` : ''}
           </h1>
+          <p className="text-accent-fg-soft text-sm capitalize mt-1">{datumTekst()}</p>
         </div>
         <button
           onClick={() => navigate('/instellingen')}
