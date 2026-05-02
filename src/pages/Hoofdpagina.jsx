@@ -118,10 +118,10 @@ export default function Hoofdpagina() {
         </div>
         <div className="flex items-center gap-2">
           <button
-            onClick={() => navigate('/healthcheck-instellen')}
+            onClick={() => navigate('/mijn-checkins')}
             className="bg-white text-accent-600 w-10 h-10 rounded-full flex items-center justify-center shadow-md"
-            title="Dagelijkse check-in"
-            aria-label="Dagelijkse check-in instellen"
+            title="Mijn check-ins"
+            aria-label="Mijn check-ins"
           >
             <ClipboardCheck size={18} strokeWidth={2.5} />
           </button>
