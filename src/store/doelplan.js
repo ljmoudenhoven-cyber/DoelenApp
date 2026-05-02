@@ -22,12 +22,24 @@ export const ACTIVITEIT_OPTIES = [
 ]
 
 const KCAL_PER_KG_VET = 7700
-const TARGET_WEEKLY_RATE = 0.007 // 0.7% van huidig lichaamsgewicht per week
-const MAX_WEEKLY_RATE = 0.01 // hard cap 1% van lichaamsgewicht
+// Target tempo per activiteitsniveau (% huidig lichaamsgewicht per week).
+// Actiever = grotere TDEE-buffer = comfortabel groter deficit;
+// sedentair = sneller bij de calorie-floor, dus kleiner deficit.
+const TARGET_WEEKLY_RATE_PER_NIVEAU = {
+  zittend: 0.005,
+  licht: 0.007,
+  matig: 0.0085,
+  actief: 0.01,
+}
+const MAX_WEEKLY_RATE = 0.01 // absolute hard cap
 const ADAPTATIE_PER_WEEK = 0.005
 const MAX_ADAPTATIE = 0.15
 const KCAL_FLOOR = { Man: 1500, Vrouw: 1200 }
 const MAX_WEKEN = 156
+
+function targetTempo(niveau) {
+  return TARGET_WEEKLY_RATE_PER_NIVEAU[niveau] || TARGET_WEEKLY_RATE_PER_NIVEAU.licht
+}
 
 export function berekenBMR({ gewicht, lengte, leeftijd, geslacht }) {
   if (!gewicht || !lengte || !leeftijd || !geslacht) return null
@@ -77,8 +89,10 @@ function simuleerWeken({ startGewicht, doelGewicht, maxWeken, basisData, richtin
     const effectiveTdee = tdee * (1 - adaptatie)
 
     // Doel-deficit afgeleid van percentage huidig gewicht (schaalt met gewicht
-    // en wordt automatisch trager naarmate je afvalt)
-    const targetWeeklyVerandering = gewicht * TARGET_WEEKLY_RATE
+    // en wordt automatisch trager naarmate je afvalt). Percentage hangt af van
+    // activiteitsniveau: actiever = groter target-tempo.
+    const tempo = targetTempo(basisData.activiteitsniveau)
+    const targetWeeklyVerandering = gewicht * tempo
     const targetDailyDeficit = (targetWeeklyVerandering * KCAL_PER_KG_VET) / 7
 
     // Hard cap op 1% van huidig gewicht per week
