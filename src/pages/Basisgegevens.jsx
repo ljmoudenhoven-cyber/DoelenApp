@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react'
 import { getSetting, setSetting, setItem } from '../store/db'
+import { formatDateKey } from '../store/taken'
 import { useNavigate } from 'react-router-dom'
 import { Check } from '../components/Iconen'
 
@@ -61,7 +62,7 @@ export default function Basisgegevens() {
     })
 
     if (beginGewicht && beginVet && beginBuik) {
-      const vandaag = new Date().toISOString().split('T')[0]
+      const vandaag = formatDateKey(new Date())
       const bmi = berekenBMI(parseFloat(beginGewicht), l)
       await setItem('metingen', `meting-beginstand`, {
         id: 'meting-beginstand',
@@ -83,7 +84,7 @@ export default function Basisgegevens() {
     navigate('/fysiek')
   }
 
-  const vandaag = new Date().toISOString().split('T')[0]
+  const vandaag = formatDateKey(new Date())
 
   return (
     <div className="flex flex-col pb-10">

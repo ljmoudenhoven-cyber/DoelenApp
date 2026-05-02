@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { getAll } from '../store/db'
+import { formatDateKey } from '../store/taken'
 import { Scale, Footprints, Book, SkipForward, Download, Check } from '../components/Iconen'
 
 function arrayNaarCSV(data, kolommen) {
@@ -41,7 +42,7 @@ export default function Export() {
       getAll('taken'),
     ])
 
-    const datum = new Date().toISOString().split('T')[0]
+    const datum = formatDateKey(new Date())
 
     // Lichaamsmetingen
     const metingenCSV = arrayNaarCSV(

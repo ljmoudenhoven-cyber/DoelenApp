@@ -1,12 +1,13 @@
 import { useState, useEffect } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import { getSetting, setItem } from '../store/db'
+import { formatDateKey } from '../store/taken'
 
 export default function TussendoelToevoegen() {
   const navigate = useNavigate()
   const { id } = useParams()
   const isBewerken = Boolean(id)
-  const vandaag = new Date().toISOString().split('T')[0]
+  const vandaag = formatDateKey(new Date())
 
   const [datum, setDatum] = useState('')
   const [gewicht, setGewicht] = useState('')

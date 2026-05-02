@@ -1,3 +1,5 @@
+import { formatDateKey } from './taken'
+
 // Genereer progressief hardloopschema van vandaag tot 12 aug 2026
 // Startpunt: gevorderd beginner (~4km), doel: 10km in <55min op 12-08-2026
 
@@ -50,7 +52,7 @@ export function genereerSportSchema() {
       const doelTijd = Math.round(afstand * doelTempo)
 
       schema.push({
-        datum: huidigeDate.toISOString().split('T')[0],
+        datum: formatDateKey(huidigeDate),
         week: weekNummer + 1,
         dag: dag === 1 ? 'Maandag' : 'Vrijdag',
         doelAfstand: afstand,

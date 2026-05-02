@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react'
 import { getAll, getSetting, getItem } from '../store/db'
+import { formatDateKey } from '../store/taken'
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ReferenceLine, ResponsiveContainer } from 'recharts'
 import { Trophy, Heart } from '../components/Iconen'
 
@@ -47,7 +48,7 @@ export default function Sport() {
   const dagenTotDoel = Math.ceil((doel - vandaag) / (1000 * 60 * 60 * 24))
 
   // Volgende geplande training
-  const toekomst = schema.filter(s => s.datum >= vandaag.toISOString().split('T')[0])
+  const toekomst = schema.filter(s => s.datum >= formatDateKey(vandaag))
   const volgende = toekomst[0]
 
   return (

@@ -1,6 +1,6 @@
 import { useState, useMemo } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { maakHandmatigeTaak, maakHerhalendeTaak } from '../store/taken'
+import { maakHandmatigeTaak, maakHerhalendeTaak, formatDateKey } from '../store/taken'
 import { User, Apple, Brain, Repeat } from '../components/Iconen'
 
 const TYPES = [
@@ -32,22 +32,15 @@ const WEEKDAGEN = [
   { dag: 0, label: 'Zo' },
 ]
 
-function lokaleDatum(d) {
-  const y = d.getFullYear()
-  const m = String(d.getMonth() + 1).padStart(2, '0')
-  const dd = String(d.getDate()).padStart(2, '0')
-  return `${y}-${m}-${dd}`
-}
-
 function plusMaanden(datumStr, n) {
   const d = new Date(datumStr + 'T00:00:00')
   d.setMonth(d.getMonth() + n)
-  return lokaleDatum(d)
+  return formatDateKey(d)
 }
 
 export default function ActiviteitPlannen() {
   const navigate = useNavigate()
-  const vandaag = lokaleDatum(new Date())
+  const vandaag = formatDateKey(new Date())
 
   const [type, setType] = useState('persoonlijk')
   const [titel, setTitel] = useState('')

@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { getSetting, setItem } from '../../store/db'
-import { taakAfvinken } from '../../store/taken'
+import { taakAfvinken, formatDateKey } from '../../store/taken'
 
 function berekenBMI(gewicht, lengte) {
   if (!gewicht || !lengte) return null
@@ -10,7 +10,7 @@ function berekenBMI(gewicht, lengte) {
 
 // Werkt voor: taak (taak prop), nieuw handmatig (manueel=true), of bewerken (bestaand prop)
 export default function MetingFormulier({ taak = null, manueel = false, bestaand = null, onVoltooid }) {
-  const vandaag = new Date().toISOString().split('T')[0]
+  const vandaag = formatDateKey(new Date())
   const [datum, setDatum] = useState(bestaand?.datum || taak?.datum || vandaag)
   const [gewicht, setGewicht] = useState(bestaand?.gewicht != null ? String(bestaand.gewicht) : '')
   const [vetPercentage, setVetPercentage] = useState(bestaand?.vetPercentage != null ? String(bestaand.vetPercentage) : '')
