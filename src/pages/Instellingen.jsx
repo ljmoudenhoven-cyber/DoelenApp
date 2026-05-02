@@ -45,15 +45,15 @@ export default function Instellingen() {
     <div className="flex flex-col pb-10">
       <div className="bg-accent-500 px-5 pt-[calc(env(safe-area-inset-top)+0.5rem)] pb-6 flex items-end justify-between">
         <div>
-          <h1 className="text-white text-2xl font-bold flex items-center gap-2">
+          <h1 className="text-accent-fg text-2xl font-bold flex items-center gap-2">
             Instellingen
             <Cog size={22} strokeWidth={2.5} />
           </h1>
-          <p className="text-accent-100 text-sm mt-1">Naam, gegevens en account</p>
+          <p className="text-accent-fg-soft text-sm mt-1">Naam, gegevens en account</p>
         </div>
         <button
           onClick={() => navigate('/')}
-          className="bg-white/20 text-white text-sm font-medium px-4 py-2 rounded-full"
+          className="bg-accent-overlay text-accent-fg text-sm font-medium px-4 py-2 rounded-full"
         >
           Sluiten
         </button>
@@ -77,7 +77,7 @@ export default function Instellingen() {
           <button
             onClick={opslaan}
             disabled={opgeslagen}
-            className="w-full bg-accent-500 text-white font-medium py-3 rounded-xl text-sm disabled:opacity-50 flex items-center justify-center gap-2"
+            className="w-full bg-accent-500 text-accent-fg font-medium py-3 rounded-xl text-sm disabled:opacity-50 flex items-center justify-center gap-2"
           >
             {opgeslagen ? (
               <>

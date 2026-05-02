@@ -30,7 +30,7 @@ export default function Metingen() {
     <div className="flex flex-col pb-10">
       <div className="bg-accent-500 px-5 pt-[calc(env(safe-area-inset-top)+0.5rem)] pb-6 flex items-end justify-between">
         <div>
-          <h1 className="text-white text-2xl font-bold flex items-center gap-2">
+          <h1 className="text-accent-fg text-2xl font-bold flex items-center gap-2">
             Metingen
             <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
               <path d="M21.3 15.3a2.4 2.4 0 0 1 0 3.4l-2.6 2.6a2.4 2.4 0 0 1-3.4 0L2.7 8.7a2.4 2.4 0 0 1 0-3.4l2.6-2.6a2.4 2.4 0 0 1 3.4 0Z"/>
@@ -40,11 +40,11 @@ export default function Metingen() {
               <path d="m17.5 15.5 2-2"/>
             </svg>
           </h1>
-          <p className="text-accent-100 text-sm mt-1">Alle bijgehouden metingen</p>
+          <p className="text-accent-fg-soft text-sm mt-1">Alle bijgehouden metingen</p>
         </div>
         <button
           onClick={() => navigate('/fysiek')}
-          className="bg-white/20 text-white text-sm font-medium px-4 py-2 rounded-full"
+          className="bg-accent-overlay text-accent-fg text-sm font-medium px-4 py-2 rounded-full"
         >
           Sluiten
         </button>
@@ -53,7 +53,7 @@ export default function Metingen() {
       <div className="px-4 py-5 space-y-4">
         <button
           onClick={() => navigate('/meting-toevoegen')}
-          className="w-full bg-accent-500 text-white font-semibold py-3 rounded-xl text-sm"
+          className="w-full bg-accent-500 text-accent-fg font-semibold py-3 rounded-xl text-sm"
         >
           + Meting toevoegen
         </button>

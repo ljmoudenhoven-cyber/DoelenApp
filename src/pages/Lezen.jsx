@@ -41,8 +41,8 @@ export default function Lezen() {
   return (
     <div className="flex flex-col">
       <div className="bg-accent-500 px-5 pt-[calc(env(safe-area-inset-top)+0.5rem)] pb-6">
-        <h1 className="text-white text-2xl font-bold">Lezen</h1>
-        <p className="text-accent-100 text-sm mt-1">Elke maand een boek</p>
+        <h1 className="text-accent-fg text-2xl font-bold">Lezen</h1>
+        <p className="text-accent-fg-soft text-sm mt-1">Elke maand een boek</p>
       </div>
 
       <div className="px-4 py-5 space-y-4">

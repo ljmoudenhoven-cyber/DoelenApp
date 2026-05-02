@@ -99,8 +99,8 @@ export default function Hoofdpagina() {
       {/* Header */}
       <div className="bg-accent-500 px-5 pt-[calc(env(safe-area-inset-top)+0.5rem)] pb-6 flex items-end justify-between">
         <div>
-          <p className="text-accent-100 text-sm capitalize">{datumTekst()}</p>
-          <h1 className="text-white text-2xl font-bold mt-1">
+          <p className="text-accent-fg-soft text-sm capitalize">{datumTekst()}</p>
+          <h1 className="text-accent-fg text-2xl font-bold mt-1">
             {groetTekst()}{naam ? `, ${naam}` : ''}
           </h1>
         </div>
@@ -117,7 +117,7 @@ export default function Hoofdpagina() {
         {/* Plan-knop */}
         <button
           onClick={() => navigate('/activiteit-plannen')}
-          className="w-full bg-accent-500 text-white font-semibold py-4 rounded-xl text-base shadow-sm flex items-center justify-center gap-2"
+          className="w-full bg-accent-500 text-accent-fg font-semibold py-4 rounded-xl text-base shadow-sm flex items-center justify-center gap-2"
         >
           <Plus size={20} strokeWidth={2.5} />
           Activiteit plannen
@@ -214,7 +214,7 @@ function TaakKaart({ taak, onOpen, onOverslaan }) {
       <div className="flex gap-2">
         <button
           onClick={onOpen}
-          className="bg-accent-500 text-white text-xs font-medium px-3 py-1.5 rounded-lg"
+          className="bg-accent-500 text-accent-fg text-xs font-medium px-3 py-1.5 rounded-lg"
         >
           Invullen
         </button>

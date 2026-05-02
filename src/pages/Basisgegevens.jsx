@@ -89,18 +89,18 @@ export default function Basisgegevens() {
     <div className="flex flex-col pb-10">
       <div className="bg-accent-500 px-5 pt-[calc(env(safe-area-inset-top)+0.5rem)] pb-6 flex items-end justify-between">
         <div>
-          <h1 className="text-white text-2xl font-bold flex items-center gap-2">
+          <h1 className="text-accent-fg text-2xl font-bold flex items-center gap-2">
             Basisgegevens
             <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
               <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
               <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
             </svg>
           </h1>
-          <p className="text-accent-100 text-sm mt-1">Lengte, beginstand en doelen</p>
+          <p className="text-accent-fg-soft text-sm mt-1">Lengte, beginstand en doelen</p>
         </div>
         <button
           onClick={sluiten}
-          className="bg-white/20 text-white text-sm font-medium px-4 py-2 rounded-full"
+          className="bg-accent-overlay text-accent-fg text-sm font-medium px-4 py-2 rounded-full"
         >
           Sluiten
         </button>
@@ -136,7 +136,7 @@ export default function Basisgegevens() {
                   onClick={() => setGeslacht(g)}
                   className={`flex-1 py-2.5 rounded-xl text-sm font-medium border transition-colors ${
                     geslacht === g
-                      ? 'bg-accent-500 text-white border-accent-500'
+                      ? 'bg-accent-500 text-accent-fg border-accent-500'
                       : 'bg-white text-gray-600 border-gray-300'
                   }`}
                 >
@@ -227,7 +227,7 @@ export default function Basisgegevens() {
         <button
           onClick={opslaan}
           disabled={opgeslagen}
-          className="w-full bg-accent-500 text-white font-semibold py-4 rounded-xl text-base shadow-sm disabled:opacity-50 flex items-center justify-center gap-2"
+          className="w-full bg-accent-500 text-accent-fg font-semibold py-4 rounded-xl text-base shadow-sm disabled:opacity-50 flex items-center justify-center gap-2"
         >
           {opgeslagen ? (
             <>

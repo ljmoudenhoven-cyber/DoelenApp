@@ -43,12 +43,12 @@ export default function ActiviteitPlannen() {
     <div className="flex flex-col pb-10">
       <div className="bg-accent-500 px-5 pt-[calc(env(safe-area-inset-top)+0.5rem)] pb-6 flex items-end justify-between">
         <div>
-          <h1 className="text-white text-2xl font-bold">Activiteit plannen</h1>
-          <p className="text-accent-100 text-sm mt-1">Voeg een eigen activiteit toe</p>
+          <h1 className="text-accent-fg text-2xl font-bold">Activiteit plannen</h1>
+          <p className="text-accent-fg-soft text-sm mt-1">Voeg een eigen activiteit toe</p>
         </div>
         <button
           onClick={() => navigate('/')}
-          className="bg-white/20 text-white text-sm font-medium px-4 py-2 rounded-full"
+          className="bg-accent-overlay text-accent-fg text-sm font-medium px-4 py-2 rounded-full"
         >
           Sluiten
         </button>
@@ -118,7 +118,7 @@ export default function ActiviteitPlannen() {
           <button
             onClick={opslaan}
             disabled={bezig}
-            className="w-full bg-accent-500 text-white font-semibold py-3 rounded-xl text-sm disabled:opacity-50"
+            className="w-full bg-accent-500 text-accent-fg font-semibold py-3 rounded-xl text-sm disabled:opacity-50"
           >
             {bezig ? 'Opslaan...' : 'Activiteit plannen'}
           </button>

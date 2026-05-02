@@ -28,16 +28,16 @@ export default function MetingToevoegen() {
     <div className="flex flex-col pb-10">
       <div className="bg-accent-500 px-5 pt-[calc(env(safe-area-inset-top)+0.5rem)] pb-6 flex items-end justify-between">
         <div>
-          <h1 className="text-white text-2xl font-bold">
+          <h1 className="text-accent-fg text-2xl font-bold">
             {isBewerken ? 'Meting bewerken' : 'Meting toevoegen'}
           </h1>
-          <p className="text-accent-100 text-sm mt-1">
+          <p className="text-accent-fg-soft text-sm mt-1">
             {isBewerken ? 'Pas gewicht, vet% of buikomvang aan' : 'Vul je gewicht, vet% en buikomvang in'}
           </p>
         </div>
         <button
           onClick={terug}
-          className="bg-white/20 text-white text-sm font-medium px-4 py-2 rounded-full"
+          className="bg-accent-overlay text-accent-fg text-sm font-medium px-4 py-2 rounded-full"
         >
           Sluiten
         </button>

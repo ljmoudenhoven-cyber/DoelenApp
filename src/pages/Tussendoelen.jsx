@@ -32,18 +32,18 @@ export default function Tussendoelen() {
     <div className="flex flex-col pb-10">
       <div className="bg-accent-500 px-5 pt-[calc(env(safe-area-inset-top)+0.5rem)] pb-6 flex items-end justify-between">
         <div>
-          <h1 className="text-white text-2xl font-bold flex items-center gap-2">
+          <h1 className="text-accent-fg text-2xl font-bold flex items-center gap-2">
             Tussendoelen
             <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
               <path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"/>
               <line x1="4" y1="22" x2="4" y2="15"/>
             </svg>
           </h1>
-          <p className="text-accent-100 text-sm mt-1">Mijlpalen op weg naar je einddoel</p>
+          <p className="text-accent-fg-soft text-sm mt-1">Mijlpalen op weg naar je einddoel</p>
         </div>
         <button
           onClick={() => navigate('/fysiek')}
-          className="bg-white/20 text-white text-sm font-medium px-4 py-2 rounded-full"
+          className="bg-accent-overlay text-accent-fg text-sm font-medium px-4 py-2 rounded-full"
         >
           Sluiten
         </button>
@@ -56,7 +56,7 @@ export default function Tussendoelen() {
 
         <button
           onClick={() => navigate('/tussendoel-toevoegen')}
-          className="w-full bg-accent-500 text-white font-semibold py-3 rounded-xl text-sm"
+          className="w-full bg-accent-500 text-accent-fg font-semibold py-3 rounded-xl text-sm"
         >
           + Tussendoel toevoegen
         </button>

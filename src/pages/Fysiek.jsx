@@ -205,8 +205,8 @@ export default function Fysiek() {
     <div className="flex flex-col pb-6">
       <div className="bg-accent-500 px-5 pt-[calc(env(safe-area-inset-top)+0.5rem)] pb-6 flex items-end justify-between">
         <div>
-          <h1 className="text-white text-2xl font-bold">Fysiek</h1>
-          <p className="text-accent-100 text-sm mt-1">Lichaamsmetingen bijhouden</p>
+          <h1 className="text-accent-fg text-2xl font-bold">Fysiek</h1>
+          <p className="text-accent-fg-soft text-sm mt-1">Lichaamsmetingen bijhouden</p>
         </div>
         <div className="flex gap-2">
           <button
@@ -263,7 +263,7 @@ export default function Fysiek() {
             <p className="text-gray-500 text-sm">Nog geen metingen.</p>
             <button
               onClick={() => navigate('/metingen')}
-              className="mt-3 bg-accent-500 text-white text-sm font-medium px-4 py-2 rounded-lg"
+              className="mt-3 bg-accent-500 text-accent-fg text-sm font-medium px-4 py-2 rounded-lg"
             >
               + Eerste meting toevoegen
             </button>

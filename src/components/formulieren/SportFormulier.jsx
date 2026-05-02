@@ -148,7 +148,7 @@ export default function SportFormulier({ taak, onVoltooid }) {
       <button
         onClick={opslaan}
         disabled={bezig}
-        className="w-full bg-accent-500 text-white font-medium py-3 rounded-xl disabled:opacity-50"
+        className="w-full bg-accent-500 text-accent-fg font-medium py-3 rounded-xl disabled:opacity-50"
       >
         {bezig ? 'Opslaan...' : 'Training opslaan'}
       </button>

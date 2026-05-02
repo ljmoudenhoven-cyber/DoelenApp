@@ -82,7 +82,7 @@ export default function Login() {
             <button
               type="submit"
               disabled={bezig}
-              className="w-full bg-accent-500 text-white font-semibold py-4 rounded-xl text-base shadow-sm disabled:opacity-50"
+              className="w-full bg-accent-500 text-accent-fg font-semibold py-4 rounded-xl text-base shadow-sm disabled:opacity-50"
             >
               {bezig ? 'Versturen…' : 'Stuur inlogcode'}
             </button>
@@ -127,7 +127,7 @@ export default function Login() {
             <button
               type="submit"
               disabled={bezig || code.length < 6}
-              className="w-full bg-accent-500 text-white font-semibold py-4 rounded-xl text-base shadow-sm disabled:opacity-50"
+              className="w-full bg-accent-500 text-accent-fg font-semibold py-4 rounded-xl text-base shadow-sm disabled:opacity-50"
             >
               {bezig ? 'Inloggen…' : 'Inloggen'}
             </button>

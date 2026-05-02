@@ -27,7 +27,7 @@ function HandmatigFormulier({ taak, onVoltooid }) {
       <button
         onClick={voltooi}
         disabled={bezig}
-        className="w-full bg-accent-500 text-white font-medium py-3 rounded-xl flex items-center justify-center gap-2 disabled:opacity-50"
+        className="w-full bg-accent-500 text-accent-fg font-medium py-3 rounded-xl flex items-center justify-center gap-2 disabled:opacity-50"
       >
         <Check size={18} strokeWidth={2.5} />
         {bezig ? 'Opslaan...' : 'Markeer als voltooid'}
