@@ -32,15 +32,22 @@ const WEEKDAGEN = [
   { dag: 0, label: 'Zo' },
 ]
 
+function lokaleDatum(d) {
+  const y = d.getFullYear()
+  const m = String(d.getMonth() + 1).padStart(2, '0')
+  const dd = String(d.getDate()).padStart(2, '0')
+  return `${y}-${m}-${dd}`
+}
+
 function plusMaanden(datumStr, n) {
   const d = new Date(datumStr + 'T00:00:00')
   d.setMonth(d.getMonth() + n)
-  return d.toISOString().split('T')[0]
+  return lokaleDatum(d)
 }
 
 export default function ActiviteitPlannen() {
   const navigate = useNavigate()
-  const vandaag = new Date().toISOString().split('T')[0]
+  const vandaag = lokaleDatum(new Date())
 
   const [type, setType] = useState('persoonlijk')
   const [titel, setTitel] = useState('')
