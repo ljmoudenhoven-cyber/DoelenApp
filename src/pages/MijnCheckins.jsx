@@ -2,13 +2,23 @@ import { useState, useEffect, useCallback } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts'
 import { getAll, getItem } from '../store/db'
-import { formatDateKey } from '../store/taken'
-import { getHealthcheckConfig } from '../store/healthcheck'
-import { ClipboardCheck, Cog } from '../components/Iconen'
+import { formatDateKey, herstartHealthcheckVoorVandaag } from '../store/taken'
+import { getHealthcheckConfig, saveHealthcheckConfig, THEMAS } from '../store/healthcheck'
+import { ClipboardCheck } from '../components/Iconen'
 import TaakModal from '../components/TaakModal'
 
 const DAGEN = ['Ma', 'Di', 'Wo', 'Do', 'Vr', 'Za', 'Zo']
 const MAANDEN = ['januari', 'februari', 'maart', 'april', 'mei', 'juni', 'juli', 'augustus', 'september', 'oktober', 'november', 'december']
+
+const FREQUENTIES = [
+  { id: 'dagelijks', label: 'Dagelijks' },
+  { id: 'wekelijks', label: 'Wekelijks' },
+]
+
+const WEEKDAGEN = [
+  { dag: 1, label: 'Ma' }, { dag: 2, label: 'Di' }, { dag: 3, label: 'Wo' },
+  { dag: 4, label: 'Do' }, { dag: 5, label: 'Vr' }, { dag: 6, label: 'Za' }, { dag: 0, label: 'Zo' },
+]
 
 function laatsteNDagen(n) {
   const out = []
@@ -48,19 +58,11 @@ function VandaagKaart({ entry, taak, onVulIn }) {
         <p className="text-xs text-gray-500 mb-2">Gevoel</p>
         <div className="flex gap-2">
           {[1, 2, 3, 4, 5].map(n => (
-            <div
-              key={n}
-              className={`flex-1 h-3 rounded-md ${gevoel >= n ? 'bg-accent-500' : 'bg-gray-200'}`}
-            />
+            <div key={n} className={`flex-1 h-3 rounded-md ${gevoel >= n ? 'bg-accent-500' : 'bg-gray-200'}`} />
           ))}
         </div>
         {taak && (
-          <button
-            onClick={onVulIn}
-            className="text-accent-600 text-xs font-medium mt-3"
-          >
-            Bewerken
-          </button>
+          <button onClick={onVulIn} className="text-accent-600 text-xs font-medium mt-3">Bewerken</button>
         )}
       </div>
     )
@@ -70,10 +72,7 @@ function VandaagKaart({ entry, taak, onVulIn }) {
       <div className="bg-accent-50 border border-accent-200 rounded-xl p-4">
         <p className="text-accent-700 font-semibold text-sm">Nog niet ingevuld vandaag</p>
         <p className="text-accent-600 text-xs mt-1">Een minuut nu, een patroon later.</p>
-        <button
-          onClick={onVulIn}
-          className="mt-3 bg-accent-500 text-accent-fg text-sm font-medium px-4 py-2 rounded-lg"
-        >
+        <button onClick={onVulIn} className="mt-3 bg-accent-500 text-accent-fg text-sm font-medium px-4 py-2 rounded-lg">
           Vul nu in
         </button>
       </div>
@@ -92,18 +91,8 @@ function TrendGrafiek({ titel, dataKey, data }) {
             <CartesianGrid strokeDasharray="3 3" stroke="#f3f4f6" />
             <XAxis dataKey="label" tick={{ fontSize: 10, fill: '#9ca3af' }} interval="preserveStartEnd" />
             <YAxis domain={[0, 5]} tick={{ fontSize: 10, fill: '#9ca3af' }} ticks={[1, 2, 3, 4, 5]} />
-            <Tooltip
-              contentStyle={{ borderRadius: '8px', border: '1px solid #e5e7eb', fontSize: '12px' }}
-              labelStyle={{ color: '#6b7280' }}
-            />
-            <Line
-              type="monotone"
-              dataKey={dataKey}
-              stroke="var(--accent-500)"
-              strokeWidth={2}
-              dot={{ r: 3, fill: 'var(--accent-500)' }}
-              connectNulls={false}
-            />
+            <Tooltip contentStyle={{ borderRadius: '8px', border: '1px solid #e5e7eb', fontSize: '12px' }} labelStyle={{ color: '#6b7280' }} />
+            <Line type="monotone" dataKey={dataKey} stroke="var(--accent-500)" strokeWidth={2} dot={{ r: 3, fill: 'var(--accent-500)' }} connectNulls={false} />
           </LineChart>
         </ResponsiveContainer>
       </div>
@@ -124,12 +113,7 @@ function MaandHeatmap({ entries }) {
   for (let d = 1; d <= aantalDagen; d++) {
     const datumKey = formatDateKey(new Date(jaar, maand, d))
     const entry = entries.find(e => e.datum === datumKey)
-    cellen.push({
-      key: datumKey,
-      dag: d,
-      gevoel: entry?.antwoorden?.gevoel || 0,
-      isVandaag: d === vandaag.getDate(),
-    })
+    cellen.push({ key: datumKey, dag: d, gevoel: entry?.antwoorden?.gevoel || 0, isVandaag: d === vandaag.getDate() })
   }
 
   return (
@@ -138,18 +122,13 @@ function MaandHeatmap({ entries }) {
       <div className="bg-white border border-gray-200 rounded-xl p-3">
         <p className="text-xs text-gray-500 capitalize mb-3">{MAANDEN[maand]} {jaar}</p>
         <div className="grid grid-cols-7 gap-1 mb-1">
-          {DAGEN.map(d => (
-            <div key={d} className="text-[10px] text-gray-400 text-center">{d}</div>
-          ))}
+          {DAGEN.map(d => <div key={d} className="text-[10px] text-gray-400 text-center">{d}</div>)}
         </div>
         <div className="grid grid-cols-7 gap-1">
           {cellen.map(c => c.leeg ? (
             <div key={c.key} className="aspect-square" />
           ) : (
-            <div
-              key={c.key}
-              className={`aspect-square rounded-md flex items-center justify-center text-[11px] font-medium ${kleurVoorGevoel(c.gevoel)} ${tekstKleurVoorGevoel(c.gevoel)} ${c.isVandaag ? 'ring-2 ring-accent-600 ring-offset-1' : ''}`}
-            >
+            <div key={c.key} className={`aspect-square rounded-md flex items-center justify-center text-[11px] font-medium ${kleurVoorGevoel(c.gevoel)} ${tekstKleurVoorGevoel(c.gevoel)} ${c.isVandaag ? 'ring-2 ring-accent-600 ring-offset-1' : ''}`}>
               {c.dag}
             </div>
           ))}
@@ -177,18 +156,10 @@ function ThemaTellingen({ entries, themas }) {
   if (totaal === 0) return null
 
   const rijen = []
-  if (themas.sport) rijen.push({
-    label: 'Sport', waarde: weekEntries.filter(e => e.antwoorden?.sport === true).length, max: totaal,
-  })
-  if (themas.meditatie) rijen.push({
-    label: 'Meditatie', waarde: weekEntries.filter(e => e.antwoorden?.meditatie === true).length, max: totaal,
-  })
-  if (themas.medicijnen) rijen.push({
-    label: 'Medicijnen', waarde: weekEntries.filter(e => e.antwoorden?.medicijnen === true).length, max: totaal,
-  })
-  if (themas.hoofdpijn) rijen.push({
-    label: 'Hoofdpijn', waarde: weekEntries.filter(e => (e.antwoorden?.hoofdpijn || 0) > 0).length, max: totaal, suffix: 'dagen',
-  })
+  if (themas.sport) rijen.push({ label: 'Sport', waarde: weekEntries.filter(e => e.antwoorden?.sport === true).length, max: totaal })
+  if (themas.meditatie) rijen.push({ label: 'Meditatie', waarde: weekEntries.filter(e => e.antwoorden?.meditatie === true).length, max: totaal })
+  if (themas.medicijnen) rijen.push({ label: 'Medicijnen', waarde: weekEntries.filter(e => e.antwoorden?.medicijnen === true).length, max: totaal })
+  if (themas.hoofdpijn) rijen.push({ label: 'Hoofdpijn', waarde: weekEntries.filter(e => (e.antwoorden?.hoofdpijn || 0) > 0).length, max: totaal, suffix: 'dagen' })
   if (themas.water) {
     const totaalWater = weekEntries.reduce((s, e) => s + (e.antwoorden?.water || 0), 0)
     const gemiddelde = totaal > 0 ? Math.round((totaalWater / totaal) * 10) / 10 : 0
@@ -216,8 +187,142 @@ function ThemaTellingen({ entries, themas }) {
   )
 }
 
+function InstellingenTab({ config, setConfig, onOpgeslagen }) {
+  const [bezig, setBezig] = useState(false)
+  const [opgeslagen, setOpgeslagen] = useState(false)
+
+  function toggleDag(d) {
+    const nieuw = new Set(config.dagen)
+    if (nieuw.has(d)) nieuw.delete(d); else nieuw.add(d)
+    setConfig({ ...config, dagen: [...nieuw].sort() })
+  }
+
+  function toggleThema(id) {
+    setConfig({ ...config, themas: { ...config.themas, [id]: !config.themas[id] } })
+  }
+
+  async function opslaan() {
+    setBezig(true)
+    await saveHealthcheckConfig(config)
+    await herstartHealthcheckVoorVandaag()
+    await onOpgeslagen()
+    setBezig(false)
+    setOpgeslagen(true)
+    setTimeout(() => setOpgeslagen(false), 1500)
+  }
+
+  const ietsAan = Object.values(config.themas).some(Boolean)
+
+  return (
+    <div className="space-y-5">
+      <div className="bg-white border border-gray-200 rounded-xl p-4">
+        <div className="flex items-center justify-between">
+          <div>
+            <p className="text-sm font-medium text-gray-800">Check-in inschakelen</p>
+            <p className="text-xs text-gray-500 mt-0.5">Verschijnt als activiteit op de hoofdpagina</p>
+          </div>
+          <button
+            type="button"
+            onClick={() => setConfig({ ...config, actief: !config.actief })}
+            role="switch"
+            aria-checked={config.actief}
+            className={`relative w-11 h-6 rounded-full transition-colors shrink-0 ${config.actief ? 'bg-accent-500' : 'bg-gray-200'}`}
+          >
+            <span className={`absolute top-0.5 left-0.5 w-5 h-5 bg-white rounded-full shadow transition-transform ${config.actief ? 'translate-x-5' : ''}`} />
+          </button>
+        </div>
+      </div>
+
+      {config.actief && (
+        <>
+          <div className="bg-white border border-gray-200 rounded-xl p-4 space-y-4">
+            <div>
+              <label className="block text-xs font-medium text-gray-500 mb-2">Frequentie</label>
+              <div className="grid grid-cols-2 gap-2">
+                {FREQUENTIES.map(f => (
+                  <button
+                    key={f.id}
+                    type="button"
+                    onClick={() => setConfig({ ...config, frequentie: f.id })}
+                    className={`py-2 rounded-lg text-xs font-medium border transition-colors ${
+                      config.frequentie === f.id ? 'bg-accent-500 text-accent-fg border-accent-500' : 'bg-white text-gray-600 border-gray-200'
+                    }`}
+                  >
+                    {f.label}
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            {config.frequentie === 'wekelijks' && (
+              <div>
+                <label className="block text-xs font-medium text-gray-500 mb-2">Op welke dagen</label>
+                <div className="grid grid-cols-7 gap-1">
+                  {WEEKDAGEN.map(w => {
+                    const aan = config.dagen.includes(w.dag)
+                    return (
+                      <button
+                        key={w.dag}
+                        type="button"
+                        onClick={() => toggleDag(w.dag)}
+                        className={`py-2 rounded-lg text-xs font-medium border transition-colors ${
+                          aan ? 'bg-accent-500 text-accent-fg border-accent-500' : 'bg-white text-gray-500 border-gray-200'
+                        }`}
+                      >
+                        {w.label}
+                      </button>
+                    )
+                  })}
+                </div>
+              </div>
+            )}
+          </div>
+
+          <div className="bg-white border border-gray-200 rounded-xl p-4">
+            <div className="mb-3">
+              <p className="text-sm font-medium text-gray-800">Vraag-thema's</p>
+              <p className="text-xs text-gray-500 mt-0.5">Welke onderwerpen wil je bijhouden?</p>
+            </div>
+            <div className="divide-y divide-gray-100">
+              {THEMAS.map(t => (
+                <div key={t.id} className="flex items-center justify-between py-3 first:pt-0 last:pb-0">
+                  <div className="flex-1 min-w-0 pr-3">
+                    <p className="text-sm text-gray-800">{t.label}</p>
+                    <p className="text-xs text-gray-500 mt-0.5">{t.uitleg}</p>
+                  </div>
+                  <button
+                    type="button"
+                    onClick={() => toggleThema(t.id)}
+                    role="switch"
+                    aria-checked={config.themas[t.id]}
+                    className={`relative w-11 h-6 rounded-full transition-colors shrink-0 ${config.themas[t.id] ? 'bg-accent-500' : 'bg-gray-200'}`}
+                  >
+                    <span className={`absolute top-0.5 left-0.5 w-5 h-5 bg-white rounded-full shadow transition-transform ${config.themas[t.id] ? 'translate-x-5' : ''}`} />
+                  </button>
+                </div>
+              ))}
+            </div>
+            {!ietsAan && (
+              <p className="text-xs text-orange-500 mt-3">Zet minimaal één thema aan, anders heeft de check-in geen vragen.</p>
+            )}
+          </div>
+        </>
+      )}
+
+      <button
+        onClick={opslaan}
+        disabled={bezig || (config.actief && !ietsAan)}
+        className="w-full bg-accent-500 text-accent-fg font-semibold py-3 rounded-xl text-sm disabled:opacity-50"
+      >
+        {bezig ? 'Opslaan...' : opgeslagen ? 'Opgeslagen' : 'Opslaan'}
+      </button>
+    </div>
+  )
+}
+
 export default function MijnCheckins() {
   const navigate = useNavigate()
+  const [tab, setTab] = useState('overzicht')
   const [entries, setEntries] = useState([])
   const [config, setConfig] = useState(null)
   const [vandaagTaak, setVandaagTaak] = useState(null)
@@ -263,57 +368,70 @@ export default function MijnCheckins() {
       <div className="bg-accent-500 px-5 pt-[calc(env(safe-area-inset-top)+0.5rem)] pb-6 flex items-end justify-between">
         <div>
           <h1 className="text-accent-fg text-2xl font-bold flex items-center gap-2">
-            Mijn check-ins
+            Check-in
             <ClipboardCheck size={22} strokeWidth={2.5} />
           </h1>
-          <p className="text-accent-fg-soft text-sm mt-1">Je dagen in cijfers</p>
+          <p className="text-accent-fg-soft text-sm mt-1">Overzicht en instellingen</p>
         </div>
-        <div className="flex items-center gap-2">
-          <button
-            onClick={() => navigate('/healthcheck-instellen')}
-            aria-label="Check-in instellingen"
-            className="bg-white text-accent-600 w-10 h-10 rounded-full flex items-center justify-center shadow-md"
-          >
-            <Cog size={18} strokeWidth={2.5} />
-          </button>
-          <button
-            onClick={() => navigate('/')}
-            className="bg-accent-overlay text-accent-fg text-sm font-medium px-4 py-2 rounded-full"
-          >
-            Sluiten
-          </button>
+        <button
+          onClick={() => navigate('/')}
+          className="bg-accent-overlay text-accent-fg text-sm font-medium px-4 py-2 rounded-full"
+        >
+          Sluiten
+        </button>
+      </div>
+
+      <div className="px-4 pt-4">
+        <div className="bg-gray-100 rounded-xl p-1 grid grid-cols-2 gap-1">
+          {[
+            { id: 'overzicht', label: 'Overzicht' },
+            { id: 'instellingen', label: 'Instellingen' },
+          ].map(t => (
+            <button
+              key={t.id}
+              onClick={() => setTab(t.id)}
+              className={`py-2 rounded-lg text-sm font-medium transition-colors ${
+                tab === t.id ? 'bg-white text-gray-800 shadow-sm' : 'text-gray-500'
+              }`}
+            >
+              {t.label}
+            </button>
+          ))}
         </div>
       </div>
 
       <div className="px-4 py-5 space-y-6">
-        {!config.actief ? (
-          <div className="bg-gray-50 border border-gray-200 rounded-xl p-5 text-center">
-            <p className="text-gray-500 text-sm font-medium">Check-in staat uit</p>
-            <p className="text-gray-400 text-xs mt-1">Schakel hem in via het tandwiel-icoon om te beginnen.</p>
-          </div>
+        {tab === 'overzicht' ? (
+          !config.actief ? (
+            <div className="bg-gray-50 border border-gray-200 rounded-xl p-5 text-center">
+              <p className="text-gray-500 text-sm font-medium">Check-in staat uit</p>
+              <p className="text-gray-400 text-xs mt-1">Schakel hem in via het tabblad Instellingen om te beginnen.</p>
+            </div>
+          ) : (
+            <>
+              <VandaagKaart entry={vandaagEntry} taak={vandaagTaak} onVulIn={vulIn} />
+              {entries.length === 0 ? (
+                <div className="bg-gray-50 border border-gray-200 rounded-xl p-5 text-center">
+                  <p className="text-gray-500 text-sm font-medium">Nog geen check-ins</p>
+                  <p className="text-gray-400 text-xs mt-1">Vul je eerste check-in in om je geschiedenis op te bouwen.</p>
+                </div>
+              ) : !heeftGenoegData ? (
+                <div className="bg-gray-50 border border-gray-200 rounded-xl p-5 text-center">
+                  <p className="text-gray-500 text-sm font-medium">Bouw je geschiedenis op</p>
+                  <p className="text-gray-400 text-xs mt-1">Vanaf drie ingevulde dagen zie je hier je trends en patronen.</p>
+                </div>
+              ) : (
+                <>
+                  {config.themas.gevoel && <TrendGrafiek titel="Gevoel — laatste 14 dagen" dataKey="gevoel" data={trendDagen} />}
+                  {config.themas.slaap && <TrendGrafiek titel="Slaap — laatste 14 dagen" dataKey="slaap" data={trendDagen} />}
+                  <MaandHeatmap entries={entries} />
+                  <ThemaTellingen entries={entries} themas={config.themas} />
+                </>
+              )}
+            </>
+          )
         ) : (
-          <>
-            <VandaagKaart entry={vandaagEntry} taak={vandaagTaak} onVulIn={vulIn} />
-
-            {entries.length === 0 ? (
-              <div className="bg-gray-50 border border-gray-200 rounded-xl p-5 text-center">
-                <p className="text-gray-500 text-sm font-medium">Nog geen check-ins</p>
-                <p className="text-gray-400 text-xs mt-1">Vul je eerste check-in in om je geschiedenis op te bouwen.</p>
-              </div>
-            ) : !heeftGenoegData ? (
-              <div className="bg-gray-50 border border-gray-200 rounded-xl p-5 text-center">
-                <p className="text-gray-500 text-sm font-medium">Bouw je geschiedenis op</p>
-                <p className="text-gray-400 text-xs mt-1">Vanaf drie ingevulde dagen zie je hier je trends en patronen.</p>
-              </div>
-            ) : (
-              <>
-                {config.themas.gevoel && <TrendGrafiek titel="Gevoel — laatste 14 dagen" dataKey="gevoel" data={trendDagen} />}
-                {config.themas.slaap && <TrendGrafiek titel="Slaap — laatste 14 dagen" dataKey="slaap" data={trendDagen} />}
-                <MaandHeatmap entries={entries} />
-                <ThemaTellingen entries={entries} themas={config.themas} />
-              </>
-            )}
-          </>
+          <InstellingenTab config={config} setConfig={setConfig} onOpgeslagen={laad} />
         )}
       </div>
 
