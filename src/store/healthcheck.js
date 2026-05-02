@@ -8,7 +8,7 @@ export const THEMAS = [
   { id: 'sport', label: 'Sport', uitleg: 'Heb je gesport vandaag?' },
   { id: 'meditatie', label: 'Meditatie', uitleg: 'Heb je een moment van meditatie gehad?' },
   { id: 'medicijnen', label: 'Medicijnen', uitleg: 'Heb je medicijnen gebruikt?' },
-  { id: 'hoofdpijn', label: 'Hoofdpijn', uitleg: 'Last gehad van hoofdpijn of migraine?' },
+  { id: 'hoofdpijn', label: 'Hoofdpijn', uitleg: 'Last gehad van hoofdpijn?' },
 ]
 
 export const STANDAARD_CONFIG = {

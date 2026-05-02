@@ -18,24 +18,19 @@ const MAALTIJD_OPTIES = [
   { id: 'ongezond', label: 'Ongezond' },
 ]
 
-const GEVOEL_KLEUREN = ['bg-red-400', 'bg-orange-400', 'bg-yellow-400', 'bg-lime-400', 'bg-green-500']
-
-function SchaalDots({ waarde, onWijzig, max = 5, kleurenVerloop = false }) {
+function SchaalDots({ waarde, onWijzig, max = 5 }) {
   return (
     <div className="flex gap-2">
       {Array.from({ length: max }).map((_, i) => {
         const n = i + 1
         const aan = waarde >= n
-        const kleur = aan
-          ? (kleurenVerloop ? GEVOEL_KLEUREN[i] : 'bg-accent-500')
-          : 'bg-gray-200'
         return (
           <button
             key={n}
             type="button"
             onClick={() => onWijzig(waarde === n ? 0 : n)}
             aria-label={`${n} van ${max}`}
-            className={`flex-1 h-8 rounded-lg transition-colors ${kleur}`}
+            className={`flex-1 h-8 rounded-lg transition-colors ${aan ? 'bg-accent-500' : 'bg-gray-200'}`}
           />
         )
       })}
@@ -151,7 +146,6 @@ export default function HealthcheckFormulier({ taak, onVoltooid }) {
           <SchaalDots
             waarde={antwoorden.gevoel}
             onWijzig={v => setAntwoorden(a => ({ ...a, gevoel: v }))}
-            kleurenVerloop
           />
         </div>
       )}
@@ -259,7 +253,7 @@ export default function HealthcheckFormulier({ taak, onVoltooid }) {
 
       {themas.hoofdpijn && (
         <div className="space-y-2">
-          <SectieKop titel="Hoofdpijn / migraine" hint="0 = geen, 5 = erg" />
+          <SectieKop titel="Hoofdpijn" hint="0 = geen, 5 = erg" />
           <div className="grid grid-cols-6 gap-1">
             {[0, 1, 2, 3, 4, 5].map(n => {
               const aan = antwoorden.hoofdpijn === n

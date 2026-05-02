@@ -40,12 +40,13 @@ export default function BottomModal({ titel, onSluit, children }) {
 
         {/* Scrollbaar inhoud met expliciete hoogte */}
         <div
-          className="px-5 py-4 pb-10"
+          className="px-5 py-4"
           style={{
             height: `calc(${MODAL_H} - ${HEADER_H}px)`,
             overflowY: 'scroll',
             WebkitOverflowScrolling: 'touch',
             overscrollBehavior: 'contain',
+            paddingBottom: 'calc(2.5rem + env(safe-area-inset-bottom))',
           }}
         >
           {children}

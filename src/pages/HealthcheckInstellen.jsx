@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { getHealthcheckConfig, saveHealthcheckConfig, THEMAS } from '../store/healthcheck'
 import { genereerWekelijkseTaken } from '../store/taken'
-import { Activity } from '../components/Iconen'
+import { ClipboardCheck } from '../components/Iconen'
 
 const FREQUENTIES = [
   { id: 'dagelijks', label: 'Dagelijks' },
@@ -55,7 +55,7 @@ export default function HealthcheckInstellen() {
         <div>
           <h1 className="text-accent-fg text-2xl font-bold flex items-center gap-2">
             Dagelijkse check-in
-            <Activity size={22} strokeWidth={2.5} />
+            <ClipboardCheck size={22} strokeWidth={2.5} />
           </h1>
           <p className="text-accent-fg-soft text-sm mt-1">Bewust nadenken over je dag</p>
         </div>
