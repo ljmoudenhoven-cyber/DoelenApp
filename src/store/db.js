@@ -7,6 +7,7 @@ const stores = {
   sport: localforage.createInstance({ name: 'DoelenApp', storeName: 'sport' }),
   lezen: localforage.createInstance({ name: 'DoelenApp', storeName: 'lezen' }),
   taken: localforage.createInstance({ name: 'DoelenApp', storeName: 'taken' }),
+  healthcheck: localforage.createInstance({ name: 'DoelenApp', storeName: 'healthcheck' }),
 }
 
 export async function getAll(store) {

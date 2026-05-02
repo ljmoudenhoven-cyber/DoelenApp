@@ -148,9 +148,28 @@ export async function maakTaak(taak) {
   }
 }
 
+async function genereerHealthcheckTaak(vandaag) {
+  const config = await getItem('settings', 'healthcheckConfig')
+  if (!config?.actief) return
+  const dag = vandaag.getDay()
+  const moetVandaag = config.frequentie === 'dagelijks' ||
+    (config.frequentie === 'wekelijks' && Array.isArray(config.dagen) && config.dagen.includes(dag))
+  if (!moetVandaag) return
+  const datumKey = formatDateKey(vandaag)
+  await maakTaak({
+    id: `healthcheck-${datumKey}`,
+    type: 'healthcheck',
+    datum: datumKey,
+    titel: 'Dagelijkse check-in',
+    beschrijving: 'Hoe was je dag?',
+  })
+}
+
 export async function genereerWekelijkseTaken() {
   const vandaag = new Date()
   const dag = vandaag.getDay()
+
+  await genereerHealthcheckTaak(vandaag)
 
   // Maandag = 1
   if (dag === 1) {

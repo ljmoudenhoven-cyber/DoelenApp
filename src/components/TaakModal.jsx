@@ -5,6 +5,7 @@ import SportFormulier from './formulieren/SportFormulier'
 import LezenVoortgangFormulier from './formulieren/LezenVoortgangFormulier'
 import LezenNieuwBoekFormulier from './formulieren/LezenNieuwBoekFormulier'
 import LezenReviewFormulier from './formulieren/LezenReviewFormulier'
+import HealthcheckFormulier from './formulieren/HealthcheckFormulier'
 import { taakAfvinken } from '../store/taken'
 import { Check, Trash } from './Iconen'
 
@@ -60,6 +61,7 @@ export default function TaakModal({ taak, type, onSluit, onVoltooid, onOvergesla
         'lezen-voortgang': <LezenVoortgangFormulier taak={taak} onVoltooid={onVoltooid} />,
         'lezen-nieuwboek': <LezenNieuwBoekFormulier taak={taak} onVoltooid={onVoltooid} />,
         'lezen-review': <LezenReviewFormulier taak={taak} onVoltooid={onVoltooid} />,
+        'healthcheck': <HealthcheckFormulier taak={taak} onVoltooid={onVoltooid} />,
       }[taak.type]
 
   return (

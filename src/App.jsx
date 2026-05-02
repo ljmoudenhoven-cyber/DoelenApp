@@ -12,6 +12,7 @@ import MetingToevoegen from './pages/MetingToevoegen'
 import Metingen from './pages/Metingen'
 import TussendoelToevoegen from './pages/TussendoelToevoegen'
 import ActiviteitPlannen from './pages/ActiviteitPlannen'
+import HealthcheckInstellen from './pages/HealthcheckInstellen'
 import Login from './pages/Login'
 import { genereerWekelijkseTaken } from './store/taken'
 import { getSetting, setItem } from './store/db'
@@ -157,6 +158,7 @@ function AppInner() {
         <Route path="/metingen" element={<Metingen />} />
         <Route path="/meting-toevoegen" element={<MetingToevoegen />} />
         <Route path="/meting-bewerken/:id" element={<MetingToevoegen />} />
+        <Route path="/healthcheck-instellen" element={<HealthcheckInstellen />} />
         <Route path="/activiteit-plannen" element={<ActiviteitPlannen />} />
       </Routes>
       <NavBar />
