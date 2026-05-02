@@ -11,6 +11,11 @@ function formatDatum(datumStr) {
   return `${d.getDate()}/${d.getMonth() + 1}`
 }
 
+function tsNaarLabel(ts) {
+  const d = new Date(ts)
+  return `${d.getDate()}/${d.getMonth() + 1}`
+}
+
 // Bouw één doelpuntenlijst uit alle plannen, waarbij een nieuwer plan
 // overneemt vanaf zijn gegenereerdOp-datum. Dat geeft een doellijn met
 // een 'knik' op het moment van bijstellen — en historie blijft zichtbaar.
@@ -70,7 +75,9 @@ function bouwGrafiekData(metingen, doelpunten, dataKey) {
     alleData[p.datum] = { ...alleData[p.datum], datum: p.datum, doel: p.doel }
   })
 
-  return Object.values(alleData).sort((a, b) => a.datum.localeCompare(b.datum))
+  return Object.values(alleData)
+    .map(d => ({ ...d, ts: new Date(d.datum + 'T00:00:00').getTime() }))
+    .sort((a, b) => a.ts - b.ts)
 }
 
 function domeinBerekenen(data, keys) {
@@ -108,11 +115,12 @@ function GrafiekKaart({ titel, metingen, dataKey, kleur, doelpunten, eenheid }) 
         <ResponsiveContainer width="100%" height={130}>
           <ComposedChart data={data} margin={{ top: 4, right: 4, left: 0, bottom: 0 }}>
             <CartesianGrid strokeDasharray="3 3" stroke="#f3f4f6" />
-            <XAxis dataKey="datum" tick={{ fontSize: 9 }} tickFormatter={formatDatum} interval="preserveStartEnd" />
+            <XAxis dataKey="ts" type="number" scale="time" domain={['dataMin', 'dataMax']}
+              tick={{ fontSize: 9 }} tickFormatter={tsNaarLabel} />
             <YAxis tick={{ fontSize: 9 }} domain={domein} width={32} tickFormatter={v => v} />
             <Tooltip
               formatter={(v, name) => [`${v} ${eenheid}`, name === 'meting' ? 'Meting' : 'Doel']}
-              labelFormatter={formatDatum}
+              labelFormatter={tsNaarLabel}
             />
             <Line type="monotone" dataKey="meting" stroke={kleur} strokeWidth={2}
               dot={{ r: 3, fill: kleur }} connectNulls={false} name="meting" />
@@ -222,8 +230,6 @@ export default function Fysiek() {
           metingen={metingen} doelpunten={planDoelpunten} eenheid="kg" />
         <GrafiekKaart titel="Vetpercentage" dataKey="vetPercentage" kleur="#f97316"
           metingen={metingen} doelpunten={[]} eenheid="%" />
-        <GrafiekKaart titel="Buikomvang" dataKey="buikomvang" kleur="#8b5cf6"
-          metingen={metingen} doelpunten={[]} eenheid="cm" />
         <GrafiekKaart titel="BMI" dataKey="bmi" kleur="#22c55e"
           metingen={metingen} doelpunten={bmiDoelpunten} eenheid="" />
       </div>

@@ -8,6 +8,7 @@ import {
   berekenBMI,
   berekenBMR,
   berekenTDEE,
+  gezondeBmiBereik,
   getPlannen,
   voegPlanToe,
   verwijderOudePlannen,
@@ -245,6 +246,7 @@ export default function MijnPlan() {
     geslacht,
   })
   const huidigeTdee = berekenTDEE(huidigeBmr, activiteit)
+  const gezondBereik = lengteN ? gezondeBmiBereik(lengteN) : null
 
   const actievePlan = plannen.length > 0 ? plannen[plannen.length - 1] : null
 
@@ -339,6 +341,11 @@ export default function MijnPlan() {
                 {huidigGewicht ? `${huidigGewicht} kg` : '— nog geen meting'}
                 {huidigBmi && <span className="text-gray-400 font-normal ml-2">BMI {huidigBmi}</span>}
               </p>
+              {gezondBereik && (
+                <p className="text-xs text-gray-500">
+                  Gezond gewicht voor jouw lengte: {gezondBereik.min}–{gezondBereik.max} kg
+                </p>
+              )}
               {huidigeTdee && (
                 <p className="text-xs text-gray-500">
                   Onderhoudsbehoefte (TDEE): ~{Math.round(huidigeTdee)} kcal/dag
