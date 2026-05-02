@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { getHealthcheckConfig, saveHealthcheckConfig, THEMAS } from '../store/healthcheck'
-import { genereerWekelijkseTaken } from '../store/taken'
+import { herstartHealthcheckVoorVandaag } from '../store/taken'
 import { ClipboardCheck } from '../components/Iconen'
 
 const FREQUENTIES = [
@@ -42,7 +42,7 @@ export default function HealthcheckInstellen() {
 
   async function opslaan() {
     await saveHealthcheckConfig(config)
-    if (config.actief) await genereerWekelijkseTaken()
+    await herstartHealthcheckVoorVandaag()
     setOpgeslagen(true)
     setTimeout(() => navigate('/'), 600)
   }

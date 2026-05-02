@@ -165,6 +165,35 @@ async function genereerHealthcheckTaak(vandaag) {
   })
 }
 
+export async function herstartHealthcheckVoorVandaag() {
+  const config = await getItem('settings', 'healthcheckConfig')
+  if (!config) return
+  const vandaag = new Date()
+  const datumKey = formatDateKey(vandaag)
+  const id = `healthcheck-${datumKey}`
+
+  if (!config.actief) {
+    const bestaand = await getItem('taken', id)
+    if (bestaand?.status === 'open') await removeItem('taken', id)
+    return
+  }
+
+  const dag = vandaag.getDay()
+  const moetVandaag = config.frequentie === 'dagelijks' ||
+    (config.frequentie === 'wekelijks' && Array.isArray(config.dagen) && config.dagen.includes(dag))
+  if (!moetVandaag) return
+
+  await setItem('taken', id, {
+    id,
+    type: 'healthcheck',
+    datum: datumKey,
+    titel: 'Dagelijkse check-in',
+    beschrijving: 'Hoe was je dag?',
+    status: 'open',
+    aangemaaktOp: new Date().toISOString(),
+  })
+}
+
 export async function genereerWekelijkseTaken() {
   const vandaag = new Date()
   const dag = vandaag.getDay()
