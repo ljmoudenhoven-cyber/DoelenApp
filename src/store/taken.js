@@ -1,4 +1,6 @@
-import { getAll, setItem, getItem } from './db'
+import { getAll, setItem, getItem, removeItem } from './db'
+
+const MAX_OCCURRENCES = 366
 
 export function formatDateKey(date) {
   return date.toISOString().split('T')[0]
@@ -53,6 +55,72 @@ export async function maakHandmatigeTaak({ type, titel, datum, beschrijving }) {
     status: 'open',
     aangemaaktOp: new Date().toISOString(),
   })
+}
+
+function berekenHerhalingsdata(startDatum, herhaling) {
+  const start = new Date(startDatum + 'T00:00:00')
+  const eind = new Date(herhaling.tot + 'T00:00:00')
+  const datums = []
+
+  if (herhaling.type === 'dagelijks') {
+    const cursor = new Date(start)
+    while (cursor <= eind && datums.length < MAX_OCCURRENCES) {
+      datums.push(formatDateKey(cursor))
+      cursor.setDate(cursor.getDate() + 1)
+    }
+  } else if (herhaling.type === 'wekelijks') {
+    const dagen = new Set(herhaling.dagen || [])
+    if (dagen.size === 0) dagen.add(start.getDay())
+    const cursor = new Date(start)
+    while (cursor <= eind && datums.length < MAX_OCCURRENCES) {
+      if (dagen.has(cursor.getDay())) datums.push(formatDateKey(cursor))
+      cursor.setDate(cursor.getDate() + 1)
+    }
+  } else if (herhaling.type === 'maandelijks') {
+    const dagInMaand = start.getDate()
+    const cursor = new Date(start.getFullYear(), start.getMonth(), 1)
+    while (cursor <= eind && datums.length < MAX_OCCURRENCES) {
+      const laatsteDag = new Date(cursor.getFullYear(), cursor.getMonth() + 1, 0).getDate()
+      const echteDag = Math.min(dagInMaand, laatsteDag)
+      const occ = new Date(cursor.getFullYear(), cursor.getMonth(), echteDag)
+      if (occ >= start && occ <= eind) datums.push(formatDateKey(occ))
+      cursor.setMonth(cursor.getMonth() + 1)
+    }
+  }
+
+  return datums
+}
+
+export async function maakHerhalendeTaak({ type, titel, datum, beschrijving, herhaling }) {
+  const datums = berekenHerhalingsdata(datum, herhaling)
+  if (datums.length === 0) return
+  const serieId = `serie-${Date.now()}`
+  const aangemaaktOp = new Date().toISOString()
+  const basis = Date.now()
+  await Promise.all(datums.map((d, i) =>
+    setItem('taken', `${type}-${basis}-${i}`, {
+      id: `${type}-${basis}-${i}`,
+      type,
+      titel,
+      datum: d,
+      beschrijving: beschrijving || '',
+      handmatig: true,
+      serieId,
+      herhaling,
+      status: 'open',
+      aangemaaktOp,
+    })
+  ))
+}
+
+export async function verwijderTaak(taakId) {
+  await removeItem('taken', taakId)
+}
+
+export async function verwijderSerie(serieId) {
+  const alle = await getAll('taken')
+  const inSerie = alle.filter(t => t.serieId === serieId)
+  await Promise.all(inSerie.map(t => removeItem('taken', t.id)))
 }
 
 export async function taakAfvinken(taakId) {

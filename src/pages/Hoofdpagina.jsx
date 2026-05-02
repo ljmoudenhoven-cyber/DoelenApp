@@ -1,9 +1,9 @@
 import { useState, useEffect, useCallback } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { getTakenVoorVandaag, getTeLaatTaken, getTakenKomende7Dagen, taakAfvinken, taakOverslaan } from '../store/taken'
+import { getTakenVoorVandaag, getTeLaatTaken, getTakenKomende7Dagen, taakAfvinken, taakOverslaan, verwijderTaak, verwijderSerie } from '../store/taken'
 import { getSetting } from '../store/db'
 import TaakModal from '../components/TaakModal'
-import { Scale, Footprints, Book, BookOpen, Pencil, Check, Cog, Plus, User, Apple, Brain } from '../components/Iconen'
+import { Scale, Footprints, Book, BookOpen, Pencil, Check, Cog, Plus, User, Apple, Brain, Repeat } from '../components/Iconen'
 
 const DAGEN = ['zondag', 'maandag', 'dinsdag', 'woensdag', 'donderdag', 'vrijdag', 'zaterdag']
 const MAANDEN = ['januari', 'februari', 'maart', 'april', 'mei', 'juni', 'juli', 'augustus', 'september', 'oktober', 'november', 'december']
@@ -89,6 +89,17 @@ export default function Hoofdpagina() {
 
   async function overslaanBevestigen(reden) {
     await taakOverslaan(activeTaak.id, reden)
+    setActiveTaak(null)
+    setModalType(null)
+    laadTaken()
+  }
+
+  async function verwijderBevestigen(scope) {
+    if (scope === 'hele-serie' && activeTaak.serieId) {
+      await verwijderSerie(activeTaak.serieId)
+    } else {
+      await verwijderTaak(activeTaak.id)
+    }
     setActiveTaak(null)
     setModalType(null)
     laadTaken()
@@ -192,6 +203,7 @@ export default function Hoofdpagina() {
           onSluit={() => { setActiveTaak(null); setModalType(null) }}
           onVoltooid={opslaanEnSluiten}
           onOvergeslagen={overslaanBevestigen}
+          onVerwijderd={verwijderBevestigen}
         />
       )}
     </div>
@@ -208,7 +220,10 @@ function TaakKaart({ taak, onOpen, onOverslaan }) {
         <Icon size={20} />
       </div>
       <div className="flex-1 min-w-0">
-        <p className="font-medium text-gray-800 text-sm leading-tight">{taak.titel}</p>
+        <div className="flex items-center gap-1.5">
+          <p className="font-medium text-gray-800 text-sm leading-tight">{taak.titel}</p>
+          {taak.serieId && <Repeat size={12} className="text-gray-400 shrink-0" />}
+        </div>
         {taak.beschrijving && <p className="text-gray-500 text-xs mt-0.5 truncate">{taak.beschrijving}</p>}
       </div>
       <div className="flex gap-2">
@@ -276,8 +291,9 @@ function KomendKaart({ taak, onOpen }) {
       <div className="w-20 shrink-0">
         <p className="text-xs font-semibold text-gray-700">{dagLabel(taak.datum)}</p>
       </div>
-      <div className="flex-1 min-w-0">
+      <div className="flex-1 min-w-0 flex items-center gap-1.5">
         <p className="text-sm text-gray-800 truncate">{taak.titel}</p>
+        {taak.serieId && <Repeat size={12} className="text-gray-400 shrink-0" />}
       </div>
     </button>
   )

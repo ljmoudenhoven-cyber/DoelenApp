@@ -6,7 +6,7 @@ import LezenVoortgangFormulier from './formulieren/LezenVoortgangFormulier'
 import LezenNieuwBoekFormulier from './formulieren/LezenNieuwBoekFormulier'
 import LezenReviewFormulier from './formulieren/LezenReviewFormulier'
 import { taakAfvinken } from '../store/taken'
-import { Check } from './Iconen'
+import { Check, Trash } from './Iconen'
 
 const HANDMATIGE_TYPES = ['persoonlijk', 'gezondheid', 'mentaal']
 
@@ -36,9 +36,13 @@ function HandmatigFormulier({ taak, onVoltooid }) {
   )
 }
 
-export default function TaakModal({ taak, type, onSluit, onVoltooid, onOvergeslagen }) {
+export default function TaakModal({ taak, type, onSluit, onVoltooid, onOvergeslagen, onVerwijderd }) {
   const [reden, setReden] = useState('')
   const [fout, setFout] = useState('')
+  const [stap, setStap] = useState('hoofd')
+
+  const isHandmatig = HANDMATIGE_TYPES.includes(taak.type)
+  const isSerie = Boolean(taak.serieId)
 
   function bevestigenOverslaan() {
     if (!reden.trim()) {
@@ -48,7 +52,7 @@ export default function TaakModal({ taak, type, onSluit, onVoltooid, onOvergesla
     onOvergeslagen(reden.trim())
   }
 
-  const formulier = HANDMATIGE_TYPES.includes(taak.type)
+  const formulier = isHandmatig
     ? <HandmatigFormulier taak={taak} onVoltooid={onVoltooid} />
     : {
         meting: <MetingFormulier taak={taak} onVoltooid={onVoltooid} />,
@@ -78,10 +82,61 @@ export default function TaakModal({ taak, type, onSluit, onVoltooid, onOvergesla
             Taak overslaan
           </button>
         </div>
+      ) : stap === 'verwijder' ? (
+        <div className="space-y-3">
+          {isSerie ? (
+            <>
+              <p className="text-gray-600 text-sm">
+                Deze activiteit hoort bij een herhalende serie. Wat wil je verwijderen?
+              </p>
+              <button
+                onClick={() => onVerwijderd('alleen-deze')}
+                className="w-full bg-red-500 text-white font-medium py-3 rounded-xl"
+              >
+                Alleen deze
+              </button>
+              <button
+                onClick={() => onVerwijderd('hele-serie')}
+                className="w-full bg-white text-red-600 font-medium py-3 rounded-xl border border-red-200"
+              >
+                Hele serie
+              </button>
+            </>
+          ) : (
+            <>
+              <p className="text-gray-600 text-sm">
+                Weet je zeker dat je deze activiteit wilt verwijderen?
+              </p>
+              <button
+                onClick={() => onVerwijderd('alleen-deze')}
+                className="w-full bg-red-500 text-white font-medium py-3 rounded-xl"
+              >
+                Verwijderen
+              </button>
+            </>
+          )}
+          <button
+            onClick={() => setStap('hoofd')}
+            className="w-full text-gray-500 text-sm font-medium py-2"
+          >
+            Annuleren
+          </button>
+        </div>
       ) : (
-        formulier || (
-          <p className="text-gray-500 text-sm">Geen formulier beschikbaar voor dit taaktype.</p>
-        )
+        <div className="space-y-4">
+          {formulier || (
+            <p className="text-gray-500 text-sm">Geen formulier beschikbaar voor dit taaktype.</p>
+          )}
+          {isHandmatig && (
+            <button
+              onClick={() => setStap('verwijder')}
+              className="w-full text-red-500 text-sm font-medium py-2 flex items-center justify-center gap-1.5"
+            >
+              <Trash size={16} />
+              Verwijder activiteit
+            </button>
+          )}
+        </div>
       )}
     </BottomModal>
   )
