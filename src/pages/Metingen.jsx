@@ -229,7 +229,6 @@ export default function Metingen() {
                       {[
                         m.gewicht != null && `${m.gewicht} kg`,
                         m.vetPercentage != null && `${m.vetPercentage}%`,
-                        m.buikomvang != null && `${m.buikomvang} cm`,
                         m.bmi != null && `BMI ${m.bmi}`,
                       ].filter(Boolean).join(' · ')}
                     </p>

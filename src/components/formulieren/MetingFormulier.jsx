@@ -14,12 +14,11 @@ export default function MetingFormulier({ taak = null, manueel = false, bestaand
   const [datum, setDatum] = useState(bestaand?.datum || taak?.datum || vandaag)
   const [gewicht, setGewicht] = useState(bestaand?.gewicht != null ? String(bestaand.gewicht) : '')
   const [vetPercentage, setVetPercentage] = useState(bestaand?.vetPercentage != null ? String(bestaand.vetPercentage) : '')
-  const [buikomvang, setBuikomvang] = useState(bestaand?.buikomvang != null ? String(bestaand.buikomvang) : '')
   const [fout, setFout] = useState('')
   const [bezig, setBezig] = useState(false)
 
   async function opslaan() {
-    if (!gewicht || !vetPercentage || !buikomvang) {
+    if (!gewicht || !vetPercentage) {
       setFout('Vul alle velden in.')
       return
     }
@@ -33,7 +32,7 @@ export default function MetingFormulier({ taak = null, manueel = false, bestaand
       datum,
       gewicht: parseFloat(gewicht),
       vetPercentage: parseFloat(vetPercentage),
-      buikomvang: parseFloat(buikomvang),
+      buikomvang: bestaand?.buikomvang ?? null,
       bmi,
       manueel: bestaand?.manueel ?? manueel,
       ingevoerdOp: bestaand?.ingevoerdOp || new Date().toISOString(),
@@ -84,19 +83,6 @@ export default function MetingFormulier({ taak = null, manueel = false, bestaand
           value={vetPercentage}
           onChange={e => setVetPercentage(e.target.value)}
           placeholder="bijv. 18.5"
-          className="w-full border border-gray-300 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-accent-500"
-        />
-      </div>
-
-      <div>
-        <label className="block text-sm font-medium text-gray-700 mb-1">Buikomvang (cm)</label>
-        <input
-          type="number"
-          inputMode="decimal"
-          step="0.5"
-          value={buikomvang}
-          onChange={e => setBuikomvang(e.target.value)}
-          placeholder="bijv. 92"
           className="w-full border border-gray-300 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-accent-500"
         />
       </div>

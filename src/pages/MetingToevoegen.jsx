@@ -21,7 +21,7 @@ export default function MetingToevoegen() {
   }, [id, isBewerken])
 
   function terug() {
-    navigate(isBewerken ? '/metingen' : '/fysiek')
+    navigate('/metingen')
   }
 
   return (
@@ -32,7 +32,7 @@ export default function MetingToevoegen() {
             {isBewerken ? 'Meting bewerken' : 'Meting toevoegen'}
           </h1>
           <p className="text-accent-fg-soft text-sm mt-1">
-            {isBewerken ? 'Pas gewicht, vet% of buikomvang aan' : 'Vul je gewicht, vet% en buikomvang in'}
+            {isBewerken ? 'Pas gewicht of vet% aan' : 'Vul je gewicht en vet% in'}
           </p>
         </div>
         <button

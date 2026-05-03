@@ -206,10 +206,9 @@ export default function Fysiek() {
         {laatste ? (
           <div className="bg-white border border-gray-200 rounded-xl p-4">
             <h2 className="font-semibold text-gray-800 text-sm mb-3">Laatste meting — {formatDatum(laatste.datum)}</h2>
-            <div className="grid grid-cols-2 gap-3">
+            <div className="grid grid-cols-3 gap-3">
               <StatKaart label="Gewicht" waarde={`${laatste.gewicht} kg`} />
               <StatKaart label="Vetpercentage" waarde={`${laatste.vetPercentage}%`} />
-              <StatKaart label="Buikomvang" waarde={`${laatste.buikomvang} cm`} />
               <StatKaart label="BMI" waarde={laatste.bmi} bmiInfo={bmiInfo(laatste.bmi)} />
             </div>
             {lengte && <p className="text-gray-400 text-xs mt-2">Lengte: {lengte} cm</p>}

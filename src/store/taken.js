@@ -217,7 +217,7 @@ export async function genereerWekelijkseTaken() {
         type: 'meting',
         datum: formatDateKey(vandaag),
         titel: 'Lichaamsmetingen invullen',
-        beschrijving: 'Vul je gewicht, vetpercentage en buikomvang in',
+        beschrijving: 'Vul je gewicht en vetpercentage in',
       })
     }
   }
