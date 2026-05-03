@@ -7,6 +7,13 @@ import {
   saveMetingenPlanning,
   herstartMetingTaakVoorVandaag,
 } from '../store/metingenPlanning'
+import { formatDateKey } from '../store/taken'
+
+function plusMaanden(datumStr, n) {
+  const d = new Date(datumStr + 'T00:00:00')
+  d.setMonth(d.getMonth() + n)
+  return formatDateKey(d)
+}
 
 const FREQUENTIES = [
   { id: 'wekelijks', label: 'Wekelijks' },
@@ -67,7 +74,9 @@ export default function Metingen() {
 
   if (!planning) return null
 
+  const vandaag = formatDateKey(new Date())
   const minstensEenDag = planning.frequentie !== 'wekelijks' || planning.dagen.length > 0
+  const eindIngevuld = planning.geenEinddatum || (planning.einddatum && planning.einddatum >= vandaag)
 
   return (
     <div className="flex flex-col pb-10">
@@ -194,12 +203,40 @@ export default function Metingen() {
                     )}
                   </div>
                 )}
+
+                <div>
+                  <div className="flex items-center justify-between mb-2">
+                    <label className="text-xs font-medium text-gray-500">Tot</label>
+                    <label className="flex items-center gap-2 text-xs text-gray-500">
+                      <input
+                        type="checkbox"
+                        checked={planning.geenEinddatum}
+                        onChange={e => setPlanning({ ...planning, geenEinddatum: e.target.checked })}
+                        className="rounded"
+                      />
+                      Geen einddatum
+                    </label>
+                  </div>
+                  <input
+                    type="date"
+                    value={planning.einddatum || (planning.geenEinddatum ? '' : plusMaanden(vandaag, 3))}
+                    min={vandaag}
+                    onChange={e => setPlanning({ ...planning, einddatum: e.target.value })}
+                    disabled={planning.geenEinddatum}
+                    className="w-full border border-gray-300 rounded-xl px-4 py-2 text-sm focus:outline-none focus:border-accent-500 disabled:bg-gray-50 disabled:text-gray-400"
+                  />
+                  {planning.geenEinddatum && (
+                    <p className="text-[11px] text-gray-400 mt-1">
+                      Wordt automatisch beperkt tot 1 jaar vooruit; verleng indien nodig later.
+                    </p>
+                  )}
+                </div>
               </>
             )}
 
             <button
               onClick={bewaarPlanning}
-              disabled={!minstensEenDag}
+              disabled={planning.actief && (!minstensEenDag || !eindIngevuld)}
               className="w-full bg-accent-500 text-accent-fg font-medium py-3 rounded-xl text-sm flex items-center justify-center gap-2 disabled:opacity-50"
             >
               <Check size={16} strokeWidth={2.5} />

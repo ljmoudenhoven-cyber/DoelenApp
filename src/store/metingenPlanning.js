@@ -6,7 +6,11 @@ export const STANDAARD_PLANNING = {
   frequentie: 'wekelijks',
   dagen: [3], // woensdag — neutraler dan maandag (geen weekend-effect)
   dagInMaand: 1,
+  geenEinddatum: false,
+  einddatum: '',
 }
+
+const MAX_DAGEN_VOORUIT = 366 // veiligheidscap bij 'geen einddatum'
 
 export async function getMetingenPlanning() {
   const p = await getSetting('metingenPlanning')
@@ -29,8 +33,6 @@ function moetVandaagMeten(config, vandaag) {
   return false
 }
 
-const HORIZON_DAGEN = 60
-
 function nieuweTaak(datumKey) {
   return {
     id: `meting-${datumKey}`,
@@ -43,17 +45,28 @@ function nieuweTaak(datumKey) {
   }
 }
 
-// Bij opslaan van planning: synchroniseer alle meting-taken in een
-// horizon van 60 dagen vooruit.
-// - Actief: matchende dagen krijgen een open taak (vandaag wordt geforceerd
-//   teruggezet, toekomstige worden alleen aangemaakt als ze nog niet bestaan)
-// - Niet actief: alle open meting-taken in de horizon worden verwijderd
+function bepaalHorizonDagen(config) {
+  if (!config?.einddatum || config.geenEinddatum) return MAX_DAGEN_VOORUIT
+  const eind = new Date(config.einddatum + 'T00:00:00')
+  const vandaag = new Date()
+  vandaag.setHours(0, 0, 0, 0)
+  const dagen = Math.round((eind - vandaag) / (1000 * 60 * 60 * 24))
+  return Math.max(0, Math.min(MAX_DAGEN_VOORUIT, dagen))
+}
+
+// Bij opslaan van planning: synchroniseer meting-taken tot aan de
+// gekozen einddatum (of 1 jaar vooruit als 'geen einddatum').
+// - Actief: matchende dagen krijgen een open taak (vandaag forceer reset)
+// - Niet actief: alle open meting-taken tot 1 jaar vooruit worden weggehaald
 export async function herstartMetingTaakVoorVandaag() {
   const config = await getItem('settings', 'metingenPlanning')
   const vandaag = new Date()
   vandaag.setHours(0, 0, 0, 0)
 
-  for (let i = 0; i <= HORIZON_DAGEN; i++) {
+  // Bij niet-actief: ruim altijd ALLE open meting-taken in een ruime horizon op
+  const horizon = config?.actief ? bepaalHorizonDagen(config) : MAX_DAGEN_VOORUIT
+
+  for (let i = 0; i <= horizon; i++) {
     const d = new Date(vandaag)
     d.setDate(d.getDate() + i)
     const k = formatDateKey(d)
@@ -66,13 +79,11 @@ export async function herstartMetingTaakVoorVandaag() {
     }
 
     if (!moetVandaagMeten(config, d)) {
-      // Was eerder gepland (open) en is nu uitgevallen: schoonmaken
       if (bestaand?.status === 'open') await removeItem('taken', id)
       continue
     }
 
     if (i === 0) {
-      // Vandaag: forceer reset naar open
       await setItem('taken', id, nieuweTaak(k))
     } else if (!bestaand) {
       await setItem('taken', id, nieuweTaak(k))
