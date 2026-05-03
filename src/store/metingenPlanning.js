@@ -18,13 +18,13 @@ export async function saveMetingenPlanning(planning) {
 }
 
 function moetVandaagMeten(config, vandaag) {
-  const dag = vandaag.getDay()
-  const dagInMaand = vandaag.getDate()
   if (config.frequentie === 'wekelijks') {
-    return Array.isArray(config.dagen) && config.dagen.includes(dag)
+    return Array.isArray(config.dagen) && config.dagen.includes(vandaag.getDay())
   }
   if (config.frequentie === 'maandelijks') {
-    return dagInMaand === config.dagInMaand
+    const laatsteDag = new Date(vandaag.getFullYear(), vandaag.getMonth() + 1, 0).getDate()
+    const effectieveDag = Math.min(config.dagInMaand, laatsteDag)
+    return vandaag.getDate() === effectieveDag
   }
   return false
 }

@@ -203,10 +203,14 @@ export async function genereerWekelijkseTaken() {
   // Lichaamsmetingen op basis van metingenPlanning
   const metingPlanning = await getItem('settings', 'metingenPlanning')
   if (metingPlanning?.actief) {
-    const dagInMaand = vandaag.getDate()
-    const moetMeten = (metingPlanning.frequentie === 'wekelijks' &&
-        Array.isArray(metingPlanning.dagen) && metingPlanning.dagen.includes(dag)) ||
-      (metingPlanning.frequentie === 'maandelijks' && dagInMaand === metingPlanning.dagInMaand)
+    let moetMeten = false
+    if (metingPlanning.frequentie === 'wekelijks') {
+      moetMeten = Array.isArray(metingPlanning.dagen) && metingPlanning.dagen.includes(dag)
+    } else if (metingPlanning.frequentie === 'maandelijks') {
+      const laatsteDag = new Date(vandaag.getFullYear(), vandaag.getMonth() + 1, 0).getDate()
+      const effectieveDag = Math.min(metingPlanning.dagInMaand, laatsteDag)
+      moetMeten = vandaag.getDate() === effectieveDag
+    }
     if (moetMeten) {
       await maakTaak({
         id: `meting-${formatDateKey(vandaag)}`,

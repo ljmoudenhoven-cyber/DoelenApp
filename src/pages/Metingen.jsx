@@ -179,15 +179,19 @@ export default function Metingen() {
                     <input
                       type="number"
                       min="1"
-                      max="28"
+                      max="31"
                       value={planning.dagInMaand}
                       onChange={e => setPlanning({
                         ...planning,
-                        dagInMaand: Math.max(1, Math.min(28, parseInt(e.target.value) || 1))
+                        dagInMaand: Math.max(1, Math.min(31, parseInt(e.target.value) || 1))
                       })}
                       className="w-full border border-gray-300 rounded-xl px-4 py-2 text-sm focus:outline-none focus:border-accent-500"
                     />
-                    <p className="text-[11px] text-gray-400 mt-1">Max dag 28 (anders mist het in februari).</p>
+                    {planning.dagInMaand > 28 && (
+                      <p className="text-[11px] text-gray-400 mt-1">
+                        In maanden zonder dag {planning.dagInMaand} valt de meting op de laatste dag van die maand.
+                      </p>
+                    )}
                   </div>
                 )}
               </>
