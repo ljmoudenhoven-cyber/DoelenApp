@@ -200,15 +200,22 @@ export async function genereerWekelijkseTaken() {
 
   await genereerHealthcheckTaak(vandaag)
 
-  // Maandag = 1
-  if (dag === 1) {
-    await maakTaak({
-      id: `meting-${formatDateKey(vandaag)}`,
-      type: 'meting',
-      datum: formatDateKey(vandaag),
-      titel: 'Lichaamsmetingen invullen',
-      beschrijving: 'Vul je gewicht, vetpercentage en buikomvang in',
-    })
+  // Lichaamsmetingen op basis van metingenPlanning
+  const metingPlanning = await getItem('settings', 'metingenPlanning')
+  if (metingPlanning?.actief) {
+    const dagInMaand = vandaag.getDate()
+    const moetMeten = (metingPlanning.frequentie === 'wekelijks' &&
+        Array.isArray(metingPlanning.dagen) && metingPlanning.dagen.includes(dag)) ||
+      (metingPlanning.frequentie === 'maandelijks' && dagInMaand === metingPlanning.dagInMaand)
+    if (moetMeten) {
+      await maakTaak({
+        id: `meting-${formatDateKey(vandaag)}`,
+        type: 'meting',
+        datum: formatDateKey(vandaag),
+        titel: 'Lichaamsmetingen invullen',
+        beschrijving: 'Vul je gewicht, vetpercentage en buikomvang in',
+      })
+    }
   }
 
   // Sport: maandag of vrijdag
