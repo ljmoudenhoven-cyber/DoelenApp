@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom'
 import { getTakenVoorVandaag, getTeLaatTaken, getTakenKomende7Dagen, taakAfvinken, taakOverslaan, verwijderTaak, verwijderSerie } from '../store/taken'
 import { getSetting } from '../store/db'
 import TaakModal from '../components/TaakModal'
-import { Scale, Footprints, Book, BookOpen, Pencil, Check, Cog, Plus, User, Apple, Brain, Repeat, ClipboardCheck } from '../components/Iconen'
+import { Ruler, Footprints, Book, BookOpen, Pencil, Check, Cog, Plus, User, Apple, Brain, Repeat, ClipboardCheck } from '../components/Iconen'
 
 const DAGEN = ['zondag', 'maandag', 'dinsdag', 'woensdag', 'donderdag', 'vrijdag', 'zaterdag']
 const MAANDEN = ['januari', 'februari', 'maart', 'april', 'mei', 'juni', 'juli', 'augustus', 'september', 'oktober', 'november', 'december']
@@ -31,7 +31,7 @@ function dagLabel(datumStr) {
 }
 
 const TAAK_STIJL = {
-  meting: { bg: 'bg-blue-50', tekst: 'text-blue-600', Icon: Scale },
+  meting: { bg: 'bg-blue-50', tekst: 'text-blue-600', Icon: Ruler },
   healthcheck: { bg: 'bg-teal-50', tekst: 'text-teal-600', Icon: ClipboardCheck },
   sport: { bg: 'bg-orange-50', tekst: 'text-orange-600', Icon: Footprints },
   'lezen-voortgang': { bg: 'bg-indigo-50', tekst: 'text-indigo-600', Icon: BookOpen },
