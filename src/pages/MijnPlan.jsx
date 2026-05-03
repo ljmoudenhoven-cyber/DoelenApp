@@ -341,11 +341,22 @@ export default function MijnPlan() {
                 {huidigGewicht ? `${huidigGewicht} kg` : '— nog geen meting'}
                 {huidigBmi && <span className="text-gray-400 font-normal ml-2">BMI {huidigBmi}</span>}
               </p>
-              {gezondBereik && (
-                <p className="text-xs text-gray-500">
-                  Gezond gewicht voor jouw lengte: {gezondBereik.min}–{gezondBereik.max} kg
-                </p>
-              )}
+              {lengteN && (() => {
+                const m = lengteN / 100
+                const midden = Math.round(22 * m * m)
+                const onder = Math.round(20 * m * m)
+                const boven = Math.round(24 * m * m)
+                return (
+                  <>
+                    <p className="text-xs text-gray-500">
+                      Streefdoel rond {midden} kg (BMI 22, midden van gezond)
+                    </p>
+                    <p className="text-xs text-gray-500">
+                      Praktisch gezond bereik: {onder}–{boven} kg (BMI 20–24)
+                    </p>
+                  </>
+                )
+              })()}
               {huidigeTdee && (
                 <p className="text-xs text-gray-500">
                   Onderhoudsbehoefte (TDEE): ~{Math.round(huidigeTdee)} kcal/dag
